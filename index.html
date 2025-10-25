@@ -3,35 +3,459 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Genesis Collective</title>
-    <meta http-equiv="refresh" content="0; url=mint.html"> 
-    
+    <title>$LUCKY Token Sale</title>
     <style>
+        /* Base Styling & Variables */
+        :root {
+            --color-amber-400: #fbbf24;
+            --color-yellow-500: #eab308;
+            --color-amber-600: #d97706;
+            --color-green-500: #22c55e;
+            --color-emerald-600: #059669;
+            --color-red-500: #ef4444;
+            --color-blue-500: #3b82f6;
+            --color-white: #ffffff;
+            --color-gray-900: #111827;
+            --color-gray-800: #1f2937;
+            --color-gray-700: #374151;
+            --color-gray-600: #4b5563;
+            --color-gray-500: #6b7280; /* Added for progress text */
+            --color-gray-200: #E5E7EB; /* Added for progress bg */
+        }
+
         body {
-            background-color: #0a0a1a;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            font-family: 'Courier New', monospace; /* Pixel font */
             margin: 0;
-            flex-direction: column;
+            padding: 0;
+            background-color: var(--color-yellow-500); /* Fallback */
+            background-image: linear-gradient(to bottom right, var(--color-amber-400), var(--color-yellow-500), var(--color-amber-600));
+            color: var(--color-gray-900);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
-        h1 {
-            color: #60a5fa;
+
+        /* Pixel Text & Border */
+        .pixel-text {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
-        p {
-            color: #9ca3af;
+        .pixel-border {
+            border: 4px solid #000;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.3), -2px -2px 0 rgba(255,255,255,0.1);
         }
+        .pixel-box {
+            border: 2px solid rgba(0,0,0,0.1);
+        }
+
+        /* Layout */
+        .max-w-7xl { max-width: 1280px; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+        .md\:py-20 { padding-top: 5rem; padding-bottom: 5rem; }
+        .relative { position: relative; }
+        .z-10 { z-index: 10; }
+        .min-h-screen { min-height: 100vh; }
+        .flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .gap-12 { gap: 3rem; }
+        .lg\:gap-20 { gap: 5rem; }
+        .grid { display: grid; }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        @media (min-width: 1024px) {
+            .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+        .space-y-8 > * + * { margin-top: 2rem; }
+        .mt-20 { margin-top: 5rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .text-center { text-align: center; }
+        .w-full { width: 100%; }
+        .text-white { color: var(--color-white); }
+        .text-gray-900 { color: var(--color-gray-900); }
+        .text-gray-700 { color: var(--color-gray-700); }
+        .text-gray-600 { color: var(--color-gray-600); }
+        .text-amber-500 { color: var(--color-yellow-500); }
+        .text-amber-600 { color: var(--color-amber-600); }
+        .text-green-600 { color: var(--color-emerald-600); }
+        .text-xs { font-size: 0.75rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-3xl { font-size: 1.875rem; }
+        .text-4xl { font-size: 2.25rem; }
+        .text-5xl { font-size: 3rem; }
+        .text-6xl { font-size: 3.75rem; }
+        .md\:text-base { font-size: 1rem; }
+        .md\:text-2xl { font-size: 1.5rem; }
+        .md\:text-3xl { font-size: 1.875rem; }
+        .md\:text-5xl { font-size: 3rem; }
+        .md\:text-6xl { font-size: 3.75rem; }
+        .font-black { font-weight: 900; }
+        .font-bold { font-weight: 700; }
+        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+        .duration-200 { transition-duration: 200ms; }
+        .duration-300 { transition-duration: 300ms; }
+        .duration-1000 { transition-duration: 1000ms; }
+        .ease-out { transition-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+        .transform { transform: translate(0, 0) rotate(0) skewX(0) skewY(0) scaleX(1) scaleY(1); }
+        .hover\:scale-105:hover { transform: scale(1.05); }
+        .active\:scale-95:active { transform: scale(0.95); }
+        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .animate-bounce { animation: bounce 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        @keyframes bounce { 0%, 100% { transform: translateY(-25%); animation-timing-function: cubic-bezier(0.8,0,1,1); } 50% { transform: none; animation-timing-function: cubic-bezier(0,0,0.2,1); } }
+        .rounded-lg { border-radius: 0.5rem; }
+        .overflow-hidden { overflow: hidden; }
+
+        /* Pixel Pattern Overlay */
+        .pixel-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.1;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px);
+        }
+        
+        /* Cloud Decorations (Basic Shape) */
+        .pixel-cloud {
+            position: absolute;
+            /* width/height defined inline/via class */
+            opacity: 0.8; /* Default, can be overridden */
+            /* animation applied via class */
+        }
+        .pixel-cloud > div { position: absolute; background-color: white; /* pixel-box applied directly */ }
+        .cloud-shape-1 { top: 1rem; left: 0; width: 2rem; height: 2rem; }
+        .cloud-shape-2 { top: 0.5rem; left: 1.5rem; width: 3rem; height: 3rem; }
+        .cloud-shape-3 { top: 1rem; left: 4rem; width: 2rem; height: 2rem; }
+        .cloud-shape-4 { top: 2rem; left: 1rem; width: 4rem; height: 2rem; }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(-20px) translateX(10px); }
+        }
+        @keyframes float-delayed {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(-15px) translateX(-10px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-float-delayed { animation: float-delayed 8s ease-in-out infinite; }
+
+        /* Header Specific */
+        header { padding: 1.5rem; position: relative; z-index: 10; }
+        .logo-box { width: 3rem; height: 3rem; background-color: var(--color-green-500); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; }
+        .logo-icon { width: 2rem; height: 2rem; color: var(--color-white); }
+
+        /* Pixel Card */
+        .pixel-card { background-color: var(--color-white); padding: 2rem; }
+        @media (min-width: 768px) { .pixel-card { padding: 3rem; } }
+
+        /* Pixel Button */
+        .pixel-button {
+            padding-left: 2rem; padding-right: 2rem; padding-top: 1rem; padding-bottom: 1rem;
+            font-weight: 900; font-size: 1.125rem; /* lg */
+            transition: all 0.2s;
+            position: relative;
+            cursor: pointer;
+            border: 4px solid #000; /* pixel-border simulation */
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.3), -2px -2px 0 rgba(255,255,255,0.1);
+        }
+        .pixel-button.primary { background-color: var(--color-amber-500); color: var(--color-gray-900); }
+        .pixel-button.primary:hover { background-color: var(--color-amber-400); transform: scale(1.05); }
+        .pixel-button.secondary { background-color: var(--color-gray-900); color: var(--color-amber-500); }
+        .pixel-button.secondary:hover { background-color: var(--color-gray-800); transform: scale(1.05); }
+        .pixel-button:active { transform: scale(0.95); }
+        .pixel-button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pixel-button .inline-block { display: inline-block; vertical-align: middle; }
+        .mr-2 { margin-right: 0.5rem; }
+
+        /* Progress Circle */
+        .progress-circle-container { position: relative; }
+        .progress-circle-svg { transform: rotate(-90deg); }
+        .progress-circle-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        /* Loading State */
+        .loading-state {
+          min-height: 100vh; display: flex; align-items: center; justify-content: center;
+          background-image: linear-gradient(to bottom right, var(--color-amber-400), var(--color-yellow-500), var(--color-amber-600));
+        }
+        
     </style>
 </head>
 <body>
-    <h1>Loading The Genesis Collective...</h1>
-    <p>If you are not redirected, click <a href="mint.html" style="color: #c084fc;">here</a>.</p>
+
+    <div id="loading-indicator" class="loading-state">
+        <div class="pixel-text text-4xl text-white animate-pulse">Loading...</div>
+    </div>
+
+    <div id="main-content" style="display: none;">
+        <div class="pixel-cloud absolute top-20 left-10 opacity-80 animate-float">
+            <div class="w-24 h-16 md:w-32 md:h-20 relative">
+                <div class="cloud-shape-1 pixel-box"></div>
+                <div class="cloud-shape-2 pixel-box"></div>
+                <div class="cloud-shape-3 pixel-box"></div>
+                <div class="cloud-shape-4 pixel-box"></div>
+            </div>
+        </div>
+        <div class="pixel-cloud absolute top-40 right-20 opacity-60 animate-float-delayed">
+             <div class="w-24 h-16 md:w-32 md:h-20 relative">
+                <div class="cloud-shape-1 pixel-box"></div>
+                <div class="cloud-shape-2 pixel-box"></div>
+                <div class="cloud-shape-3 pixel-box"></div>
+                <div class="cloud-shape-4 pixel-box"></div>
+            </div>
+        </div>
+        <div class="pixel-cloud absolute bottom-40 left-1/4 opacity-70 animate-float">
+             <div class="w-24 h-16 md:w-32 md:h-20 relative">
+                <div class="cloud-shape-1 pixel-box"></div>
+                <div class="cloud-shape-2 pixel-box"></div>
+                <div class="cloud-shape-3 pixel-box"></div>
+                <div class="cloud-shape-4 pixel-box"></div>
+            </div>
+        </div>
+        
+        <div class="pixel-pattern"></div>
+
+        <header class="relative z-10">
+            <div class="max-w-7xl mx-auto flex justify-between items-center px-6">
+                <div class="flex items-center gap-3">
+                    <div class="logo-box pixel-border">
+                        <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.5-4.5H11v-3h2v3h1.5v-5H11v-3H9.5v3h-2v5zm4.5-9.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5z"/></svg>
+                    </div>
+                    <div class="pixel-text text-2xl md:text-3xl font-black text-gray-900" id="header-title">
+                        TOKEN SALE
+                    </div>
+                </div>
+                <button id="connect-wallet-btn" class="pixel-button primary text-sm md:text-base">
+                    <svg class="inline-block w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 8a6 6 0 11-12 0 6 6 0 0112 0zm-6 4a4 4 0 100-8 4 4 0 000 8zm-6-4a6 6 0 006 6 6 6 0 100-12 6 6 0 00-6 6z" clip-rule="evenodd" /><path d="M2 10a8 8 0 1116 0 8 8 0 01-16 0z" /></svg>
+                    <span id="connect-wallet-text">Connect Wallet</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="relative z-10 max-w-7xl mx-auto px-6 py-12 md:py-20">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                
+                <div class="flex justify-center lg:justify-start">
+                    <div class="relative">
+                        <div class="w-64 h-64 md:w-80 md:h-80 bg-gray-900 pixel-border relative overflow-hidden group hover:scale-105 transition-transform duration-300">
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-600 opacity-20"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <svg class="w-32 h-32 text-amber-500 animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 11-2 0V6H3a1 1 0 110-2h1V3a1 1 0 011-1zm1 14a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1H6a1 1 0 110-2h1v-1a1 1 0 011-1zm6-11a1 1 0 010-2h1V3a1 1 0 112 0v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0V6h-1zm3 11a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 112 0v1h1a1 1 0 110 2h-1v1z" clip-rule="evenodd" /></svg>
+                            </div>
+                            <div class="absolute bottom-4 left-0 right-0 text-center">
+                                <div class="pixel-text text-white text-xl font-black">MINT NOW!</div>
+                            </div>
+                        </div>
+                        <div class="absolute -top-4 -right-4 bg-red-500 text-white pixel-border px-4 py-2 pixel-text font-black animate-bounce">
+                            HOT! 🔥
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="pixel-card space-y-8">
+                        <div class="text-center">
+                            <div class="pixel-text text-3xl md:text-5xl font-black text-gray-900 mb-2">
+                                MINT
+                            </div>
+                            <div class="pixel-text text-4xl md:text-6xl font-black text-amber-600" id="token-symbol-display">
+                                $TOKEN
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center">
+                            <div class="progress-circle-container" style="width: 280px; height: 280px;">
+                                <svg width="280" height="280" class="progress-circle-svg">
+                                    <circle cx="140" cy="140" r="130" fill="none" stroke="var(--color-gray-200)" stroke-width="20" />
+                                    <circle id="progress-circle-fg" cx="140" cy="140" r="130" fill="none" stroke="var(--color-yellow-500)" stroke-width="20" stroke-dasharray="816.8" stroke-dashoffset="816.8" stroke-linecap="round" class="transition-all duration-1000 ease-out" />
+                                </svg>
+                                <div class="progress-circle-text">
+                                    <div class="text-gray-500 text-sm md:text-base font-bold mb-1 pixel-text" id="remaining-text">REMAINING</div>
+                                    <div class="text-2xl md:text-4xl font-black pixel-text">
+                                        <span class="text-amber-500" id="progress-minted">0</span>
+                                        <span class="text-gray-800" id="progress-total">/ 1</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="text-center pixel-text text-sm md:text-base text-gray-700" id="mint-rate-text">
+                                Mint rate: Every $10 = 50,000 TOKEN
+                            </div>
+                            
+                            <button id="mint-button" class="pixel-button primary w-full flex items-center justify-center gap-2">
+                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.5-4.5H11v-3h2v3h1.5v-5H11v-3H9.5v3h-2v5zm4.5-9.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5z"/></svg>
+                                MINT NOW
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="pixel-card text-center">
+                            <div class="pixel-text text-gray-600 text-xs md:text-sm mb-2">MINTED</div>
+                            <div class="pixel-text text-xl md:text-2xl font-black text-gray-900" id="stat-minted">
+                                0
+                            </div>
+                            <div class="pixel-text text-xs text-amber-600" id="stat-percentage">0%</div>
+                        </div>
+                        
+                        <div class="pixel-card text-center">
+                            <div class="pixel-text text-gray-600 text-xs md:text-sm mb-2">REMAINING</div>
+                            <div class="pixel-text text-xl md:text-2xl font-black text-gray-900" id="stat-remaining">
+                                0
+                            </div>
+                            <div class="pixel-text text-xs text-green-600">Available</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-20 grid md:grid-cols-3 gap-6">
+                <div class="pixel-card text-center hover:scale-105 transition-transform duration-300">
+                     <svg class="w-12 h-12 text-amber-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" /></svg>
+                    <div class="pixel-text text-xl font-black text-gray-900 mb-2">FAIR LAUNCH</div>
+                    <div class="text-gray-700 text-sm">Tokens are distributed fairly to all participants</div>
+                </div>
+
+                <div class="pixel-card text-center hover:scale-105 transition-transform duration-300">
+                    <svg class="w-12 h-12 text-green-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zm-3 4c-3.14 0-6 1.8-6 4v2h12v-2c0-2.2-2.86-4-6-4zm8-4a3 3 0 11-6 0 3 3 0 016 0zm-3 4a4 4 0 00-4 4v2h8v-2a4 4 0 00-4-4z" /></svg>
+                    <div class="pixel-text text-xl font-black text-gray-900 mb-2">COMMUNITY</div>
+                    <div class="text-gray-700 text-sm">Built together with a strong community</div>
+                </div>
+
+                <div class="pixel-card text-center hover:scale-105 transition-transform duration-300">
+                    <svg class="w-12 h-12 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 11-2 0V6H3a1 1 0 110-2h1V3a1 1 0 011-1zm1 14a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1H6a1 1 0 110-2h1v-1a1 1 0 011-1zm6-11a1 1 0 010-2h1V3a1 1 0 112 0v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0V6h-1zm3 11a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 112 0v1h1a1 1 0 110 2h-1v1z" clip-rule="evenodd" /></svg>
+                    <div class="pixel-text text-xl font-black text-gray-900 mb-2">REWARDS</div>
+                    <div class="text-gray-700 text-sm">Get exciting rewards for being a holder</div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="relative z-10 text-center py-8 mt-20">
+            <div class="pixel-text text-gray-900 text-sm" id="footer-text">
+                © 2025 Token Sale • All rights reserved
+            </div>
+        </footer>
+    </div>
 
     <script>
-        // window.location.replace("mint.html");
+        // Sample Data (Replace with actual data fetching later)
+        const sampleTokenData = {
+            total_supply: 500000000,
+            minted: 188000000,
+            mint_rate: 5000, // Tokens per price_per_unit
+            price_per_unit: 10, // Cost in $ for mint_rate tokens
+            token_name: "Lucky Token",
+            token_symbol: "LUCKY"
+        };
+
+        // DOM Elements
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const mainContent = document.getElementById('main-content');
+        const headerTitle = document.getElementById('header-title');
+        const connectWalletBtn = document.getElementById('connect-wallet-btn');
+        const connectWalletText = document.getElementById('connect-wallet-text');
+        const tokenSymbolDisplay = document.getElementById('token-symbol-display');
+        const progressCircleFg = document.getElementById('progress-circle-fg');
+        const progressMinted = document.getElementById('progress-minted');
+        const progressTotal = document.getElementById('progress-total');
+        const remainingText = document.getElementById('remaining-text'); // Added this ID
+        const mintRateText = document.getElementById('mint-rate-text');
+        const mintButton = document.getElementById('mint-button');
+        const statMinted = document.getElementById('stat-minted');
+        const statPercentage = document.getElementById('stat-percentage');
+        const statRemaining = document.getElementById('stat-remaining');
+        const footerText = document.getElementById('footer-text');
+
+        let walletConnected = false;
+
+        // Function to update UI with data
+        function updateUI(data) {
+            if (!data) return;
+
+            const remaining = data.total_supply - data.minted;
+            const percentageMinted = (data.minted / data.total_supply * 100);
+            
+            // Header
+            headerTitle.textContent = `${data.token_symbol} SALE`;
+            
+            // Mint Card
+            tokenSymbolDisplay.textContent = `$${data.token_symbol}`;
+            mintRateText.textContent = `Mint rate: Every $${data.price_per_unit} = ${data.mint_rate.toLocaleString()} ${data.token_symbol}`;
+            
+            // Progress Circle
+            progressMinted.textContent = data.minted.toLocaleString();
+            progressTotal.textContent = `/ ${data.total_supply.toLocaleString()}`;
+            remainingText.textContent = 'REMAINING'; // Keep this text static
+
+            const size = 280;
+            const strokeWidth = 20;
+            const radius = (size - strokeWidth) / 2;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percentageMinted / 100) * circumference;
+            progressCircleFg.style.strokeDashoffset = offset;
+
+            // Stats
+            statMinted.textContent = data.minted.toLocaleString();
+            statPercentage.textContent = `${percentageMinted.toFixed(1)}%`;
+            statRemaining.textContent = remaining.toLocaleString();
+
+            // Footer
+            footerText.textContent = `© 2025 ${data.token_name} • All rights reserved`;
+        }
+
+        // Simulate data fetching
+        function fetchData() {
+            setTimeout(() => {
+                updateUI(sampleTokenData);
+                loadingIndicator.style.display = 'none';
+                mainContent.style.display = 'block';
+            }, 1500); // Simulate 1.5 second loading
+        }
+
+        // Handle Connect Wallet Click
+        connectWalletBtn.addEventListener('click', () => {
+            walletConnected = !walletConnected;
+            if (walletConnected) {
+                // Simulate connected state
+                connectWalletText.textContent = 'Connected';
+                connectWalletBtn.classList.remove('primary');
+                connectWalletBtn.classList.add('secondary');
+                alert('Wallet connected (mock)!');
+                // Enable Mint button if needed
+            } else {
+                connectWalletText.textContent = 'Connect Wallet';
+                connectWalletBtn.classList.remove('secondary');
+                connectWalletBtn.classList.add('primary');
+                alert('Wallet disconnected (mock)!');
+            }
+        });
+
+        // Handle Mint Click
+        mintButton.addEventListener('click', () => {
+            if (!walletConnected) {
+                alert('Please connect your wallet first!');
+                return;
+            }
+            alert('Minting feature coming soon! 🎉');
+        });
+
+        // Initial Load
+        window.onload = fetchData;
+
     </script>
 </body>
 </html>
