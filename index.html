@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$LUCKY Token Sale</title>
+    <title>$COLLECT Token Sale</title>
     <style>
         /* Base Styling & Variables (Pixel Theme) */
         :root {
@@ -121,7 +121,7 @@
 
         /* Pixel Button */
         .pixel-button {
-            padding-left: 1.5rem; padding-right: 1.5rem; padding-top: 0.75rem; padding-bottom: 0.75rem;
+            padding-left: 1rem; padding-right: 1rem; padding-top: 0.5rem; padding-bottom: 0.5rem;
             font-weight: 700; font-size: 1rem; /* Adjusted size */
             transition: all 0.2s;
             position: relative;
@@ -182,7 +182,7 @@
 <body>
 
     <div id="loading-indicator" class="loading-state">
-        <div class="pixel-text text-4xl text-white animate-pulse">Loading $LUCKY...</div>
+        <div class="pixel-text text-4xl text-white animate-pulse">Loading $COLLECT...</div>
     </div>
 
     <div id="main-content" style="display: none;">
@@ -192,10 +192,10 @@
             <div class="max-w-7xl mx-auto flex justify-between items-center px-6">
                 <div class="flex items-center gap-3">
                     <div class="logo-box pixel-border">
-                        <img src="logo.png" alt="Lucky Token Logo" style="width: 2rem; height: 2rem;"> 
+                        <img src="logo.png" alt="COLLECT Token Logo" style="width: 2rem; height: 2rem;"> 
                         </div>
                     <div class="pixel-text text-2xl md:text-3xl font-black text-gray-900" id="header-title">
-                        $LUCKY SALE
+                        $COLLECT SALE
                     </div>
                 </div>
                 <button id="connect-wallet-btn" class="pixel-button primary text-sm md:text-base">
@@ -212,7 +212,7 @@
                                 MINT
                             </div>
                             <div class="pixel-text text-4xl md:text-5xl font-black text-amber-600" id="token-symbol-display">
-                                $LUCKY
+                                $COLLECT
                             </div>
                         </div>
 
@@ -234,14 +234,14 @@
 
                         <div class="space-y-3">
                             <div class="text-center pixel-text text-sm md:text-base text-gray-700" id="mint-rate-text">
-                                Rate: 1 USDC = 5,000 $LUCKY
+                                Rate: 1 USDC = 5,000 $COLLECT
                             </div>
                             
                             <div>
                                 <label for="usdc-amount" class="pixel-text text-sm font-bold block mb-1 text-center">Enter USDC Amount (Min 1)</label>
                                 <input type="number" id="usdc-amount" placeholder="USDC Amount" value="1" min="1" class="input-pixel w-full">
                                 <div class="pixel-text text-center text-sm text-gray-600" id="token-receive">
-                                    You Receive: 5,000 $LUCKY
+                                    You Receive: 5,000 $COLLECT
                                 </div>
                             </div>
                             
@@ -279,7 +279,7 @@
 
         <footer class="relative z-10 text-center py-8 mt-20">
             <div class="pixel-text text-gray-900 text-sm" id="footer-text">
-                © 2025 Lucky Token Sale • All rights reserved
+                © 2025 The Genesis Collective • All rights reserved
             </div>
         </footer>
     </div>
@@ -290,8 +290,8 @@
         // --- KONFIGURASI WEB3 ---
         const CHAIN_ID = 8453; // Base Mainnet
         const SALE_CONTRACT_ADDRESS = "0xED143D7C6195fD65C5b0a66F8d2B329E44ffE3D1"; // Ganti ini!
-        const TOKEN_SYMBOL = "LUCKY";
-        const TOKEN_RATE = 5000; // 5000 $LUCKY per 1 USDC
+        const TOKEN_SYMBOL = "COLLECT";
+        const TOKEN_RATE = 5000; // 5000 $COLLECT per 1 USDC
         const BASE_USD_PRICE = 1000000; // 1 USDC (6 desimal)
         const USDC_CONTRACT_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
         const RELAYER_URL = "https://api.us-ai.fun/mint"; // URL Backend Relayer Anda
@@ -602,11 +602,11 @@
         function updateTokenReceiveDisplay() {
             const usdcAmount = parseFloat(usdcAmountInput.value);
             if (isNaN(usdcAmount) || usdcAmount < 1) {
-                tokenReceiveDisplay.textContent = 'You Receive: 0 $LUCKY';
+                tokenReceiveDisplay.textContent = 'You Receive: 0 $COLLECT';
                 return;
             }
             const receivedTokens = usdcAmount * TOKEN_RATE;
-            tokenReceiveDisplay.textContent = `You Receive: ${receivedTokens.toLocaleString()} $LUCKY`;
+            tokenReceiveDisplay.textContent = `You Receive: ${receivedTokens.toLocaleString()} $COLLECT`;
         }
 
         // --- Initial Load & Event Listeners ---
