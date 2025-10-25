@@ -568,63 +568,307 @@
             </div>
         </div>
     </div>
-    <script>
-        // --- Modal Logic ---
-        function openModal(type) {
-            const modalId = type === 'nft' ? 'nft-modal' : 'token-modal';
-            document.getElementById(modalId).style.display = 'flex';
-            updateNFTSummary();
-            updateTokenSummary();
+    <script src="https://cdn.jsdelivr.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+<script>
+    // *******************************************************************
+    // KONFIGURASI WEB3 DAN LOGIKA
+    // *******************************************************************
+
+    const TOKEN_RATE = 5000;         // 1 USDC = 5,000 $COLLECT
+    const NFT_PRICE_USD = 10;        // 1 NFT = 10 USDC
+    const BASE_USD_PRICE = 1000000;  // 1 USDC (dalam 6 desimal USDC)
+    const CHAIN_ID = 8453;           // Base Mainnet
+
+    // --- ALAMAT KONTRAK WAJIB DI GANTI DENGAN ALAMAT FINAL ANDA ---
+    const NFT_SALE_CONTRACT = "0x...GANTI_DENGAN_ALAMAT_KONTRAK_SALE_NFT_ANDA..."; 
+    const TOKEN_SALE_CONTRACT = "0x...GANTI_DENGAN_ALAMAT_KONTRAK_SALE_TOKEN_ANDA..."; 
+    const USDC_CONTRACT_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; 
+    
+    // --- RELAYER / BACKEND ---
+    const RELAYER_BASE_URL = "https://api.us-ai.fun"; // Domain API Anda (sudah HTTPS)
+
+    // --- Variabel Global ---
+    let signer;
+    let provider;
+    let userAddress;
+    
+    // ABI Minimal untuk fungsi read-only dan minting
+    const saleAbi = ["function wallet() view returns (address)"];
+    const mintAbi = ["function mintWithPermit(address _buyer, uint256 quantity, uint256 validAfter, uint256 validBefore, bytes32 nonce, uint8 v, bytes32 r, bytes32 s)"];
+    
+    // Element UI (Dideklarasikan di sini agar bisa diakses global)
+    const connectBtn = document.getElementById('connect-wallet-btn');
+    const walletStatusText = document.getElementById('wallet-status-text');
+    const nftMintBtn = document.getElementById('mint-nft-btn');
+    const tokenMintBtn = document.getElementById('token-mint-button'); // ID di modal
+
+    // *******************************************************************
+    // FUNGSI UTAMA 1: KONEKSI WALLET
+    // *******************************************************************
+
+    async function connectWallet() {
+            errorMessage.textContent = '';
+            statusMessage.textContent = 'Connecting...';
+            gasDisplay.textContent = 'Fetching gas price...';
+
+            if (typeof window.ethereum === 'undefined') {
+                errorMessage.textContent = "Metamask not detected."; return;
+            }
+            try {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                signer = provider.getSigner();
+                userAddress = await signer.getAddress();
+
+                const { chainId } = await provider.getNetwork();
+                if (chainId !== CHAIN_ID) {
+                    errorMessage.textContent = `Please switch to the Base Mainnet.`; return;
+                }
+
+                // Deteksi Harga Gas
+                try {
+                    const feeData = await provider.getFeeData();
+                    const gasPriceInGwei = feeData.gasPrice.div(1000000000);
+                    gasDisplay.textContent = `⚡ Current Network Gas: ${gasPriceInGwei.toString()} Gwei`;
+                } catch (gasError) {
+                    gasDisplay.textContent = 'Could not fetch gas price.';
+                }
+
+                // Ambil alamat wallet owner
+                statusMessage.textContent = 'Fetching sale configuration...';
+                const saleContract = new ethers.Contract(CONTRACT_SALE_MANAGER_ADDRESS, saleManagerABI, provider);
+                ownerWalletAddress = await saleContract.wallet();
+
+                if (!ownerWalletAddress) {
+                     errorMessage.textContent = 'Failed to read owner wallet address from contract.'; return;
+                }
+
+                connectWalletBtn.style.display = 'none';
+                mintTokenBtn.style.display = 'block';
+                mintTokenBtn.disabled = false;
+                statusMessage.textContent = `Wallet Connected: ${userAddress.substring(0, 6)}...`;
+            } catch (error) {
+                console.error("Connection Error:", error);
+                errorMessage.textContent = `Connection aborted or failed to read contract.`;
+            }
         }
 
-        function closeModal(type) {
-            const modalId = type === 'nft' ? 'nft-modal' : 'token-modal';
-            document.getElementById(modalId).style.display = 'none';
-        }
+    // *******************************************************************
+    // FUNGSI DUKUNGAN (PERMIT SIGNING)
+    // *******************************************************************
 
-        // --- Calculation Logic ---
+    async function signPermit(saleContractAddress, usdcValueWei) {
+        // Mendapatkan alamat owner untuk dijadikan target 'to' di Permit
+        const readContract = new ethers.Contract(saleContractAddress, saleAbi, provider);
+        const ownerWalletAddress = await readContract.wallet();
+        
+        if (!ownerWalletAddress) throw new Error("Failed to retrieve owner wallet address from contract.");
+
+        // Buat Payload Permit
+        const nonce = ethers.utils.solidityKeccak256(["uint256", "uint256"], [userAddress, Date.now()]);
+        const message = {
+            from: userAddress,
+            to: ownerWalletAddress, // WAJIB: Alamat Owner
+            value: usdcValueWei,
+            validAfter: 0,
+            validBefore: Math.floor(Date.now() / 1000) + 900, // 15 menit
+            nonce: nonce,
+        };
+
+        // Tandatangani (Pop-up Gratis)
+        const signature = await signer._signTypedData({ name: 'USD Coin', version: '2', chainId: CHAIN_ID, verifyingContract: USDC_CONTRACT_ADDRESS }, 
+            { TransferWithAuthorization: [{ name: 'from', type: 'address' }, { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' }, { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' }] }, 
+            message);
+        
+        const sigParts = ethers.utils.splitSignature(signature);
+        
+        return { message, sigParts };
+    }
+
+    // *******************************************************************
+    // FUNGSI UTAMA 2: MINT NFT (Endpoint: /mint-nft)
+    // *******************************************************************
+
+    async function mintNFT() {
+        if (!signer) return alert("Harap hubungkan dompet terlebih dahulu.");
+        
+        const quantity = document.getElementById('nft-amount').value;
+        if (parseInt(quantity) < 1) return alert("Jumlah NFT minimal 1.");
+        
+        const totalUSDCAmount = parseFloat(quantity) * NFT_PRICE_USD;
+        const valueWei = (totalUSDCAmount * BASE_USD_PRICE).toString();
+        
+        try {
+            const { message, sigParts } = await signPermit(NFT_SALE_CONTRACT, valueWei);
+
+            // Kirim ke Endpoint NFT
+            const response = await fetch(`${RELAYER_URL_BASE}/mint-nft`, { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    buyerAddress: userAddress,
+                    quantity: quantity, 
+                    validAfter: message.validAfter, validBefore: message.validBefore, nonce: message.nonce,
+                    v: sigParts.v, r: sigParts.r, s: sigParts.s
+                })
+            });
+
+            if (!response.ok) {
+                const errorBody = await response.json();
+                throw new Error(errorBody.error || `Server error (Status ${response.status})`);
+            }
+
+            const result = await response.json();
+            
+            if (!result.success) throw new Error(result.error || "Transaksi NFT tidak berhasil.");
+
+            alert(`MINT NFT SUKSES! Tx Hash: ${result.txHash}`);
+
+        } catch (error) {
+            console.error("Mint NFT Gagal:", error);
+            alert(`Transaksi Gagal: ${error.message || "Cek log konsol."}`);
+        }
+    }
+
+    // *******************************************************************
+    // FUNGSI UTAMA 3: BELI TOKEN (Endpoint: /buy-token)
+    // *******************************************************************
+
+    async function mintToken() {
+        if (!signer) return alert("Harap hubungkan dompet terlebih dahulu.");
+        
+        const usdcAmount = document.getElementById('token-amount').value;
+        if (parseFloat(usdcAmount) < 1) return alert("Pembelian minimal 1 USDC.");
+
+        const totalUSDCAmount = parseFloat(usdcAmount); 
+        const valueWei = (totalUSDCAmount * BASE_USD_PRICE).toString();
+        
+        try {
+            const { message, sigParts } = await signPermit(TOKEN_SALE_CONTRACT, valueWei);
+
+            // Kirim ke Endpoint Token
+            const response = await fetch(`${RELAYER_URL_BASE}/buy-token`, { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    buyerAddress: userAddress,
+                    usdcAmount: usdcAmount, 
+                    validAfter: message.validAfter, validBefore: message.validBefore, nonce: message.nonce,
+                    v: sigParts.v, r: sigParts.r, s: sigParts.s
+                })
+            });
+
+            if (!response.ok) {
+                const errorBody = await response.json();
+                throw new Error(errorBody.error || `Server error (Status ${response.status})`);
+            }
+
+            const result = await response.json();
+            
+            if (!result.success) throw new Error(result.error || "Pembelian Token Gagal: Transaksi tidak berhasil.");
+
+            alert(`BELI TOKEN SUKSES! Tx Hash: ${result.txHash}`);
+
+        } catch (error) {
+            console.error("Beli Token Gagal:", error);
+            alert(`Transaksi Gagal: ${error.message || "Cek log konsol."}`);
+        }
+    }
+    
+    // *******************************************************************
+    // FUNGSI UTILITY & EVENT LISTENERS
+    // *******************************************************************
+
+    function updateNFTSummary() {
+        const amount = Number(document.getElementById('nft-amount').value) || 0;
+        const tokens = (amount / 10) * 50000; // Logika yang Anda tentukan
+        document.getElementById('nft-pay-amount').textContent = `${amount} USDC`;
+        document.getElementById('nft-receive-tokens').textContent = tokens.toLocaleString();
+    }
+
+    function updateTokenSummary() {
+        const amount = Number(document.getElementById('token-amount').value) || 0;
+        const tokens = amount * TOKEN_RATE;
+        document.getElementById('token-pay-amount').textContent = `${amount} USDC`;
+        document.getElementById('token-receive-tokens').textContent = tokens.toLocaleString();
+    }
+    
+    window.onload = function() {
+        // Inisialisasi UI
+        updateNFTSummary();
+        updateTokenSummary();
+        
+        // Event Listeners Input
         document.getElementById('nft-amount').addEventListener('input', updateNFTSummary);
         document.getElementById('token-amount').addEventListener('input', updateTokenSummary);
 
-        function updateNFTSummary() {
-            const amount = Number(document.getElementById('nft-amount').value) || 0;
-            const tokens = (amount / 10) * 50000;
-            document.getElementById('nft-pay-amount').textContent = `${amount} USDC`;
-            document.getElementById('nft-receive-tokens').textContent = tokens.toLocaleString();
-        }
-
-        function updateTokenSummary() {
-            const amount = Number(document.getElementById('token-amount').value) || 0;
-            const tokens = amount * 5000;
-            document.getElementById('token-pay-amount').textContent = `${amount} USDC`;
-            document.getElementById('token-receive-tokens').textContent = tokens.toLocaleString();
-        }
-
-        // --- Mock Mint Logic ---
-        function handleMockMint(type) {
-            const walletId = type === 'nft' ? 'nft-wallet' : 'token-wallet';
-            const walletAddress = document.getElementById(walletId).value;
-            
-            if (!walletAddress || !walletAddress.startsWith('0x')) {
-                alert("Please enter a valid mock wallet address (e.g., 0x123...)");
-                return;
-            }
-            
-            const amount = type === 'nft' ? document.getElementById('nft-amount').value : document.getElementById('token-amount').value;
-            const tokens = type === 'nft' ? (amount / 10) * 50000 : amount * 5000;
-            
-            alert(`MINT SUCCESS (MOCK)! Type: ${type.toUpperCase()}, Paid: ${amount} USDC, Received: ${tokens.toLocaleString()} $COLLECT to wallet: ${walletAddress.slice(0, 6)}...`);
-            closeModal(type);
-        }
-
-        document.getElementById('nft-mint-button').addEventListener('click', () => handleMockMint('nft'));
-        document.getElementById('token-mint-button').addEventListener('click', () => handleMockMint('token'));
-
+        // Event Listeners Tombol
+        document.getElementById('connect-wallet-btn').addEventListener('click', connectWallet);
+        document.getElementById('nft-mint-button').addEventListener('click', mintNFT); 
+        document.getElementById('token-mint-button').addEventListener('click', mintToken); 
+        
         // Sidebar Toggle for Mobile
         document.querySelector('.mobile-header button').addEventListener('click', () => {
             document.getElementById('sidebar').classList.toggle('open');
         });
-    </script>
+        
+    };
+
+    // Fungsi placeholder untuk Wallet Connect (Disalin dari jawaban sebelumnya)
+    async function connectWallet() {
+        const gasDisplay = document.getElementById('gas-display');
+        const errorMessage = document.getElementById('error-message');
+        
+        errorMessage.textContent = '';
+        statusMessage.textContent = 'Connecting...';
+        gasDisplay.textContent = 'Fetching gas price...';
+
+        if (typeof window.ethereum === 'undefined') {
+            errorMessage.textContent = 'MetaMask atau dompet EVM tidak terdeteksi.';
+            return;
+        }
+
+        try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            signer = provider.getSigner();
+            userAddress = await signer.getAddress();
+
+            const { chainId } = await provider.getNetwork();
+            if (chainId !== CHAIN_ID) {
+                errorMessage.textContent = 'Harap pindah ke jaringan Base Mainnet.';
+                return;
+            }
+
+            // Deteksi Harga Gas
+            const feeData = await provider.getFeeData();
+            const gasPriceInGwei = feeData.gasPrice.div(1000000000);
+            gasDisplay.textContent = `⚡ Gas: ${gasPriceInGwei.toString()} Gwei (Gas dibayar oleh Server)`;
+
+            // Ambil alamat wallet owner (menggunakan salah satu kontrak sebagai titik awal)
+            const saleContract = new ethers.Contract(TOKEN_SALE_CONTRACT, saleAbi, provider);
+            const ownerWalletAddress = await saleContract.wallet();
+
+            if (!ownerWalletAddress) {
+                 errorMessage.textContent = 'Failed to read owner wallet address from contract.'; 
+                 return;
+            }
+
+            walletStatusText.textContent = `Wallet: ${userAddress.substring(0, 6)}...${userAddress.substring(38)} (Connected)`;
+            walletStatusText.style.color = '#39ff14';
+            connectBtn.textContent = 'Wallet Connected';
+            connectBtn.disabled = true;
+            statusMessage.textContent = `✅ Connected to Base Mainnet. Owner Wallet: ${ownerWalletAddress.substring(0, 6)}...`;
+
+        } catch (error) {
+            console.error("Koneksi Wallet Gagal:", error);
+            errorMessage.textContent = `Connection aborted or failed to read contract.`;
+            walletStatusText.textContent = 'Wallet Disconnected';
+            walletStatusText.style.color = 'var(--color-danger)';
+        }
+    }
+</script>
 
 </body>
 </html>
