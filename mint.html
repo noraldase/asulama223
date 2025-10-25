@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Genesis Collective Mint</title>
-    
+    <title>The Genesis Collective</title>
     <style>
         /* Base CSS - Clean & Professional Style (Cyberpunk/Neon Theme) */
         :root {
-            /* Tailwind Color Palette Mock */
             --gray-950: #0a0a1a;
             --gray-900: #111827;
             --gray-800: #1f2937;
@@ -29,58 +27,134 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: 'Arial', sans-serif;
             background-color: var(--gray-950);
             color: var(--white);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
-
-        .layout-container {
-            display: flex;
-            min-height: 100vh;
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 10%, rgba(0, 255, 255, 0.1), transparent 30%),
+                        radial-gradient(circle at 80% 90%, rgba(255, 0, 255, 0.1), transparent 40%);
+            z-index: -2;
+        }
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, rgba(0, 255, 255, 0.08) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 215, 0, 0.08) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.3;
+            z-index: -1;
+            pointer-events: none;
         }
 
-        /* --- Sidebar & Layout (minimal styles for this page) --- */
-        .sidebar { display: none; } /* Sidebar disembunyikan di sini */
-        .main-content { flex-grow: 1; overflow-y: auto; padding: 2rem 1rem; }
-
-        /* General Container */
         .container {
-            max-width: 1280px;
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: 1rem;
-            padding-right: 1rem;
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            background-color: rgba(28, 28, 79, 0.85);
+            padding: 15px 0;
+            border-bottom: 2px solid var(--gray-800);
+            text-align: center;
+            backdrop-filter: blur(5px);
+            position: sticky;
+            top: 0;
+            z-index: 20;
         }
         
-        /* Hero Text Gradient */
-        .hero-title {
-            font-size: 3rem;
-            background: linear-gradient(to right, var(--purple-400), var(--pink-400), var(--blue-400));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        header h1 {
+            color: var(--cyan-500);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Wallet Status and Connect Button */
+        #wallet-status {
+            font-size: 0.9em;
+            padding: 10px 0;
+            text-align: right;
+        }
+
+        #connect-wallet-btn {
+            background-color: var(--cyan-500);
+            color: var(--gray-900);
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
             font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 0 15px var(--cyan-500);
+        }
+
+        #connect-wallet-btn:hover {
+            background-color: #66FFFF;
+            transform: scale(1.05);
         }
         
-        /* Card Styles */
+        /* Hero Section - Dual Panel Layout */
+        .hero-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 60px 0;
+            text-align: center;
+        }
+
         .card {
-            background-color: rgba(17, 24, 40, 0.7); 
+            background-color: rgba(17, 24, 40, 0.7);
+            padding: 30px;
+            border-radius: 12px;
+            flex: 1;
+            min-width: 300px;
             border: 1px solid var(--gray-800);
-            border-radius: 0.75rem;
-            backdrop-filter: blur(4px);
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.1);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
         }
         
-        /* Button Styles */
+        .logo-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px; 
+            margin-bottom: 1rem;
+        }
+
+        .logo-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 0.5rem; 
+        }
+
+        .card h2 {
+            color: var(--yellow-400);
+            margin-top: 0;
+            text-shadow: 0 0 5px rgba(250, 204, 21, 0.7);
+        }
+        
         .btn {
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
             font-weight: bold;
-            text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             text-transform: uppercase;
@@ -116,87 +190,92 @@
             padding: 1rem 0;
             border-top: 1px dashed var(--gray-800);
             margin-top: 1rem;
-        }
-
-        #error-message {
-            color: var(--red-400);
-            font-weight: bold;
+            text-align: center;
         }
         
-        /* Layout Helpers */
-        .grid-lg-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
-        @media (max-width: 768px) { .grid-lg-2 { grid-template-columns: 1fr; } }
-
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .hero-section { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
+    
+    <div class="background-overlay"></div> 
+    
+    <header>
+        <div class="container">
+            <div id="wallet-status">
+                <span id="wallet-status-text" style="color: var(--red-400);">Wallet Disconnected</span>
+                <button id="connect-wallet-btn" >Connect Wallet (EVM)</button>
+            </div>
+            <h1>THE GENESIS COLLECTIVE</h1>
+            <p>Exclusive ownership & mass utility. Fully Tracked on X402Scan.</p>
+        </div>
+    </header>
 
-    <div class="layout-container">
-        <main class="main-content">
-            <div class="container mx-auto py-12">
+    <div class="container">
+        <section class="hero-section">
+            
+            <div class="card nft-card">
                 
-                <h1 class="hero-title text-center mb-8">
-                    THE GENESIS COLLECTIVE MINT
-                </h1>
+                <div class="logo-box">
+                    <img src="images/logo-nft.png" alt="NFT Logo" class="logo-img">
+                </div>
                 
-                <div class="max-w-4xl mx-auto">
-                    <div class="flex justify-between items-center mb-6 p-4 card">
-                        <div class="flex items-center gap-4">
-                            <span class="text-gray-400">Status Wallet:</span>
-                            <span id="wallet-status-text" style="color: var(--red-400);">Disconnected</span>
-                        </div>
-                        <button id="connect-wallet-btn" class="btn btn-purple-pink">Connect Wallet</button>
-                    </div>
-
-                    <div class="grid grid-lg-2 gap-6">
-                        
-                        <div class="card p-6 space-y-6">
-                            <h2 class="text-2xl font-bold text-white mb-2" style="color: var(--purple-400);">🖼️ GENESIS NFT ($GEN)</h2>
-                            <p class="text-gray-400">Mint 1 NFT (Limit 10,000 supply).</p>
-                            
-                            <div class="bg-gray-800/50 rounded-lg p-4">
-                                <p class="text-sm text-gray-400 mb-1">Price per NFT:</p>
-                                <p class="text-xl font-bold text-white">10 USDC</p>
-                            </div>
-
-                            <div class="space-y-4">
-                                <input type="number" id="nft-quantity" placeholder="Quantity (1-10)" value="1" min="1" max="10" class="input-text w-full text-center">
-                                <p class="text-xs text-gray-400 text-center" id="nft-total-cost">Total Cost: 10 USDC</p>
-                                <button id="nft-mint-button" class="btn btn-purple-pink w-full text-lg" disabled>
-                                    Mint NFT Now
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="card p-6 space-y-6">
-                            <h2 class="text-2xl font-bold text-white mb-2" style="color: var(--blue-400);">🪙 $COLLECT Token</h2>
-                            <p class="text-gray-400">Buy $COLLECT (1 USDC = 5,000 $COLLECT).</p>
-                            
-                            <div class="bg-gray-800/50 rounded-lg p-4">
-                                <p class="text-sm text-gray-400 mb-1">Total Supply:</p>
-                                <p class="text-xl font-bold text-white">1,000,000,000</p>
-                            </div>
-
-                            <div class="space-y-4">
-                                <input type="number" id="token-amount" placeholder="USDC to Spend (Min 1)" value="10" min="1" class="input-text w-full text-center">
-                                <p class="text-xs text-gray-400 text-center" id="token-receive-display">Receive: 50,000 $COLLECT</p>
-                                <button id="token-mint-button" class="btn btn-blue-cyan w-full text-lg" disabled>
-                                    Buy Tokens
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="status-and-error">
-                        <div id="gas-display" class="text-sm mt-4 text-gray-400">Gas Status: Connecting...</div> 
-                        <div id="status-message" class="text-green-400 font-bold mt-2"></div>
-                        <div id="error-message" class="text-red-400 font-bold mt-1"></div>
-                    </div>
-
+                <h2 class="text-2xl font-bold text-center text-white" style="color: var(--purple-400);">GENESIS NFT ACCESS ($GEN)</h2>
+                <p class="text-gray-400 text-center">Limited Supply: **10,000 NFT**</p>
+                
+                <p style="font-size: 1.4em; color: var(--yellow-400);">
+                    **1 NFT = 10,000 $COLLECT Claim**
+                </p>
+                
+                <div class="space-y-4">
+                    <input type="number" id="nft-quantity" placeholder="Quantity (1-10)" value="1" min="1" max="10" class="input-text w-full text-center">
+                    <p class="text-xs text-gray-400 text-center" id="nft-total-cost">Total Cost: 10 USDC</p>
+                    <button id="nft-mint-button" class="btn btn-purple-pink w-full text-lg" disabled>
+                        Mint NFT Now
+                    </button>
                 </div>
             </div>
-        </main>
+
+            <div class="card token-card">
+                
+                <div class="logo-box">
+                    <img src="images/logo-token.png" alt="Token Logo" class="logo-img">
+                </div>
+
+                <h2 class="text-2xl font-bold text-center text-white" style="color: var(--blue-400);">COLLECTIVE UTILITY TOKEN ($COLLECT)</h2>
+                <p class="text-gray-400 text-center">Total Supply: **1,000,000,000 (1B)**</p>
+                
+                <p style="font-size: 1.4em; color: var(--cyan-500);">
+                    **RATE:** 1 USDC = 5,000 $COLLECT
+                </p>
+
+                <div class="space-y-4">
+                    <input type="number" id="token-amount" placeholder="USDC to Spend (Min 1)" value="10" min="1" class="input-text w-full text-center">
+                    <p class="text-xs text-gray-400 text-center" id="token-receive-display">Receive: 50,000 $COLLECT</p>
+                    <button id="token-mint-button" class="btn btn-blue-cyan w-full text-lg" disabled>
+                        Buy Tokens
+                    </button>
+                </div>
+            </div>
+            
+        </section>
+        
+        <div id="status-and-error">
+            <div id="gas-display" class="text-sm mt-4 text-gray-400">Gas Status: Connecting...</div> 
+            <div id="status-message" class="text-green-400 font-bold mt-2"></div>
+            <div id="error-message" class="text-red-400 font-bold mt-1"></div>
+        </div>
+        
     </div>
+
+    <footer>
+        <p style="text-align: center; padding: 10px 0;">
+            Contract Transparency Verification: <a href="https://basescan.org" target="_blank">BaseScan Explorer</a>
+        </p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 
@@ -205,18 +284,17 @@
         // KONFIGURASI WEB3 DAN LOGIKA
         // *******************************************************************
 
-        const TOKEN_RATE = 5000;         // 1 USDC = 5,000 $COLLECT
-        const NFT_PRICE_USD = 10;        // 1 NFT = 10 USDC
-        const BASE_USD_PRICE = 1000000;  // 1 USDC (dalam 6 desimal USDC)
-        const CHAIN_ID = 8453;           // Base Mainnet
+        const TOKEN_RATE = 5000;         
+        const NFT_PRICE_USD = 10;        
+        const BASE_USD_PRICE = 1000000;  
+        const CHAIN_ID = 8453;           
 
         // --- ALAMAT KONTRAK WAJIB DI GANTI ---
-        const NFT_SALE_CONTRACT = "0xFC80912AA27E5B7798A159B516196589cf70815B"; 
-        const TOKEN_SALE_CONTRACT = "0xED143D7C6195fD65C5b0a66F8d2B329E44ffE3D1"; 
+        const NFT_SALE_CONTRACT = "0x...GANTI_DENGAN_ALAMAT_KONTRAK_SALE_NFT_ANDA..."; 
+        const TOKEN_SALE_CONTRACT = "0x...GANTI_DENGAN_ALAMAT_KONTRAK_SALE_TOKEN_ANDA..."; 
         const USDC_CONTRACT_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; 
         
         // --- RELAYER / BACKEND ---
-        // Ganti dengan domain API yang sudah terkonfigurasi Nginx/HTTPS
         const RELAYER_URL_BASE = "https://api.us-ai.fun"; 
 
         // --- Variabel Global ---
@@ -273,7 +351,7 @@
                 gasDisplay.textContent = `⚡ Gas: ${gasPriceInGwei.toString()} Gwei (Gas dibayar oleh Server)`;
 
 
-                // Ambil alamat wallet owner (Menggunakan salah satu kontrak untuk read-only)
+                // Ambil alamat wallet owner (Menggunakan salah satu kontrak sebagai titik awal)
                 const saleContract = new ethers.Contract(TOKEN_SALE_CONTRACT, saleAbi, provider);
                 const ownerWalletAddress = await saleContract.wallet();
 
@@ -292,7 +370,7 @@
                 statusMessage.textContent = `✅ Connected to Base Mainnet. Owner Wallet: ${ownerWalletAddress.substring(0, 6)}...`;
 
             } catch (error) {
-                console.error("Koneksi Wallet Gagal:", error);
+                console.error("Connection Error:", error);
                 errorMessage.textContent = `Connection aborted or failed to read contract.`;
                 walletStatusText.textContent = 'Wallet Disconnected';
                 walletStatusText.style.color = 'var(--color-danger)';
@@ -320,7 +398,7 @@
 
         async function signPermit(saleContractAddress, usdcValueWei) {
             const readContract = new ethers.Contract(saleContractAddress, saleAbi, provider);
-            const ownerWalletAddress = await readContract.wallet(); // Ambil owner lagi (diperlukan untuk signature)
+            const ownerWalletAddress = await readContract.wallet();
             
             if (!ownerWalletAddress) throw new Error("Owner wallet address not found.");
 
@@ -453,8 +531,9 @@
             nftMintBtn.addEventListener('click', mintNFT); 
             tokenMintBtn.addEventListener('click', mintToken); 
             
-            // Memastikan nilai awal diatur untuk token amount
+            // Memastikan nilai awal diatur untuk input
             if (tokenAmountInput.value === "") tokenAmountInput.value = 10;
+            if (nftQuantityInput.value === "") nftQuantityInput.value = 1;
         };
     </script>
 
