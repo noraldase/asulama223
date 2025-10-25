@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$COLLECT Analytics Dashboard</title>
+    
+    <style>
+        :root {
+            /* Tailwind Color Palette Mock */
+            --gray-950: #0a0a1a;
+            --gray-900: #111827;
+            --gray-800: #1f2937;
+            --gray-700: #374151;
+            --gray-500: #6b7280;
+            --gray-400: #9ca3af;
+            --white: #ffffff;
+            --purple-500: #a855f7;
+            --purple-400: #c084fc;
+            --pink-500: #ec4899;
+            --pink-400: #f472b6;
+            --blue-500: #3b82f6;
+            --blue-400: #60a5fa;
+            --cyan-500: #06b6d4;
+            --green-400: #4ade80;
+            --yellow-400: #facc15;
+            --red-400: #f87171;
+            --green-500: #22c55e;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--gray-950);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* --- Sidebar & Layout --- */
+        .sidebar {
+            width: 250px;
+            background-color: var(--gray-950);
+            border-right: 1px solid var(--gray-800);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 50;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            background-color: var(--gray-950);
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .logo-icon-box {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(to bottom right, var(--purple-500), var(--pink-500), var(--blue-500));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .sidebar-content {
+            padding: 0.5rem;
+            flex-grow: 1;
+        }
+
+        .sidebar-group-label {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.5rem 0.5rem;
+            font-weight: 500;
+        }
+
+        .menu-item-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.5rem 0.75rem;
+            text-decoration: none;
+            color: var(--gray-400);
+            border-radius: 8px;
+            margin-bottom: 4px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .menu-item-link:hover {
+            background-color: var(--gray-800);
+            color: var(--purple-400);
+        }
+
+        .menu-item-link.active {
+            background-color: var(--gray-800);
+            color: var(--purple-400);
+        }
+
+        /* Stats & Footer */
+        .sidebar-footer {
+            border-top: 1px solid var(--gray-800);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stat-card-footer {
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .nft-card-footer {
+            background-color: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .token-card-footer {
+            background-color: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        /* Dashboard Content Specific Styles */
+        .container-dash {
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1rem;
+        }
+        
+        .space-y-8 > * + * { margin-top: 2rem; }
+        
+        .card {
+            background-color: rgba(17, 24, 40, 0.5); /* gray-900/50 */
+            border: 1px solid var(--gray-800);
+            border-radius: 0.5rem;
+            backdrop-filter: blur(4px);
+        }
+        
+        .card-header {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-400);
+        }
+
+        .card-content {
+            padding: 1rem;
+        }
+        
+        .text-3xl { font-size: 1.875rem; }
+        .text-xs { font-size: 0.75rem; }
+
+        /* Table Styles */
+        .table-container { overflow-x: auto; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table-header th { text-align: left; padding: 0.75rem; color: var(--gray-400); font-weight: 500; border-bottom: 1px solid var(--gray-800); }
+        .table-row { border-bottom: 1px solid var(--gray-800); transition: background-color 0.2s; }
+        .table-row:hover { background-color: rgba(31, 41, 55, 0.5); /* gray-800/50 */ }
+        .table-cell { padding: 0.75rem; color: var(--gray-300); }
+        
+        /* Badge Styles */
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .badge-purple { background-color: rgba(168, 85, 247, 0.2); color: var(--purple-400); border: 1px solid rgba(168, 85, 247, 0.2); }
+        .badge-blue { background-color: rgba(59, 130, 246, 0.2); color: var(--blue-400); border: 1px solid rgba(59, 130, 246, 0.2); }
+        .badge-green { background-color: rgba(34, 197, 94, 0.2); color: var(--green-400); border: 1px solid rgba(34, 197, 94, 0.2); }
+        .badge-yellow { background-color: rgba(250, 204, 21, 0.2); color: var(--yellow-400); border: 1px solid rgba(250, 204, 21, 0.2); }
+
+        /* General Utility */
+        .grid-cols-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .grid-lg-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .gap-6 { gap: 1.5rem; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .p-8 { padding: 2rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mt-1 { margin-top: 0.25rem; }
+        .font-bold { font-weight: bold; }
+        
+        /* --- Media Queries --- */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); position: fixed; height: 100%; }
+            .mobile-header { 
+                display: flex; 
+                align-items: center; 
+                gap: 1rem; 
+                padding: 1rem 1.5rem; 
+                border-bottom: 1px solid var(--gray-800);
+            }
+            .grid-cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .grid-lg-2 { grid-template-columns: 1fr; }
+        }
+        
+        @media (min-width: 768px) {
+            .mobile-header { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout-container">
+        <div class="sidebar" id="sidebar">
+            
+            <div class="sidebar-header">
+                <div class="flex items-center gap-2">
+                    <div class="logo-icon-box">💰</div>
+                    <div>
+                        <h2 class="font-bold text-white text-lg" style="margin: 0;">$COLLECT</h2>
+                        <p class="text-xs text-gray-400" style="margin: 0;">NFT Mint Platform</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <div>
+                    <h3 class="sidebar-group-label">Menu</h3>
+                    <a href="mint.html" class="menu-item-link">
+                        <span style="width: 16px; height: 16px;">💰</span>
+                        <span class="font-medium">Mint</span>
+                    </a>
+                    <a href="dashboard.html" class="menu-item-link active">
+                        <span style="width: 16px; height: 16px;">📈</span>
+                        <span class="font-medium">Dashboard</span>
+                    </a>
+                </div>
+
+                <div style="padding: 12px 8px;">
+                    <h3 class="sidebar-group-label">Stats</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2 text-sm">
+                            <span style="color: var(--purple-400);">💼</span>
+                            <span class="text-gray-400">NFTs Minted</span>
+                            <span class="font-semibold text-white" style="margin-left: auto;">500 / 10,000</span>
+                        </div>
+                        <div class="bg-gray-800 h-2 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500" style="width: 5%;"></div>
+                        </div>
+                        <div class="pt-2 border-t border-gray-800">
+                            <div class="flex items-center gap-2 text-sm">
+                                <span style="color: var(--blue-400);">🪙</span>
+                                <span class="text-gray-400">Total Tokens</span>
+                            </div>
+                            <p class="text-lg font-bold text-blue-400 mt-1">2.50M</p>
+                            <p class="text-xs text-gray-500">$COLLECT minted</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="stat-card-footer nft-card-footer">
+                    <p class="text-xs text-gray-300 font-medium mb-1">NFT Mint</p>
+                    <p class="text-sm text-white font-bold">10 USDC = 50K $COLLECT</p>
+                </div>
+                <div class="stat-card-footer token-card-footer">
+                    <p class="text-xs text-gray-300 font-medium mb-1">Token Mint</p>
+                    <p class="text-sm text-white font-bold">1 USDC = 5K $COLLECT</p>
+                </div>
+            </div>
+        </div>
+        <main class="main-content">
+            <header class="mobile-header">
+                <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-white">☰</button>
+                <h1 class="text-xl font-semibold text-white">$COLLECT</h1>
+            </header>
+
+            <div class="container-dash p-8">
+                <div class="space-y-8">
+                    <div>
+                        <h1 class="text-3xl font-bold text-white mb-2">Analytics Dashboard</h1>
+                        <p class="text-gray-400">Track your NFT mint performance and token distribution</p>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="card-title">NFTs Minted</span>
+                                <span style="color: var(--purple-400);">🖼️</span>
+                            </div>
+                            <div class="card-content">
+                                <div class="text-3xl font-bold text-white">500</div>
+                                <p class="text-xs text-gray-500 mt-1">of 10,000 NFTs</p>
+                                <div class="mt-2 h-2 bg-gray-800 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500" style="width: 5%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="card-title">Total Revenue</span>
+                                <span style="color: var(--green-400);">💵</span>
+                            </div>
+                            <div class="card-content">
+                                <div class="text-3xl font-bold text-white">$12,500</div>
+                                <p class="text-xs text-gray-500 mt-1">in USDC</p>
+                                <div class="flex gap-2 mt-2 text-xs">
+                                    <span class="text-purple-400">NFT: $5,000</span>
+                                    <span class="text-blue-400">Token: $7,500</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="card-title">Tokens Distributed</span>
+                                <span style="color: var(--blue-400);">🪙</span>
+                            </div>
+                            <div class="card-content">
+                                <div class="text-3xl font-bold text-white">2.50M</div>
+                                <p class="text-xs text-gray-500 mt-1">$COLLECT tokens</p>
+                                <div class="mt-2 h-2 bg-gray-800 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-blue-500 to-cyan-500" style="width: 0.25%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="card-title">Unique Wallets</span>
+                                <span style="color: var(--pink-400);">👥</span>
+                            </div>
+                            <div class="card-content">
+                                <div class="text-3xl font-bold text-white">105</div>
+                                <p class="text-xs text-gray-500 mt-1">participants</p>
+                                <p class="text-xs text-gray-400 mt-2">150 total transactions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-lg-2 gap-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="text-white font-bold">Mint Activity</span>
+                            </div>
+                            <div class="card-content">
+                                <div style="height: 320px; background-color: var(--gray-800); display: flex; align-items: center; justify-content: center; color: var(--gray-500); border-radius: 0.25rem;">
+                                    [Area Chart Placeholder]
+                                    <p class="text-xs">NFT Mints (Purple) vs Token Mints (Blue)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="text-white font-bold">Mint Type Distribution</span>
+                            </div>
+                            <div class="card-content">
+                                <div style="height: 320px; background-color: var(--gray-800); display: flex; align-items: center; justify-content: center; color: var(--gray-500); border-radius: 0.25rem;">
+                                    [Pie Chart Placeholder]
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 mt-4">
+                                    <div class="badge-purple p-3 text-center rounded-lg">
+                                        <p class="text-2xl font-bold text-white">50</p>
+                                        <p class="text-xs text-gray-400">NFT Mints</p>
+                                    </div>
+                                    <div class="badge-blue p-3 text-center rounded-lg">
+                                        <p class="text-2xl font-bold text-white">100</p>
+                                        <p class="text-xs text-gray-400">Token Mints</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="text-white font-bold">Recent Transactions</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead class="table-header">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Wallet</th>
+                                            <th>Amount (USDC)</th>
+                                            <th>Tokens Received</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="table-row">
+                                            <td class="table-cell"><span class="badge badge-purple">🖼️ NFT</span></td>
+                                            <td class="table-cell font-mono text-sm">0xabc...d4</td>
+                                            <td class="table-cell text-white font-medium">$10</td>
+                                            <td class="table-cell text-blue-400">50,000</td>
+                                            <td class="table-cell"><span class="badge badge-green">completed</span></td>
+                                            <td class="table-cell text-gray-400">Oct 25, 14:30</td>
+                                        </tr>
+                                        <tr class="table-row">
+                                            <td class="table-cell"><span class="badge badge-blue">🪙 Token</span></td>
+                                            <td class="table-cell font-mono text-sm">0xdef...e5</td>
+                                            <td class="table-cell text-white font-medium">$50</td>
+                                            <td class="table-cell text-blue-400">250,000</td>
+                                            <td class="table-cell"><span class="badge badge-yellow">pending</span></td>
+                                            <td class="table-cell text-gray-400">Oct 25, 14:00</td>
+                                        </tr>
+                                        <tr class="table-row">
+                                            <td class="table-cell"><span class="badge badge-purple">🖼️ NFT</span></td>
+                                            <td class="table-cell font-mono text-sm">0x123...f6</td>
+                                            <td class="table-cell text-white font-medium">$20</td>
+                                            <td class="table-cell text-blue-400">100,000</td>
+                                            <td class="table-cell"><span class="badge badge-green">completed</span></td>
+                                            <td class="table-cell text-gray-400">Oct 24, 11:15</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sidebar Toggle for Mobile (Sama dengan mint.html)
+        document.querySelector('.mobile-header button').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+    </script>
+</body>
+</html>
