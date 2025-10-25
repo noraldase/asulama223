@@ -7,8 +7,9 @@
     <style>
         /* Base Styling & Variables (Pixel Theme) */
         :root {
+             /* Colors adjusted slightly for better contrast */
             --color-amber-400: #fbbf24;
-            --color-yellow-500: #eab308;
+            --color-yellow-500: #f59e0b; /* Darker yellow */
             --color-amber-600: #d97706;
             --color-green-500: #22c55e;
             --color-emerald-600: #059669;
@@ -24,7 +25,7 @@
         }
 
         body {
-            font-family: 'Courier New', monospace; 
+            font-family: 'Courier New', monospace; /* Pixel font */
             margin: 0;
             padding: 0;
             background-color: var(--color-yellow-500); 
@@ -38,12 +39,12 @@
         /* Pixel Text & Border */
         .pixel-text {
             font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
+            letter-spacing: 1px; /* Slightly reduced for readability */
             text-transform: uppercase;
         }
         .pixel-border {
             border: 4px solid #000;
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.3), -2px -2px 0 rgba(255,255,255,0.1);
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.2), -2px -2px 0 rgba(255,255,255,0.05); /* Softer shadow */
         }
         .pixel-box {
             border: 2px solid rgba(0,0,0,0.1);
@@ -63,10 +64,12 @@
         .gap-3 { gap: 0.75rem; }
         .gap-12 { gap: 3rem; }
         .grid { display: grid; }
+        .space-y-3 > * + * { margin-top: 0.75rem; }
         .space-y-6 > * + * { margin-top: 1.5rem; }
         .space-y-8 > * + * { margin-top: 2rem; }
         .mt-20 { margin-top: 5rem; }
         .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
         .w-full { width: 100%; }
         .text-center { text-align: center; }
         .text-white { color: var(--color-white); }
@@ -76,12 +79,12 @@
         .text-amber-500 { color: var(--color-yellow-500); }
         .text-amber-600 { color: var(--color-amber-600); }
         .text-green-600 { color: var(--color-emerald-600); }
+        .text-xs { font-size: 0.75rem; }
         .text-sm { font-size: 0.875rem; }
         .text-xl { font-size: 1.25rem; }
         .text-2xl { font-size: 1.5rem; }
         .text-3xl { font-size: 1.875rem; }
         .text-4xl { font-size: 2.25rem; }
-        .text-5xl { font-size: 3rem; }
         .md\:text-base { font-size: 1rem; }
         .md\:text-5xl { font-size: 3rem; }
         .font-black { font-weight: 900; }
@@ -100,43 +103,66 @@
         .pixel-pattern {
             position: absolute;
             inset: 0;
-            opacity: 0.1;
+            opacity: 0.05; /* Made it more subtle */
             background-image: 
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px),
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px);
+            z-index: -1;
         }
 
         /* Header Specific */
-        header { padding: 1.5rem; position: relative; z-index: 10; }
-        .logo-box { width: 3rem; height: 3rem; background-color: var(--color-green-500); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; }
-        .logo-icon { width: 2rem; height: 2rem; color: var(--color-white); }
+        header { padding: 1rem 1.5rem; position: sticky; top: 0; background: rgba(217, 119, 6, 0.8); backdrop-filter: blur(5px); z-index: 20; border-bottom: 4px solid black;}
+        .logo-box { width: 2.5rem; height: 2.5rem; background-color: var(--color-green-500); border-radius: 0.25rem; display: flex; align-items: center; justify-content: center; }
+        .logo-icon { width: 1.5rem; height: 1.5rem; color: var(--color-white); }
 
         /* Pixel Card */
-        .pixel-card { background-color: var(--color-white); padding: 2rem; }
-        @media (min-width: 768px) { .pixel-card { padding: 3rem; } }
+        .pixel-card { background-color: var(--color-white); padding: 1.5rem; }
+        @media (min-width: 768px) { .pixel-card { padding: 2rem; } }
 
         /* Pixel Button */
         .pixel-button {
-            padding-left: 2rem; padding-right: 2rem; padding-top: 1rem; padding-bottom: 1rem;
-            font-weight: 900; font-size: 1.125rem; 
+            padding-left: 1.5rem; padding-right: 1.5rem; padding-top: 0.75rem; padding-bottom: 0.75rem;
+            font-weight: 700; font-size: 1rem; /* Adjusted size */
             transition: all 0.2s;
             position: relative;
             cursor: pointer;
             border: 4px solid #000; 
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.3), -2px -2px 0 rgba(255,255,255,0.1);
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
         }
-        .pixel-button.primary { background-color: var(--color-yellow-500); color: var(--color-gray-900); }
-        .pixel-button.primary:hover { background-color: var(--color-amber-400); transform: scale(1.05); }
-        .pixel-button.secondary { background-color: var(--color-gray-900); color: var(--color-yellow-500); }
-        .pixel-button.secondary:hover { background-color: var(--color-gray-800); transform: scale(1.05); }
-        .pixel-button:active { transform: scale(0.95); }
-        .pixel-button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pixel-button.primary { background-color: var(--color-amber-500); color: var(--color-gray-900); }
+        .pixel-button.primary:hover { background-color: var(--color-amber-400); transform: scale(1.02); }
+        .pixel-button.secondary { background-color: var(--color-gray-900); color: var(--color-amber-500); }
+        .pixel-button.secondary:hover { background-color: var(--color-gray-800); transform: scale(1.02); }
+        .pixel-button:active { transform: scale(0.98); box-shadow: 3px 3px 0 rgba(0,0,0,0.2);}
+        .pixel-button:disabled { background-color: var(--color-gray-600); border-color: var(--color-gray-700); color: var(--color-gray-800); box-shadow: 3px 3px 0 rgba(0,0,0,0.2); opacity: 0.7; cursor: not-allowed; }
         .inline-block { display: inline-block; vertical-align: middle; }
         .mr-2 { margin-right: 0.5rem; }
 
+        /* Input Fields */
+        .input-pixel {
+             padding: 0.75rem 1rem;
+             border: 4px solid black;
+             background-color: var(--color-white);
+             color: var(--color-gray-900);
+             text-align: center;
+             font-size: 1.1em;
+             width: calc(100% - 8px - 2rem); /* Full width minus border/padding */
+             box-shadow: inset 2px 2px 0 rgba(0,0,0,0.1);
+             margin-bottom: 1rem;
+        }
+         .input-pixel:focus {
+             outline: none;
+             box-shadow: inset 2px 2px 0 rgba(0,0,0,0.1), 0 0 0 2px var(--color-blue-500);
+         }
+         .input-pixel[readonly] {
+             background-color: var(--color-gray-200);
+             color: var(--color-gray-600);
+             cursor: default;
+         }
+
         /* Progress Circle */
-        .progress-circle-container { position: relative; }
-        .progress-circle-svg { transform: rotate(-90deg); }
+        .progress-circle-container { position: relative; width: 200px; height: 200px; margin: 1rem auto; } /* Smaller */
+        .progress-circle-svg { transform: rotate(-90deg); width: 100%; height: 100%;}
         .progress-circle-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
         /* Loading State */
@@ -144,13 +170,19 @@
             min-height: 100vh; display: flex; align-items: center; justify-content: center;
             background-image: linear-gradient(to bottom right, var(--color-amber-400), var(--color-yellow-500), var(--color-amber-600));
         }
+
+        /* Status & Error */
+        #status-and-error { text-align: center; margin-top: 1.5rem; min-height: 40px;}
+        #gas-display { color: var(--color-gray-800); font-size: 0.8em; } 
+        #status-message { color: var(--color-emerald-600); font-weight: bold; margin-top: 0.5rem; }
+        #error-message { color: var(--color-red-500); font-weight: bold; margin-top: 0.5rem; }
         
     </style>
 </head>
 <body>
 
     <div id="loading-indicator" class="loading-state">
-        <div class="pixel-text text-4xl text-white animate-pulse">Loading...</div>
+        <div class="pixel-text text-4xl text-white animate-pulse">Loading $LUCKY...</div>
     </div>
 
     <div id="main-content" style="display: none;">
@@ -174,40 +206,25 @@
         </header>
 
         <main class="relative z-10 max-w-7xl mx-auto px-6 py-12 md:py-20">
-            <div class="grid grid-cols-1 gap-12 lg:gap-20 items-center"> <div class="flex justify-center">
-                    <div class="relative">
-                        <div class="w-64 h-64 md:w-80 md:h-80 bg-gray-900 pixel-border relative overflow-hidden group hover:scale-105 transition-transform duration-300">
-                            <div class="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-600 opacity-20"></div>
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <svg class="w-32 h-32 text-amber-500 animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 11-2 0V6H3a1 1 0 110-2h1V3a1 1 0 011-1zm1 14a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1H6a1 1 0 110-2h1v-1a1 1 0 011-1zm6-11a1 1 0 010-2h1V3a1 1 0 112 0v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0V6h-1zm3 11a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 112 0v1h1a1 1 0 110 2h-1v1z" clip-rule="evenodd" /></svg>
-                            </div>
-                            <div class="absolute bottom-4 left-0 right-0 text-center">
-                                <div class="pixel-text text-white text-xl font-black">MINT NOW!</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-6">
-                    <div class="pixel-card space-y-8">
-                        <div class="text-center">
+            <div class="grid grid-cols-1 gap-12 lg:gap-20 items-center"> <div class="space-y-6">
+                    <div class="pixel-card pixel-border space-y-8"> <div class="text-center">
                             <div class="pixel-text text-3xl md:text-5xl font-black text-gray-900 mb-2">
                                 MINT
                             </div>
-                            <div class="pixel-text text-4xl md:text-6xl font-black text-amber-600" id="token-symbol-display">
+                            <div class="pixel-text text-4xl md:text-5xl font-black text-amber-600" id="token-symbol-display">
                                 $LUCKY
                             </div>
                         </div>
 
                         <div class="flex justify-center">
-                            <div class="progress-circle-container" style="width: 280px; height: 280px;">
-                                <svg width="280" height="280" class="progress-circle-svg">
-                                    <circle cx="140" cy="140" r="130" fill="none" stroke="var(--color-gray-200)" stroke-width="20" />
-                                    <circle id="progress-circle-fg" cx="140" cy="140" r="130" fill="none" stroke="var(--color-yellow-500)" stroke-width="20" stroke-dasharray="816.8" stroke-dashoffset="816.8" stroke-linecap="round" class="transition-all duration-1000 ease-out" />
+                            <div class="progress-circle-container">
+                                <svg width="200" height="200" class="progress-circle-svg">
+                                    <circle cx="100" cy="100" r="90" fill="none" stroke="var(--color-gray-200)" stroke-width="20" />
+                                    <circle id="progress-circle-fg" cx="100" cy="100" r="90" fill="none" stroke="var(--color-yellow-500)" stroke-width="20" stroke-dasharray="565.5" stroke-dashoffset="565.5" stroke-linecap="round" class="transition-all duration-1000 ease-out" />
                                 </svg>
                                 <div class="progress-circle-text">
-                                    <div class="text-gray-500 text-sm md:text-base font-bold mb-1 pixel-text" id="remaining-text">REMAINING</div>
-                                    <div class="text-2xl md:text-4xl font-black pixel-text">
+                                    <div class="text-gray-500 text-xs md:text-sm font-bold mb-1 pixel-text" id="remaining-text">REMAINING</div>
+                                    <div class="text-xl md:text-2xl font-black pixel-text">
                                         <span class="text-amber-500" id="progress-minted">0</span>
                                         <span class="text-gray-800" id="progress-total">/ 1</span>
                                     </div>
@@ -217,27 +234,39 @@
 
                         <div class="space-y-3">
                             <div class="text-center pixel-text text-sm md:text-base text-gray-700" id="mint-rate-text">
-                                Mint rate: Every $10 = 50,000 $LUCKY
+                                Rate: 1 USDC = 5,000 $LUCKY
                             </div>
                             
-                            <button id="mint-button" class="pixel-button primary w-full flex items-center justify-center gap-2">
+                            <div>
+                                <label for="usdc-amount" class="pixel-text text-sm font-bold block mb-1 text-center">Enter USDC Amount (Min 1)</label>
+                                <input type="number" id="usdc-amount" placeholder="USDC Amount" value="1" min="1" class="input-pixel w-full">
+                                <div class="pixel-text text-center text-sm text-gray-600" id="token-receive">
+                                    You Receive: 5,000 $LUCKY
+                                </div>
+                            </div>
+                            
+                            <button id="mint-button" class="pixel-button primary w-full flex items-center justify-center gap-2" disabled>
                                 <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.5-4.5H11v-3h2v3h1.5v-5H11v-3H9.5v3h-2v5zm4.5-9.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5z"/></svg>
                                 MINT NOW
                             </button>
                         </div>
                     </div>
 
+                    <div id="status-and-error" class="pixel-card pixel-border" style="min-height: 60px;">
+                        <div id="gas-display" class="pixel-text text-xs text-center text-gray-600"></div> 
+                        <div id="status-message" class="pixel-text text-sm text-center text-green-600 font-bold mt-2"></div>
+                        <div id="error-message" class="pixel-text text-sm text-center text-red-500 font-bold mt-1"></div>
+                    </div>
+
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="pixel-card text-center">
-                            <div class="pixel-text text-gray-600 text-xs md:text-sm mb-2">MINTED</div>
+                        <div class="pixel-card pixel-border text-center"> <div class="pixel-text text-gray-600 text-xs md:text-sm mb-2">MINTED</div>
                             <div class="pixel-text text-xl md:text-2xl font-black text-gray-900" id="stat-minted">
                                 0
                             </div>
                             <div class="pixel-text text-xs text-amber-600" id="stat-percentage">0%</div>
                         </div>
                         
-                        <div class="pixel-card text-center">
-                            <div class="pixel-text text-gray-600 text-xs md:text-sm mb-2">REMAINING</div>
+                        <div class="pixel-card pixel-border text-center"> <div class="pixel-text text-gray-600 text-xs md:text-sm mb-2">REMAINING</div>
                             <div class="pixel-text text-xl md:text-2xl font-black text-gray-900" id="stat-remaining">
                                 0
                             </div>
@@ -246,13 +275,6 @@
                     </div>
                 </div>
             </div>
-
-            <div id="status-and-error" style="text-align: center; margin-top: 30px;">
-                <div id="gas-display" style="color: var(--color-white);"></div> 
-                <div id="status-message" style="color: #39ff14; font-weight: bold; margin-top: 10px;"></div>
-                <div id="error-message" style="color: var(--color-danger); font-weight: bold; margin-top: 5px;"></div>
-            </div>
-
         </main>
 
         <footer class="relative z-10 text-center py-8 mt-20">
@@ -267,12 +289,14 @@
     <script>
         // --- KONFIGURASI WEB3 ---
         const CHAIN_ID = 8453; // Base Mainnet
-        const SALE_CONTRACT_ADDRESS = "0x...GANTI_ALAMAT_KONTRAK_SALE_TOKEN..."; // Ganti ini!
+        const SALE_CONTRACT_ADDRESS = "0xED143D7C6195fD65C5b0a66F8d2B329E44ffE3D1"; // Ganti ini!
         const TOKEN_SYMBOL = "LUCKY";
-        const TOKEN_RATE = 5000; // 5000 $LUCKY per 10 USDC
-        const PRICE_PER_UNIT_USD = 10; // Harga per unit minting (10 USDC)
+        const TOKEN_RATE = 5000; // 5000 $LUCKY per 1 USDC
+        const BASE_USD_PRICE = 1000000; // 1 USDC (6 desimal)
+        const USDC_CONTRACT_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+        const RELAYER_URL = "https://api.us-ai.fun/mint"; // URL Backend Relayer Anda
 
-        // Variabel UI dan Web3
+        // --- Variabel UI dan Web3 ---
         const loadingIndicator = document.getElementById('loading-indicator');
         const mainContent = document.getElementById('main-content');
         const headerTitle = document.getElementById('header-title');
@@ -292,31 +316,35 @@
         const gasDisplay = document.getElementById('gas-display');
         const statusMessage = document.getElementById('status-message');
         const errorMessage = document.getElementById('error-message');
+        const usdcAmountInput = document.getElementById('usdc-amount');
+        const tokenReceiveDisplay = document.getElementById('token-receive');
 
         let provider;
         let signer;
         let userAddress;
-        let saleContract;
-        let tokenContract; // Anda mungkin perlu ini untuk total supply
-        let tokenDecimals = 18; // Asumsi standar ERC20
-        let totalTokenSupply = 1000000000; // 1 Miliar
-        let mintedAmount = 0; // Akan diambil dari kontrak
+        let saleContractReadOnly; // Untuk membaca data tanpa signer
+        let ownerWalletAddress;
+        
+        let totalTokenSupply = 0; // Akan diambil dari kontrak
+        let mintedAmount = 0;     // Akan diambil dari kontrak
 
         // ABI Minimal (Wajib ada fungsi ini di kontrak Sale Anda)
         const saleABI = [
-            "function totalMinted() view returns (uint256)",
-            "function totalTokenSupply() view returns (uint256)", // Fungsi untuk total supply
-            "function mintTokens(uint256 amountToBuy)" // Fungsi untuk minting
+            "function totalTokenSupplyForSale() view returns (uint256)", // Total supply yang DIJUAL
+            "function totalMinted() view returns (uint256)", // Jumlah yang SUDAH terjual/minted
+            "function wallet() view returns (address)" // Alamat owner penerima USDC
+            // Kita tidak perlu ABI mintWithPermit di frontend
         ];
 
         // --- FUNGSI UTAMA ---
 
         async function connectWallet() {
             errorMessage.textContent = '';
-            statusMessage.textContent = 'Connecting...';
+            statusMessage.textContent = 'Connecting wallet...';
+            gasDisplay.textContent = ''; // Reset gas display
 
             if (typeof window.ethereum === 'undefined') {
-                errorMessage.textContent = 'MetaMask or EVM wallet not detected.';
+                errorMessage.textContent = 'MetaMask or compatible wallet not found.';
                 return;
             }
 
@@ -329,31 +357,35 @@
                 const { chainId } = await provider.getNetwork();
                 if (chainId !== CHAIN_ID) {
                     errorMessage.textContent = `Please switch to Base Mainnet (ID ${CHAIN_ID}).`;
-                    signer = null; // Putuskan signer
+                    signer = null; 
                     return;
                 }
 
-                // Inisialisasi kontrak
-                saleContract = new ethers.Contract(SALE_CONTRACT_ADDRESS, saleABI, signer);
-                
+                // Ambil alamat owner DULU (penting untuk Permit)
+                saleContractReadOnly = new ethers.Contract(SALE_CONTRACT_ADDRESS, saleABI, provider);
+                ownerWalletAddress = await saleContractReadOnly.wallet();
+                if (!ownerWalletAddress) {
+                    throw new Error("Could not read owner wallet from contract.");
+                }
+
                 // Update UI sukses
                 connectWalletText.textContent = `Connected: ${userAddress.substring(0, 4)}...${userAddress.substring(38)}`;
                 connectWalletBtn.classList.remove('primary');
                 connectWalletBtn.classList.add('secondary');
-                connectWalletBtn.disabled = true; // Disable setelah terhubung
-                statusMessage.textContent = '✅ Wallet Connected to Base.';
+                connectWalletBtn.disabled = true;
+                statusMessage.textContent = '✅ Wallet Connected.';
                 
-                // Aktifkan tombol mint
-                mintButton.disabled = false; 
+                // Aktifkan tombol mint dan ambil data
+                await fetchGasPrice();
+                await fetchMintData(); // Ambil data mint setelah connect
 
-                // Ambil data gas
-                fetchGasPrice();
-                // Ambil data minting
-                fetchMintData(); 
-                
             } catch (error) {
                 console.error("Wallet connection failed:", error);
                 errorMessage.textContent = `Connection failed: ${error.message}`;
+                connectWalletText.textContent = 'Connect Wallet';
+                connectWalletBtn.classList.remove('secondary');
+                connectWalletBtn.classList.add('primary');
+                connectWalletBtn.disabled = false;
             }
         }
 
@@ -362,134 +394,235 @@
              try {
                 const feeData = await provider.getFeeData();
                 const gasPriceInGwei = feeData.gasPrice.div(1000000000); 
-                gasDisplay.textContent = `⚡ Gas Price: ${gasPriceInGwei.toString()} Gwei (User Pays)`;
+                gasDisplay.textContent = `⚡ Gas: ${gasPriceInGwei.toString()} Gwei (Paid by Server)`;
              } catch {
                 gasDisplay.textContent = 'Could not fetch gas price.';
              }
         }
         
         async function fetchMintData() {
-            if (!provider) return; // Butuh provider, tidak perlu signer
-             statusMessage.textContent = 'Fetching mint status...';
+            statusMessage.textContent = 'Fetching mint status...';
+            errorMessage.textContent = ''; // Clear previous errors
             try {
-                 const readOnlySaleContract = new ethers.Contract(SALE_CONTRACT_ADDRESS, saleABI, provider);
+                 // Selalu gunakan provider baru untuk data read-only
+                 const tempProvider = new ethers.providers.JsonRpcProvider("https://mainnet.base.org"); // Ganti RPC jika perlu
+                 const readOnlyContract = new ethers.Contract(SALE_CONTRACT_ADDRESS, saleABI, tempProvider);
                  
-                 // Ambil total supply dan minted dari kontrak
-                 const fetchedTotalSupply = await readOnlySaleContract.totalTokenSupply();
-                 const fetchedMinted = await readOnlySaleContract.totalMinted();
+                 const fetchedTotalSupply = await readOnlyContract.totalTokenSupplyForSale();
+                 const fetchedMinted = await readOnlyContract.totalMinted();
                  
-                 // Konversi BigNumber ke number untuk kalkulasi (hati-hati jika angka terlalu besar)
-                 totalTokenSupply = fetchedTotalSupply.toNumber(); // Asumsi tidak melebihi batas JS
-                 mintedAmount = fetchedMinted.toNumber(); 
+                 // Gunakan string untuk BigNumber agar akurat
+                 totalTokenSupply = fetchedTotalSupply.toString(); 
+                 mintedAmount = fetchedMinted.toString(); 
                  
-                 updateUI(); // Update tampilan dengan data baru
+                 updateUI(); 
                  statusMessage.textContent = 'Mint status updated.';
 
             } catch (error) {
                  console.error("Failed to fetch mint data:", error);
                  errorMessage.textContent = 'Failed to load sale data. Check contract address or network.';
+                 // Set default values if fetch fails
+                 totalTokenSupply = '500000000'; // 50% dari 1 Miliar
+                 mintedAmount = '0';
+                 updateUI();
+            } finally {
+                loadingIndicator.style.display = 'none'; // Sembunyikan loading setelah data (atau default) dimuat
+                mainContent.style.display = 'block';
             }
         }
 
-
         function updateUI() {
-            const remaining = totalTokenSupply - mintedAmount;
-            const percentageMinted = (mintedAmount / totalTokenSupply * 100);
+            // Gunakan BigNumber untuk kalkulasi yang aman
+            const bnTotal = ethers.BigNumber.from(totalTokenSupply);
+            const bnMinted = ethers.BigNumber.from(mintedAmount);
             
-            // Header
+            if (bnTotal.isZero()) { // Hindari pembagian dengan nol
+                 statPercentage.textContent = '0%';
+                 progressCircleFg.style.strokeDashoffset = 565.5; // Lingkaran kosong
+                 statMinted.textContent = '0';
+                 statRemaining.textContent = '0';
+                 progressMinted.textContent = '0';
+                 progressTotal.textContent = '/ 0';
+                 mintButton.disabled = true; // Disable jika total supply 0
+                 return;
+            }
+
+            const bnRemaining = bnTotal.sub(bnMinted);
+            const percentageMinted = bnMinted.mul(1000).div(bnTotal).toNumber() / 10; // Kalkulasi persentase dengan 1 desimal
+            
+            // Header & Info Token
             headerTitle.textContent = `$${TOKEN_SYMBOL} SALE`;
-            
-            // Mint Card
             tokenSymbolDisplay.textContent = `$${TOKEN_SYMBOL}`;
-            mintRateText.textContent = `Mint rate: Every $${PRICE_PER_UNIT_USD} = ${TOKEN_RATE.toLocaleString()} $${TOKEN_SYMBOL}`;
+            mintRateText.textContent = `Rate: 1 USDC = ${TOKEN_RATE.toLocaleString()} $${TOKEN_SYMBOL}`;
+            footerText.textContent = `© 2025 ${TOKEN_SYMBOL} Sale • All rights reserved`;
+
+            // Progress Circle & Stats (Format dengan toLocaleString)
+            const formatNumber = (bn) => ethers.utils.commify(bn.toString()); // Format dengan koma
             
-            // Progress Circle
-            progressMinted.textContent = mintedAmount.toLocaleString();
-            progressTotal.textContent = `/ ${totalTokenSupply.toLocaleString()}`;
-            remainingText.textContent = 'REMAINING'; 
+            progressMinted.textContent = formatNumber(bnMinted);
+            progressTotal.textContent = `/ ${formatNumber(bnTotal)}`;
+            remainingText.textContent = bnRemaining.isNegative() ? 'SOLD OUT' : 'REMAINING'; 
             
-            const size = 280;
+            const size = 200; // Ukuran SVG
             const strokeWidth = 20;
             const radius = (size - strokeWidth) / 2;
             const circumference = 2 * Math.PI * radius;
-            const offset = circumference - (percentageMinted / 100) * circumference;
+            let progress = Math.max(0, Math.min(100, percentageMinted)); // Batasi 0-100%
+            const offset = circumference - (progress / 100) * circumference;
             progressCircleFg.style.strokeDashoffset = offset;
 
-            // Stats
-            statMinted.textContent = mintedAmount.toLocaleString();
+            statMinted.textContent = formatNumber(bnMinted);
             statPercentage.textContent = `${percentageMinted.toFixed(1)}%`;
-            statRemaining.textContent = remaining.toLocaleString();
+            statRemaining.textContent = formatNumber(bnRemaining.isNegative() ? ethers.BigNumber.from(0) : bnRemaining);
 
-            // Footer
-            footerText.textContent = `© 2025 ${TOKEN_SYMBOL} Sale • All rights reserved`;
-
-            // Check if sold out
-            if (mintedAmount >= totalTokenSupply) {
+            // Button State
+            if (bnMinted.gte(bnTotal)) { // Jika minted >= total
                 mintButton.textContent = 'SOLD OUT!';
                 mintButton.disabled = true;
                 mintButton.classList.remove('primary');
                 mintButton.classList.add('secondary');
             } else {
-                 mintButton.disabled = !signer; // Aktif jika wallet terhubung
+                 mintButton.textContent = 'MINT NOW';
+                 mintButton.disabled = !signer; // Aktif hanya jika wallet terhubung
+                 if(signer) mintButton.classList.add('primary');
             }
         }
 
-        // --- MINT FUNCTION (USER PAYS GAS) ---
+        // --- MINT FUNCTION (GASLESS PERMIT) ---
         async function handleMint() {
-            if (!signer) return alert('Please connect your wallet first!');
+            if (!signer || !ownerWalletAddress) return alert('Please connect your wallet first!');
             
-            statusMessage.textContent = 'Preparing transaction...';
+            const usdcAmountStr = usdcAmountInput.value;
+            const usdcAmount = parseFloat(usdcAmountStr);
+
+            if (isNaN(usdcAmount) || usdcAmount < 1) {
+                return alert("Minimum purchase is 1 USDC.");
+            }
+            
+            statusMessage.textContent = '1. Requesting Permit Signature (Gas-Free)...';
             errorMessage.textContent = '';
             mintButton.disabled = true;
             
-            try {
-                 // Anda perlu mengimplementasikan logika untuk mendapatkan jumlah USDC
-                 // atau jumlah token yang ingin dibeli, lalu mengkonversinya ke
-                 // parameter yang dibutuhkan oleh fungsi mintTokens(uint256 amountToBuy) Anda.
-                 // Contoh: Kita asumsikan `amountToBuy` adalah jumlah token yang ingin dibeli
-                 // dan 1 unit pembelian = 10 USDC = 50,000 Token
-                 const amountToBuy = TOKEN_RATE; // Beli 1 unit (50,000 token)
+            // Konversi jumlah USDC ke unit terkecil (Wei)
+            const valueWei = ethers.utils.parseUnits(usdcAmountStr, 6); // USDC has 6 decimals
 
-                 // Anda perlu menambahkan logika untuk mengirim pembayaran USDC
-                 // Ini biasanya melibatkan:
-                 // 1. Approve USDC ke Kontrak Sale
-                 // 2. Memanggil fungsi mintTokens di Kontrak Sale
-                 
-                 // === CONTOH SIMULASI (Perlu diganti dengan logic USDC Approval & Call) ===
-                 statusMessage.textContent = 'Waiting for wallet confirmation...';
-                 // const tx = await saleContract.mintTokens(amountToBuy); // Panggil fungsi mint
-                 // statusMessage.textContent = `Transaction sent: ${tx.hash.substring(0,10)}... Waiting for confirmation...`;
-                 // await tx.wait();
-                 // === AKHIR SIMULASI ===
-                 
-                 // Simulasikan sukses
-                 await new Promise(resolve => setTimeout(resolve, 2000)); // Tunggu 2 detik
-                 mintedAmount += amountToBuy; // Update state lokal
-                 
-                 alert(`Mint Successful! You received ${amountToBuy.toLocaleString()} $${TOKEN_SYMBOL}.`);
-                 statusMessage.textContent = `✅ Mint Successful! Refreshing status...`;
-                 
-                 // Ambil data baru setelah mint
-                 await fetchMintData(); 
+            try {
+                // Buat Tanda Tangan
+                const currentTimestamp = Math.floor(Date.now() / 1000);
+                const validBefore = currentTimestamp + (60 * 15); // 15 menit expiry
+                const validAfter = 0; 
+                const nonce = ethers.utils.solidityKeccak256(["uint256", "uint256"], [userAddress, Date.now()]);
+
+                const domain = {
+                    name: 'USD Coin', version: '2',
+                    chainId: CHAIN_ID, verifyingContract: USDC_CONTRACT_ADDRESS,
+                };
+                const types = {
+                    TransferWithAuthorization: [
+                        { name: 'from', type: 'address' }, { name: 'to', type: 'address' },
+                        { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' },
+                        { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' },
+                    ],
+                };
+                
+                const message = {
+                    from: userAddress,
+                    to: ownerWalletAddress, // WAJIB: Alamat Owner Penerima USDC
+                    value: valueWei.toString(), // Kirim jumlah yang benar
+                    validAfter: validAfter, 
+                    validBefore: validBefore, 
+                    nonce: nonce,
+                };
+
+                // Pengguna Tanda Tangan
+                const signature = await signer._signTypedData(domain, types, message);
+                const signatureParts = ethers.utils.splitSignature(signature);
+
+                statusMessage.textContent = '2. Signature obtained. Sending to Relayer...';
+
+                // --- Kirim ke Server Relayer ---
+                const signatureBody = {
+                    buyerAddress: userAddress,
+                    // Tambahkan usdcAmount agar server tahu berapa yang dibeli
+                    usdcAmount: valueWei.toString(), 
+                    validAfter: message.validAfter,
+                    validBefore: message.validBefore,
+                    nonce: message.nonce,
+                    v: signatureParts.v,
+                    r: signatureParts.r,
+                    s: signatureParts.s
+                };
+
+                const response = await fetch(RELAYER_URL, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-PAYMENT': 'dummy=true' // Untuk mengakali middleware X402
+                    },
+                    body: JSON.stringify(signatureBody) 
+                });
+                
+                if (!response.ok) {
+                    let errorMsg = `Server error (Status ${response.status}).`;
+                    try {
+                         const errorBody = await response.json();
+                         errorMsg = errorBody.error || errorMsg;
+                    } catch { /* Gagal parse JSON error */ }
+                    throw new Error(errorMsg);
+                }
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || "Minting failed: Transaction not successful.");
+                }
+
+                alert(`Mint Successful! Transaction Hash: ${result.txHash}`);
+                statusMessage.innerHTML = `✅ **Mint Success!** <br>Tx: <a href="https://basescan.org/tx/${result.txHash}" target="_blank">${result.txHash.substring(0,10)}...</a>`;
+                
+                // Ambil data baru setelah mint
+                await fetchMintData(); 
 
             } catch (error) {
-                 console.error("Minting failed:", error);
-                 errorMessage.textContent = `Mint Failed: ${error.message || "User rejected or transaction failed."}`;
+                console.error("Minting failed:", error);
+                let displayError = "Minting Failed. Check console (F12).";
+                if (error.code === 4001) {
+                    displayError = 'Signature denied by user.';
+                } else if (error.message) {
+                    displayError = error.message;
+                }
+                errorMessage.textContent = displayError;
             } finally {
-                 // Aktifkan kembali tombol jika belum sold out
-                 updateUI(); 
+                // Aktifkan kembali tombol jika belum sold out
+                updateUI(); 
             }
         }
+        
+        // --- UTILITY: Update token receive amount ---
+        function updateTokenReceiveDisplay() {
+            const usdcAmount = parseFloat(usdcAmountInput.value);
+            if (isNaN(usdcAmount) || usdcAmount < 1) {
+                tokenReceiveDisplay.textContent = 'You Receive: 0 $LUCKY';
+                return;
+            }
+            const receivedTokens = usdcAmount * TOKEN_RATE;
+            tokenReceiveDisplay.textContent = `You Receive: ${receivedTokens.toLocaleString()} $LUCKY`;
+        }
 
-
-        // --- Initial Load ---
+        // --- Initial Load & Event Listeners ---
         window.onload = () => {
-            loadingIndicator.style.display = 'none';
-            mainContent.style.display = 'block';
+            headerTitle.textContent = `$${TOKEN_SYMBOL} SALE`; // Set judul awal
+            tokenSymbolDisplay.textContent = `$${TOKEN_SYMBOL}`; // Set simbol awal
+            mintRateText.textContent = `Rate: 1 USDC = ${TOKEN_RATE.toLocaleString()} $${TOKEN_SYMBOL}`; // Set rate awal
+            footerText.textContent = `© 2025 ${TOKEN_SYMBOL} Sale • All rights reserved`; // Set footer awal
+
             connectWalletBtn.addEventListener('click', connectWallet);
             mintButton.addEventListener('click', handleMint);
-            // Ambil data awal saat halaman dimuat (tanpa signer)
+            usdcAmountInput.addEventListener('input', updateTokenReceiveDisplay);
+
+            // Ambil data awal saat halaman dimuat
             fetchMintData(); 
+            updateTokenReceiveDisplay(); // Set tampilan awal token diterima
         };
 
     </script>
