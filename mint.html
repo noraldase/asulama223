@@ -50,20 +50,20 @@
 </head>
 <body>
     <div class="container">
-        <h1>SHIUAX402 | $SHIUA Mint</h1>
+        <h1>SHIUAX402 | $POOP Mint</h1>
 
         <h2>Mint Token</h2>
-        <p>Token Rate: 1 USDC = 5,000 $SHIUA</p>
-        <p>Supply: 1,000,000,000 $SHIBA (Total)</p>
+        <p>Token Rate: 1 USDC = 10,000 $POOP</p>
+        <p>Supply: 1,000,000,000 $POOP (Total)</p>
 
         <button id="connectWalletBtn">Connect Wallet</button>
 
         <div id="mintOptions" class="mint-options" style="display: none;">
             <button id="mint1USDCBtn" class="mint-btn" data-usdc-amount="1" disabled>
-                Mint 5,000 $SHIBA (1 USDC)
+                Mint 10,000 $POOP (1 USDC)
             </button>
             <button id="mint10USDCBtn" class="mint-btn" data-usdc-amount="10" disabled>
-                Mint 50,000 $SHIBA (10 USDC)
+                Mint 100,000 $POOP (10 USDC)
             </button>
         </div>
 
@@ -92,7 +92,7 @@
         const USDC_CONTRACT_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; // USDC Base Mainnet
         const CHAIN_ID = 8453; // Base Mainnet
         
-        const BASE_RATE = 5000; // 1 USDC = 5000 $SHIBA
+        const BASE_RATE = 10000; // 1 USDC = 5000 $POOP
         
         // Harga USDC dalam WEI/smallest unit (1 USDC = 1,000,000)
         const ONE_USDC_TX = ethers.BigNumber.from('1000000'); 
@@ -215,7 +215,7 @@
                     v: signatureParts.v,
                     r: signatureParts.r,
                     s: signatureParts.s,
-                    usdcAmount: usdcAmount // Tambahkan amount agar relayer tahu berapa $SHIBA yang harus dikirim
+                    usdcAmount: usdcAmount // Tambahkan amount agar relayer tahu berapa $POOP yang harus dikirim
                 };
 
                 response = await fetch(RELAYER_URL, {
@@ -248,7 +248,7 @@
                 
                 // --- 4. TAMPILKAN HASIL SUKSES (JIKA JSON VALID) ---
                 if (result.success && result.txHash) {
-                    statusMessage.innerHTML = `✅ **Mint Success!** ${tokenAmount.toLocaleString()} $SHIBA sent! <br>Tx: <a href="https://basescan.org/tx/${result.txHash}" target="_blank">${result.txHash.substring(0,10)}...</a>`;
+                    statusMessage.innerHTML = `✅ **Mint Success!** ${tokenAmount.toLocaleString()} $POOP sent! <br>Tx: <a href="https://basescan.org/tx/${result.txHash}" target="_blank">${result.txHash.substring(0,10)}...</a>`;
                 } else {
                     errorMessage.textContent = `Mint Failed: ${result.error || "Server reported failure."}`;
                 }
