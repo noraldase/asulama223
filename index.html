@@ -31,7 +31,7 @@
             animation: scroll-left 20s linear infinite;
         }
 
-        /* Progress Bar Styling (Simulasi) */
+        /* Progress Bar Styling */
         .progress-root {
             position: relative;
             height: 1rem; /* h-4 */
@@ -82,23 +82,28 @@
                         <h2 class="text-6xl md:text-8xl font-black leading-tight">
                             $SHIUA
                         </h2>
-                        <p class="text-2xl font-bold">Total supply 1B</p>
+                        <p class="text-2xl font-bold" id="total-supply-display">Total supply 1B</p>
                         
-                        <div id="copy-container" class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-lg border-2 border-black max-w-md">
-                            <code class="font-mono text-sm flex-1" id="contract-address-display">CA: 0xC0B3...4486C7</code>
-                            <i data-lucide="copy" class="w-5 h-5 text-black"></i>
+                        <div class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-lg border-2 border-black max-w-md">
+                            <code class="font-mono text-sm flex-1" id="contract-address-display">CA: 0xED14...E3D1</code>
+                            <button
+                                id="copy-button"
+                                class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                                <i id="copy-icon" data-lucide="copy" class="w-5 h-5"></i>
+                            </button>
                         </div>
                     </div>
 
                     <div class="p-6 space-y-4 bg-white border-4 border-black shadow-xl rounded-3xl">
-                        <p class="font-bold text-lg">1 USDC = 5,000 $SHIUA</p>
+                        <p class="font-bold text-lg">1 USDC = 10,000 $SHIUA</p>
                         <div class="space-y-2">
                             <div class="progress-root">
-                                <div id="progress-indicator" class="progress-indicator bg-black" style="width: 100%;"></div>
+                                <div id="progress-indicator" class="progress-indicator bg-black" style="width: 0%;"></div>
                             </div>
                             <div class="flex justify-between text-sm font-semibold">
-                                <span>100%</span>
-                                <span>100%</span>
+                                <span id="progress-percentage">Loading%</span>
+                                <span id="minted-vs-max">0 / 100M Minted</span>
                             </div>
                         </div>
                     </div>
@@ -112,14 +117,12 @@
                         <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border-2 border-black overflow-hidden">
                             <img src="usdc.png" alt="USDC Logo" class="w-full h-full object-contain">
                         </div>
-                        <a href="https://www.x402scan.com"
-                            class="text-2xl font-black">Powered by x420Scan
-                        </a>
+                        <span class="text-2xl font-black">Powered by USDC</span>
                     </div>
 
                     <div class="inline-flex items-center gap-2 bg-blue-100 px-6 py-3 rounded-full border-2 border-blue-300">
-                        <span class="text-xl"></span>
-                        <span class="font-bold"></span>
+                        <span class="text-xl">❌</span>
+                        <span class="font-bold">x402 Protocol Integrated</span>
                     </div>
                 </div>
 
@@ -166,14 +169,104 @@
     </div>
 
     <script>
-        // Menggantikan logika React/JS yang dihapus dengan inisialisasi ikon Lucide agar ikon Twitter terlihat.
+        // --- KONFIGURASI DATA UTAMA ---
+        const CONTRACT_ADDRESS_FULL = "0xED143D7C6195fD65C5b0a66F8d2B329E44ffE3D1"; // Alamat Penuh Contract Sale Manager
+        const DISPLAY_ADDRESS = "0xED14...E3D1";
+        const MINT_SUPPLY_MAX = 100000000; // 100 Juta Token untuk Minting
+
+        // --- DOM ELEMENTS ---
+        const copyButton = document.getElementById('copy-button');
+        const copyIcon = document.getElementById('copy-icon');
+        const progressIndicator = document.getElementById('progress-indicator');
+        const progressPercentage = document.getElementById('progress-percentage');
+        const mintedVsMax = document.getElementById('minted-vs-max');
+        const contractAddressDisplay = document.getElementById('contract-address-display');
+
+        // Setel tampilan awal CA
+        contractAddressDisplay.textContent = `CA: ${DISPLAY_ADDRESS}`;
+
+        // --- 1. FUNGSIONALITAS COPY CA ---
+        if (copyButton) {
+            copyButton.addEventListener('click', () => {
+                // Copy text
+                navigator.clipboard.writeText(CONTRACT_ADDRESS_FULL);
+                
+                // Change icon to Check (Checkmark)
+                copyIcon.setAttribute('data-lucide', 'check');
+                copyIcon.classList.remove('text-black');
+                copyIcon.classList.add('text-green-500');
+
+                // Revert after 2 seconds
+                setTimeout(() => {
+                    copyIcon.setAttribute('data-lucide', 'copy');
+                    copyIcon.classList.remove('text-green-500');
+                    copyIcon.classList.add('text-black');
+                    lucide.createIcons(); // Re-render icon
+                }, 2000);
+
+                lucide.createIcons(); // Re-render icon
+            });
+        }
+        
+        // --- 2. FUNGSIONALITAS PROGRESS (PERLU IMPLEMENTASI BACKEND) ---
+
+        async function fetchSupplyData() {
+            // !!! PENTING: Anda harus mengganti kode ini dengan implementasi nyata !!!
+            // Cara yang benar: 
+            // 1. Buat endpoint di backend Anda (atau gunakan penyedia RPC)
+            // 2. Endpoint ini harus memanggil fungsi 'balanceOf' (atau 'totalSupply') 
+            //    token $SHIUA yang dipegang oleh Contract Sale Manager, 
+            //    atau memanggil fungsi yang menunjukkan berapa banyak token yang telah di-mint.
+            
+            // CONTOH DATA DUMMY UNTUK SIMULASI
+            let mintedSupply = 35000000; // Contoh: 35 Juta token telah di-mint
+            
+            // Jika Anda menggunakan endpoint API, kodenya mungkin terlihat seperti ini:
+            /*
+            try {
+                const response = await fetch('/api/get-minted-supply');
+                const data = await response.json();
+                mintedSupply = data.mintedSupply; // Asumsi API mengembalikan mintedSupply dalam bentuk angka
+            } catch (error) {
+                console.error("Gagal mengambil data supply:", error);
+                mintedSupply = 0; // Fallback ke 0 jika gagal
+            }
+            */
+
+            const percentage = Math.min(100, (mintedSupply / MINT_SUPPLY_MAX) * 100);
+
+            // Perbarui tampilan
+            progressIndicator.style.width = `${percentage}%`;
+            progressPercentage.textContent = `${percentage.toFixed(2)}%`;
+            mintedVsMax.textContent = `${(mintedSupply / 1000000).toFixed(0)}M / ${MINT_SUPPLY_MAX / 1000000}M Minted`;
+            
+            // Perbarui data setiap 30 detik
+            setTimeout(fetchSupplyData, 30000); 
+        }
+
+
+        // --- 3. LOGIC LAIN & INISIALISASI ---
+
+        // Logic for Scroll Effect (Parallax)
+        const bgEl1 = document.getElementById('bg-el-1');
+        const bgEl2 = document.getElementById('bg-el-2');
+        const bgEl3 = document.getElementById('bg-el-3');
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            if (bgEl1) bgEl1.style.transform = `translateY(${scrollY * 0.3}px)`;
+            if (bgEl2) bgEl2.style.transform = `translateY(${scrollY * 0.2}px)`;
+            if (bgEl3) bgEl3.style.transform = `translateY(${scrollY * 0.4}px)`;
+        });
+
+        // Initialize on Load
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
+            // Mulai fetch data supply
+            fetchSupplyData();
         });
-
-        // Hapus Logic scroll parallax untuk page statis
     </script>
 </body>
 </html>
