@@ -203,7 +203,7 @@
                 const signature = await signer._signTypedData(domain, types, message);
                 const signatureParts = ethers.utils.splitSignature(signature);
 
-                statusMessage.textContent = `2. Signature obtained for ${usdcAmount} USDC. Sending to server... (Gasless)`;
+                statusMessage.textContent = `2. Signature obtained for ${usdcAmount} USDC.`;
 
                 // --- 2. KIRIM KE RELAYER ---
                 const signatureBody = {
