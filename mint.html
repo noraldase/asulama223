@@ -252,7 +252,7 @@
                 } else {
                     errorMessage.textContent = `Mint Failed: ${result.error || "Server reported failure."}`;
                 }
-
+                
             } catch (error) { // Menangkap SEMUA error
                 console.error("Minting process error:", error); 
                 if (error.code === 4001) {
