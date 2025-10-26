@@ -44,6 +44,11 @@
             background-color: black; /* Default to black for visibility */
             transition: transform 0.6s ease;
         }
+        
+        /* Gaya kustom untuk memastikan lebar sejajar */
+        .cta-max-width {
+            max-width: 450px; /* Batasan lebar untuk keseragaman CTA */
+        }
     </style>
 </head>
 <body class="min-h-screen bg-[#F5F0E8] overflow-x-hidden relative">
@@ -84,13 +89,18 @@
                         </h2>
                         <p class="text-2xl font-bold">Total supply 1B</p>
                         
-                        <div id="copy-container" class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-lg border-2 border-black max-w-md">
-                            <code class="font-mono text-sm flex-1" id="contract-address-display">CA: 0xC0B3...4486C7</code>
-                            <i data-lucide="copy" class="w-5 h-5 text-black"></i>
+                        <div class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-lg border-2 border-black cta-max-width">
+                            <code class="font-mono text-sm flex-1" id="contract-address-display">CA: 0xED14...E3D1</code>
+                            <button
+                                id="copy-button"
+                                class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                                <i id="copy-icon" data-lucide="copy" class="w-5 h-5"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="p-6 space-y-4 bg-white border-4 border-black shadow-xl rounded-3xl">
+                    <div class="p-6 space-y-4 bg-white border-4 border-black shadow-xl rounded-3xl cta-max-width">
                         <p class="font-bold text-lg">1 USDC = 5,000 $SHIUA</p>
                         <div class="space-y-2">
                             <div class="progress-root">
@@ -102,19 +112,21 @@
                             </div>
                         </div>
                     </div>
-
-                    <a href="/mint.html" 
-                        class="inline-block bg-gradient-to-r from-yellow-400 to-orange-400 px-10 py-5 rounded-full border-4 border-black shadow-xl transform hover:scale-105 transition-transform text-2xl font-black text-black text-center">
-                        MINT YOUR $SHIUA
-                    </a>
                     
-                    <div class="inline-flex items-center gap-3 bg-white px-10 py-5 rounded-full border-4 border-black shadow-xl">
-                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border-2 border-black overflow-hidden">
-                            <img src="usdc.png" alt="USDC Logo" class="w-full h-full object-contain">
-                        </div>
-                        <a href="https://www.x402scan.com"
-                            class="text-2xl font-black">Powered by x420Scan
+                    <div class="space-y-4 cta-max-width">
+                        <a href="/mint.html" 
+                            class="inline-block w-full text-center bg-gradient-to-r from-yellow-400 to-orange-400 px-10 py-5 rounded-full border-4 border-black shadow-xl transform hover:scale-105 transition-transform text-2xl font-black text-black">
+                            MINT YOUR $SHIUA
                         </a>
+                        
+                        <div class="inline-flex items-center justify-center w-full gap-3 bg-white px-10 py-5 rounded-full border-4 border-black shadow-xl">
+                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border-2 border-black overflow-hidden">
+                                <img src="usdc.png" alt="USDC Logo" class="w-full h-full object-contain">
+                            </div>
+                            <a href="https://www.x402scan.com" target="_blank"
+                                class="text-2xl font-black text-center">Powered by x420Scan
+                            </a>
+                        </div>
                     </div>
 
                     <div class="inline-flex items-center gap-2 bg-blue-100 px-6 py-3 rounded-full border-2 border-blue-300">
@@ -166,14 +178,65 @@
     </div>
 
     <script>
-        // Menggantikan logika React/JS yang dihapus dengan inisialisasi ikon Lucide agar ikon Twitter terlihat.
+        // --- KONFIGURASI DATA UTAMA ---
+        const CONTRACT_ADDRESS_FULL = "0xED143D7C6195fD65C5b0a66F8d2B329E44ffE3D1"; 
+        const DISPLAY_ADDRESS = "0xED14...E3D1";
+        
+        // --- DOM ELEMENTS ---
+        const copyButton = document.getElementById('copy-button');
+        const copyIcon = document.getElementById('copy-icon');
+        const contractAddressDisplay = document.getElementById('contract-address-display');
+
+        // Setel tampilan awal CA
+        contractAddressDisplay.textContent = `CA: ${DISPLAY_ADDRESS}`;
+
+        // --- FUNGSIONALITAS COPY CA ---
+        if (copyButton) {
+            copyButton.addEventListener('click', () => {
+                // Copy text
+                navigator.clipboard.writeText(CONTRACT_ADDRESS_FULL);
+                
+                // Change icon to Check (Checkmark)
+                copyIcon.setAttribute('data-lucide', 'check');
+                copyIcon.classList.remove('text-black');
+                copyIcon.classList.add('text-green-500');
+
+                // Revert after 2 seconds
+                setTimeout(() => {
+                    copyIcon.setAttribute('data-lucide', 'copy');
+                    copyIcon.classList.remove('text-green-500');
+                    copyIcon.classList.add('text-black');
+                    lucide.createIcons(); // Re-render icon
+                }, 2000);
+
+                lucide.createIcons(); // Re-render icon
+            });
+        }
+
+        // --- INISIALISASI (Termasuk Parallax yang tidak terdeteksi) ---
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
-        });
 
-        // Hapus Logic scroll parallax untuk page statis
+            // Memperbaiki tampilan CA agar sesuai dengan format penuh
+            contractAddressDisplay.textContent = `CA: ${DISPLAY_ADDRESS}`; 
+
+            // Logic for Scroll Effect (Parallax) - Dibiarkan agar efek tetap ada
+            const bgEl1 = document.getElementById('bg-el-1');
+            const bgEl2 = document.getElementById('bg-el-2');
+            const bgEl3 = document.getElementById('bg-el-3');
+
+            const handleScroll = () => {
+                const scrollY = window.scrollY;
+                if (bgEl1) bgEl1.style.transform = `translateY(${scrollY * 0.3}px)`;
+                if (bgEl2) bgEl2.style.transform = `translateY(${scrollY * 0.2}px)`;
+                if (bgEl3) bgEl3.style.transform = `translateY(${scrollY * 0.4}px)`;
+            };
+
+            window.addEventListener('scroll', handleScroll);
+            handleScroll(); // Panggil sekali untuk posisi awal
+        });
     </script>
 </body>
 </html>
