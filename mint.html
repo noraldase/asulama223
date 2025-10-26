@@ -3,336 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Genesis Collective</title>
+    <title>$SHIBA - SHIBA_X402 Mint</title>
     <style>
-        /* Base CSS - Clean & Professional Style (Cyberpunk/Neon Theme) */
-        :root {
-            --gray-950: #0a0a1a;
-            --gray-900: #111827;
-            --gray-800: #1f2937;
-            --gray-700: #374151;
-            --gray-500: #6b7280;
-            --gray-400: #9ca3af;
-            --white: #ffffff;
-            --purple-500: #a855f7;
-            --purple-400: #c084fc;
-            --pink-500: #ec4899;
-            --pink-400: #f472b6;
-            --blue-500: #3b82f6;
-            --blue-400: #60a5fa;
-            --cyan-500: #06b6d4;
-            --green-400: #4ade80;
-            --yellow-400: #facc15;
-            --red-400: #f87171;
-        }
+        /* Gaya dasar */
+        body { font-family: monospace, Courier New; margin: 40px; color: #333; }
+        .container { max-width: 800px; margin: auto; padding: 0; }
+        h1 { color: #ff9900; font-size: 2.5em; padding-bottom: 5px; margin-bottom: 15px; border-bottom: 2px solid #ff9900; }
+        h2 { color: #555; font-size: 1.5em; margin-top: 25px; }
+        .mint-options { display: flex; gap: 20px; margin-top: 15px; }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--gray-950);
-            color: var(--white);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 10%, rgba(0, 255, 255, 0.1), transparent 30%),
-                        radial-gradient(circle at 80% 90%, rgba(255, 0, 255, 0.1), transparent 40%);
-            z-index: -2;
-        }
-        .background-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: linear-gradient(to right, rgba(0, 255, 255, 0.08) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255, 215, 0, 0.08) 1px, transparent 1px);
-            background-size: 50px 50px;
-            opacity: 0.3;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px 0;
-            position: relative;
-            z-index: 10;
-        }
-
-        header {
-            background-color: rgba(28, 28, 79, 0.85);
-            padding: 15px 0;
-            border-bottom: 2px solid var(--gray-800);
-            text-align: center;
-            backdrop-filter: blur(5px);
-            position: sticky;
-            top: 0;
-            z-index: 20;
-        }
-        
-        header h1 {
-            color: var(--cyan-500);
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-        }
-
-        /* Wallet Status and Connect Button */
-        #wallet-status {
-            font-size: 0.9em;
-            padding: 10px 0;
-            text-align: right;
-        }
-
-        #connect-wallet-btn {
-            background-color: var(--cyan-500);
-            color: var(--gray-900);
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        /* Gaya Tombol */
+        #connectWalletBtn { 
+            padding: 12px 25px; 
+            font-size: 18px; 
+            border: none; 
+            cursor: pointer; 
+            border-radius: 8px; 
+            background-color: #ff9900; 
+            color: white; 
             font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 0 0 15px var(--cyan-500);
+            transition: background-color 0.3s;
+        }
+        .mint-btn { 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            border: 2px solid #007bff;
+            background-color: #007bff; 
+            color: white; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            transition: opacity 0.3s; 
+            font-family: monospace;
+        }
+        .mint-btn:disabled { 
+            background-color: #ccc; 
+            border-color: #ccc;
+            cursor: not-allowed; 
         }
 
-        #connect-wallet-btn:hover {
-            background-color: #66FFFF;
-            transform: scale(1.05);
-        }
-        
-        /* Hero Section - Dual Panel Layout */
-        .hero-section {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            padding: 60px 0;
-            text-align: center;
-        }
-
-        .card {
-            background-color: rgba(17, 24, 40, 0.7);
-            padding: 30px;
-            border-radius: 12px;
-            flex: 1;
-            min-width: 300px;
-            border: 1px solid var(--gray-800);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
-        }
-        
-        .logo-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100px; 
-            margin-bottom: 1rem;
-        }
-
-        .logo-img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 0.5rem; 
-        }
-
-        .card h2 {
-            color: var(--yellow-400);
-            margin-top: 0;
-            text-shadow: 0 0 5px rgba(250, 204, 21, 0.7);
-        }
-        
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-        }
-        
-        .btn-purple-pink {
-            background: linear-gradient(to right, var(--purple-500), var(--pink-500));
-            color: var(--white);
-        }
-        
-        .btn-blue-cyan {
-            background: linear-gradient(to right, var(--blue-500), var(--cyan-500));
-            color: var(--white);
-        }
-        
-        .btn:disabled {
-            background: var(--gray-700);
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .input-text {
-            background-color: var(--gray-800);
-            border: 1px solid var(--gray-700);
-            color: var(--white);
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            text-align: center;
-        }
-
-        /* Status & Error Display */
-        #status-and-error {
-            padding: 1rem 0;
-            border-top: 1px dashed var(--gray-800);
-            margin-top: 1rem;
-            text-align: center;
-        }
-        
-        /* Media Queries */
-        @media (max-width: 768px) {
-            .hero-section { flex-direction: column; }
-        }
+        /* Gaya Pesan */
+        #errorMessage { color: red; font-weight: bold; }
+        #statusMessage { color: green; font-weight: bold; }
+        #gasDisplay { margin-top: 10px; font-size: 0.9em; color: #555; }
+        .warning { margin-top: 20px; padding: 10px; border: 1px solid #ffcc00; background-color: #fff9e6; border-radius: 5px; font-size: 0.9em;}
     </style>
 </head>
 <body>
-    
-    <div class="background-overlay"></div> 
-    
-    <header>
-        <div class="container">
-            <div id="wallet-status">
-                <span id="wallet-status-text" style="color: var(--red-400);">Wallet Disconnected</span>
-                <button id="connect-wallet-btn" >Connect Wallet (EVM)</button>
-            </div>
-            <h1>THE GENESIS COLLECTIVE</h1>
-            <p>Exclusive ownership & mass utility. Fully Tracked on X402Scan.</p>
-        </div>
-    </header>
-
     <div class="container">
-        <section class="hero-section">
-            
-            <div class="card nft-card">
-                
-                <div class="logo-box">
-                    <img src="images/logo-nft.png" alt="NFT Logo" class="logo-img">
-                </div>
-                
-                <h2 class="text-2xl font-bold text-center text-white" style="color: var(--purple-400);">GENESIS NFT ACCESS ($GEN)</h2>
-                <p class="text-gray-400 text-center">Limited Supply: **10,000 NFT**</p>
-                
-                <p style="font-size: 1.4em; color: var(--yellow-400);">
-                    **1 NFT = 10,000 $COLLECT Claim**
-                </p>
-                
-                <div class="space-y-4">
-                    <input type="number" id="nft-quantity" placeholder="Quantity (1-10)" value="1" min="1" max="10" class="input-text w-full text-center">
-                    <p class="text-xs text-gray-400 text-center" id="nft-total-cost">Total Cost: 10 USDC</p>
-                    <button id="nft-mint-button" class="btn btn-purple-pink w-full text-lg" disabled>
-                        Mint NFT Now
-                    </button>
-                </div>
-            </div>
+        <h1>SHIBA_X402 | $SHIBA Mint</h1>
 
-            <div class="card token-card">
-                
-                <div class="logo-box">
-                    <img src="images/logo-token.png" alt="Token Logo" class="logo-img">
-                </div>
+        <h2>Mint Token</h2>
+        <p>Token Rate: **1 USDC = 5,000 $SHIBA**</p>
+        <p>Supply: 100,000,000 $SHIBA (Total)</p>
 
-                <h2 class="text-2xl font-bold text-center text-white" style="color: var(--blue-400);">COLLECTIVE UTILITY TOKEN ($COLLECT)</h2>
-                <p class="text-gray-400 text-center">Total Supply: **1,000,000,000 (1B)**</p>
-                
-                <p style="font-size: 1.4em; color: var(--cyan-500);">
-                    **RATE:** 1 USDC = 5,000 $COLLECT
-                </p>
+        <button id="connectWalletBtn">Connect Wallet</button>
 
-                <div class="space-y-4">
-                    <input type="number" id="token-amount" placeholder="USDC to Spend (Min 1)" value="10" min="1" class="input-text w-full text-center">
-                    <p class="text-xs text-gray-400 text-center" id="token-receive-display">Receive: 50,000 $COLLECT</p>
-                    <button id="token-mint-button" class="btn btn-blue-cyan w-full text-lg" disabled>
-                        Buy Tokens
-                    </button>
-                </div>
-            </div>
-            
-        </section>
-        
-        <div id="status-and-error">
-            <div id="gas-display" class="text-sm mt-4 text-gray-400">Gas Status: Connecting...</div> 
-            <div id="status-message" class="text-green-400 font-bold mt-2"></div>
-            <div id="error-message" class="text-red-400 font-bold mt-1"></div>
+        <div id="mintOptions" class="mint-options" style="display: none;">
+            <button id="mint1USDCBtn" class="mint-btn" data-usdc-amount="1" disabled>
+                Mint 5,000 $SHIBA (1 USDC)
+            </button>
+            <button id="mint10USDCBtn" class="mint-btn" data-usdc-amount="10" disabled>
+                Mint 50,000 $SHIBA (10 USDC)
+            </button>
         </div>
-        
-    </div>
 
-    <footer>
-        <p style="text-align: center; padding: 10px 0;">
-            Contract Transparency Verification: <a href="https://basescan.org" target="_blank">BaseScan Explorer</a>
-        </p>
-    </footer>
+        <div id="gasDisplay"></div>
+        <div id="statusMessage" style="margin-top: 15px;"></div>
+        <div id="errorMessage" style="margin-top: 5px;"></div>
+
+        <hr style="margin-top: 30px; margin-bottom: 30px; border: 0; border-top: 1px solid #eee;">
+
+        <h2>Social</h2>
+        <p>Follow <a href="https://x.com/yourshibaaccount" target="_blank" rel="noopener noreferrer">@yourshibaaccount</a> on X</p>
+
+        <div class="warning">
+            ⚠️ **Warning:** Use at your own risk. NO financial advice.
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 
     <script>
-        // *******************************************************************
-        // KONFIGURASI WEB3 DAN LOGIKA
-        // *******************************************************************
-
-        const TOKEN_RATE = 5000;         
-        const NFT_PRICE_USD = 10;        
-        const BASE_USD_PRICE = 1000000;  
-        const CHAIN_ID = 8453;           
-
-        // --- ALAMAT KONTRAK WAJIB DI GANTI ---
-        const NFT_SALE_CONTRACT = "0x...GANTI_DENGAN_ALAMAT_KONTRAK_SALE_NFT_ANDA..."; 
-        const TOKEN_SALE_CONTRACT = "0x...GANTI_DENGAN_ALAMAT_KONTRAK_SALE_TOKEN_ANDA..."; 
-        const USDC_CONTRACT_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; 
+        // --- KONFIGURASI PROYEK SHIBA_X402 ---
+        // GANTI SEMUA NILAI INI DENGAN DATA KONTRAK DAN RELAYER AKTUAL ANDA
+        const RELAYER_URL = "https://api.us-ai.fun/shiba-mint"; // Ganti jika relayer endpoint berbeda
+        const CONTRACT_SALE_MANAGER_ADDRESS = "0xED143D7C6195fD65C5b0a66F8d2B329E44ffE3D1"; // Tetap sama seperti referensi
         
-        // --- RELAYER / BACKEND ---
-        const RELAYER_URL_BASE = "https://api.us-ai.fun"; 
+        const USDC_CONTRACT_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; // USDC Base Mainnet
+        const CHAIN_ID = 8453; // Base Mainnet
+        
+        const BASE_RATE = 5000; // 1 USDC = 5000 $SHIBA
+        
+        // Harga USDC dalam WEI/smallest unit (1 USDC = 1,000,000)
+        const ONE_USDC_TX = ethers.BigNumber.from('1000000'); 
+        
+        // --- DOM Elements ---
+        const connectWalletBtn = document.getElementById('connectWalletBtn');
+        const mintOptionsDiv = document.getElementById('mintOptions');
+        const mint1USDCBtn = document.getElementById('mint1USDCBtn');
+        const mint10USDCBtn = document.getElementById('mint10USDCBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const gasDisplay = document.getElementById('gasDisplay');
 
-        // --- Variabel Global ---
+        // --- Variabel State Global ---
         let signer;
         let provider;
         let userAddress;
+        let ownerWalletAddress; 
 
-        // Element UI
-        const connectBtn = document.getElementById('connect-wallet-btn');
-        const walletStatusText = document.getElementById('wallet-status-text');
-        const nftQuantityInput = document.getElementById('nft-quantity');
-        const tokenAmountInput = document.getElementById('token-amount');
-        const nftMintBtn = document.getElementById('nft-mint-button');
-        const tokenMintBtn = document.getElementById('token-mint-button');
-        const gasDisplay = document.getElementById('gas-display');
-        const statusMessage = document.getElementById('status-message');
-        const errorMessage = document.getElementById('error-message');
-        const nftTotalCostDisplay = document.getElementById('nft-total-cost');
-        const tokenReceiveDisplay = document.getElementById('token-receive-display');
+        const saleManagerABI = [
+            "function wallet() view returns (address)", // ABI untuk mengambil alamat owner/penerima
+        ];
 
-        // ABI Minimal untuk mendapatkan alamat wallet owner
-        const saleAbi = ["function wallet() view returns (address)"];
-
-
-        // *******************************************************************
-        // FUNGSI KONEKSI DAN UTILITY
-        // *******************************************************************
-
+        // --- WALLET CONNECTION (Fungsi tidak berubah) ---
         async function connectWallet() {
             errorMessage.textContent = '';
             statusMessage.textContent = 'Connecting...';
             gasDisplay.textContent = 'Fetching gas price...';
 
             if (typeof window.ethereum === 'undefined') {
-                errorMessage.textContent = 'MetaMask atau dompet EVM tidak terdeteksi.';
-                return;
+                errorMessage.textContent = "Metamask not detected."; return;
             }
-
             try {
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
                 provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -341,201 +133,154 @@
 
                 const { chainId } = await provider.getNetwork();
                 if (chainId !== CHAIN_ID) {
-                    errorMessage.textContent = 'Harap pindah ke jaringan Base Mainnet.';
-                    return;
+                    errorMessage.textContent = `Please switch to the Base Mainnet.`; return;
                 }
 
                 // Deteksi Harga Gas
-                const feeData = await provider.getFeeData();
-                const gasPriceInGwei = feeData.gasPrice.div(1000000000);
-                gasDisplay.textContent = `⚡ Gas: ${gasPriceInGwei.toString()} Gwei (Gas dibayar oleh Server)`;
+                try {
+                    const feeData = await provider.getFeeData();
+                    const gasPriceInGwei = feeData.gasPrice.div(1000000000);
+                    gasDisplay.textContent = `⚡ Current Network Gas: ${gasPriceInGwei.toString()} Gwei`;
+                } catch (gasError) {
+                    gasDisplay.textContent = 'Could not fetch gas price.';
+                }
 
-
-                // Ambil alamat wallet owner (Menggunakan salah satu kontrak sebagai titik awal)
-                const saleContract = new ethers.Contract(TOKEN_SALE_CONTRACT, saleAbi, provider);
-                const ownerWalletAddress = await saleContract.wallet();
+                // Ambil alamat wallet owner
+                statusMessage.textContent = 'Fetching sale configuration...';
+                const saleContract = new ethers.Contract(CONTRACT_SALE_MANAGER_ADDRESS, saleManagerABI, provider);
+                ownerWalletAddress = await saleContract.wallet();
 
                 if (!ownerWalletAddress) {
-                     errorMessage.textContent = 'Failed to read owner wallet address from contract.'; 
-                     return;
+                    errorMessage.textContent = 'Failed to read owner wallet address from contract.'; return;
                 }
 
-                // Update UI sukses
-                walletStatusText.textContent = `Wallet: ${userAddress.substring(0, 6)}...${userAddress.substring(38)} (Connected)`;
-                walletStatusText.style.color = '#39ff14';
-                connectBtn.textContent = 'Wallet Connected';
-                connectBtn.disabled = true;
-                nftMintBtn.disabled = false;
-                tokenMintBtn.disabled = false;
-                statusMessage.textContent = `✅ Connected to Base Mainnet. Owner Wallet: ${ownerWalletAddress.substring(0, 6)}...`;
-
+                connectWalletBtn.style.display = 'none';
+                mintOptionsDiv.style.display = 'flex'; // Tampilkan dua tombol mint
+                
+                // Aktifkan kedua tombol mint
+                mint1USDCBtn.disabled = false;
+                mint10USDCBtn.disabled = false;
+                
+                statusMessage.textContent = `Wallet Connected: ${userAddress.substring(0, 6)}...`;
             } catch (error) {
                 console.error("Connection Error:", error);
-                errorMessage.textContent = `Connection aborted or failed to read contract.`;
-                walletStatusText.textContent = 'Wallet Disconnected';
-                walletStatusText.style.color = 'var(--color-danger)';
+                errorMessage.textContent = `Connection aborted or failed.`;
+            }
+        }
+
+        // --- MINT FUNCTION (GASLESS) - Fleksibel dengan Jumlah USDC ---
+        async function mintToken(usdcAmount) {
+            errorMessage.textContent = '';
+            statusMessage.textContent = '1. Requesting Permit Signature';
+            
+            // Nonaktifkan semua tombol mint selama transaksi
+            mint1USDCBtn.disabled = true;
+            mint10USDCBtn.disabled = true;
+            
+            if (!ownerWalletAddress) {
+                errorMessage.textContent = "Owner wallet not loaded. Please reconnect.";
+                mint1USDCBtn.disabled = false;
+                mint10USDCBtn.disabled = false;
+                return;
+            }
+
+            // Hitung nilai USDC yang akan ditransfer (BigNumber)
+            const usdcValueToTransfer = ONE_USDC_TX.mul(usdcAmount);
+            const tokenAmount = usdcAmount * BASE_RATE;
+
+            let response;
+            try {
+                // --- 1. Buat Tanda Tangan ---
+                const currentTimestamp = Math.floor(Date.now() / 1000);
+                const validBefore = currentTimestamp + (60 * 15);
+                const validAfter = 0;
+                // Nonce harus unik per transaksi
+                const nonce = ethers.utils.solidityKeccak256(["uint256", "uint256"], [userAddress, Date.now()]); 
+
+                const domain = { name: 'USD Coin', version: '2', chainId: CHAIN_ID, verifyingContract: USDC_CONTRACT_ADDRESS };
+                const types = { TransferWithAuthorization: [ { name: 'from', type: 'address' }, { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' }, { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' }, ] };
+                const message = { from: userAddress, to: ownerWalletAddress, value: usdcValueToTransfer, validAfter: validAfter, validBefore: validBefore, nonce: nonce };
+
+                const signature = await signer._signTypedData(domain, types, message);
+                const signatureParts = ethers.utils.splitSignature(signature);
+
+                statusMessage.textContent = `2. Signature obtained for ${usdcAmount} USDC. Sending to server... (Gasless)`;
+
+                // --- 2. KIRIM KE RELAYER ---
+                const signatureBody = {
+                    buyerAddress: userAddress,
+                    validAfter: message.validAfter,
+                    validBefore: message.validBefore,
+                    nonce: message.nonce,
+                    v: signatureParts.v,
+                    r: signatureParts.r,
+                    s: signatureParts.s,
+                    usdcAmount: usdcAmount // Tambahkan amount agar relayer tahu berapa $SHIBA yang harus dikirim
+                };
+
+                response = await fetch(RELAYER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(signatureBody) 
+                });
+                
+                // --- 3. PROSES RESPONS DENGAN HATI-HATI ---
+                if (!response.ok) {
+                    let errorMsg = `Server error (Status ${response.status})`;
+                    try {
+                        const errorBody = await response.json();
+                        errorMsg = errorBody.error || errorMsg;
+                    } catch (e) {
+                        errorMsg = await response.text();
+                    }
+                    throw new Error(errorMsg);
+                }
+
+                // Jika status OK (200), coba parse JSON
+                let result;
+                try {
+                    result = await response.json();
+                } catch (parseError) {
+                    console.error("Gagal parse JSON respons:", parseError);
+                    statusMessage.innerHTML = `✅ **Mint Likely Successful!** Sent ${usdcAmount} USDC. Check your wallet and Basescan.`;
+                    return; 
+                }
+                
+                // --- 4. TAMPILKAN HASIL SUKSES (JIKA JSON VALID) ---
+                if (result.success && result.txHash) {
+                    statusMessage.innerHTML = `✅ **Mint Success!** ${tokenAmount.toLocaleString()} $SHIBA sent! <br>Tx: <a href="https://basescan.org/tx/${result.txHash}" target="_blank">${result.txHash.substring(0,10)}...</a>`;
+                } else {
+                    errorMessage.textContent = `Mint Failed: ${result.error || "Server reported failure."}`;
+                }
+
+            } catch (error) { // Menangkap SEMUA error
+                console.error("Minting process error:", error); 
+                if (error.code === 4001) {
+                    errorMessage.textContent = 'Transaction signature denied by the user.';
+                } else {
+                    errorMessage.textContent = `Mint Operation Failed: ${error.message || "Unknown error occurred."}`;
+                }
+            } finally {
+                // Aktifkan kembali tombol
+                mint1USDCBtn.disabled = false;
+                mint10USDCBtn.disabled = false;
             }
         }
         
-        function updateNFTSummary() {
-            const quantity = Number(nftQuantityInput.value) || 0;
-            const totalCost = quantity * NFT_PRICE_USD;
-            nftTotalCostDisplay.textContent = `Total Cost: ${totalCost} USDC`;
-        }
-
-        function updateTokenSummary() {
-            const usdcAmount = Number(tokenAmountInput.value) || 0;
-            const receivedTokens = usdcAmount * TOKEN_RATE;
-            const formattedTokens = receivedTokens.toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-
-            tokenReceiveDisplay.textContent = `Receive: ${formattedTokens} $COLLECT`;
-        }
-
-
-        // *******************************************************************
-        // FUNGSI PERMIT & MINTING (INTEGRASI BACKEND)
-        // *******************************************************************
-
-        async function signPermit(saleContractAddress, usdcValueWei) {
-            const readContract = new ethers.Contract(saleContractAddress, saleAbi, provider);
-            const ownerWalletAddress = await readContract.wallet();
-            
-            if (!ownerWalletAddress) throw new Error("Owner wallet address not found.");
-
-            // Buat Payload Permit
-            const nonce = ethers.utils.solidityKeccak256(["uint256", "uint256"], [userAddress, Date.now()]);
-            const message = {
-                from: userAddress,
-                to: ownerWalletAddress, // WAJIB: Alamat Owner
-                value: usdcValueWei,
-                validAfter: 0,
-                validBefore: Math.floor(Date.now() / 1000) + 900, 
-                nonce: nonce,
-            };
-
-            // Tandatangani (Pop-up Gratis)
-            const signature = await signer._signTypedData({ name: 'USD Coin', version: '2', chainId: CHAIN_ID, verifyingContract: USDC_CONTRACT_ADDRESS }, 
-                { TransferWithAuthorization: [{ name: 'from', type: 'address' }, { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' }, { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' }] }, 
-                message);
-            
-            const sigParts = ethers.utils.splitSignature(signature);
-            
-            return { message, sigParts };
-        }
-
-        async function mintNFT() {
-            if (!signer) return errorMessage.textContent = 'Harap hubungkan dompet terlebih dahulu.';
-            
-            const quantity = nftQuantityInput.value;
-            const totalUSDCAmount = parseFloat(quantity) * NFT_PRICE_USD;
-            const valueWei = (totalUSDCAmount * BASE_USD_PRICE).toString();
-            
-            try {
-                statusMessage.textContent = '1. Meminta Tanda Tangan Permit... (Gratis)';
-                
-                const { message, sigParts } = await signPermit(NFT_SALE_CONTRACT, valueWei);
-
-                statusMessage.textContent = '2. Signature didapatkan. Mengirim ke Relayer...';
-                
-                // --- FETCH KE ENDPOINT NFT ---
-                const response = await fetch(`${RELAYER_URL_BASE}/mint-nft`, { 
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        buyerAddress: userAddress,
-                        quantity: quantity, 
-                        validAfter: message.validAfter, validBefore: message.validBefore, nonce: message.nonce,
-                        v: sigParts.v, r: sigParts.r, s: sigParts.s
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorBody = await response.json();
-                    throw new Error(errorBody.error || `Server error (Status ${response.status})`);
-                }
-
-                const result = await response.json();
-                
-                if (!result.success) throw new Error(result.error || "Transaksi NFT tidak berhasil.");
-
-                errorMessage.textContent = '';
-                statusMessage.textContent = `✅ MINT NFT SUKSES! Tx Hash: ${result.txHash.substring(0,10)}...`;
-
-            } catch (error) {
-                console.error("Mint NFT Gagal:", error);
-                errorMessage.textContent = `Mint NFT Gagal: ${error.message || "Cek log konsol."}`;
-                statusMessage.textContent = 'Transaksi Gagal.';
-            }
-        }
-
-        async function mintToken() {
-            if (!signer) return errorMessage.textContent = 'Harap hubungkan dompet terlebih dahulu.';
-            
-            const usdcAmount = tokenAmountInput.value;
-            const totalUSDCAmount = parseFloat(usdcAmount); 
-            const valueWei = (totalUSDCAmount * BASE_USD_PRICE).toString();
-
-            try {
-                statusMessage.textContent = '1. Meminta Tanda Tangan Permit... (Gratis)';
-
-                const { message, sigParts } = await signPermit(TOKEN_SALE_CONTRACT, valueWei);
-                
-                statusMessage.textContent = '2. Signature didapatkan. Mengirim ke Relayer...';
-
-                // --- FETCH KE ENDPOINT TOKEN ---
-                const response = await fetch(`${RELAYER_URL_BASE}/buy-token`, { 
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        buyerAddress: userAddress,
-                        usdcAmount: usdcAmount, 
-                        validAfter: message.validAfter, validBefore: message.validBefore, nonce: message.nonce,
-                        v: sigParts.v, r: sigParts.r, s: sigParts.s
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorBody = await response.json();
-                    throw new Error(errorBody.error || `Server error (Status ${response.status})`);
-                }
-
-                const result = await response.json();
-                
-                if (!result.success) throw new Error(result.error || "Pembelian Token Gagal: Transaksi tidak berhasil.");
-
-                errorMessage.textContent = '';
-                statusMessage.textContent = `✅ BELI TOKEN SUKSES! Tx Hash: ${result.txHash.substring(0,10)}...`;
-
-            } catch (error) {
-                console.error("Beli Token Gagal:", error);
-                errorMessage.textContent = `Beli Token Gagal: ${error.message || "Cek log konsol."}`;
-                statusMessage.textContent = 'Transaksi Gagal.';
-            }
-        }
-
-        // *******************************************************************
-        // EVENT LISTENERS
-        // *******************************************************************
+        // --- Event Listeners ---
+        connectWalletBtn.addEventListener('click', connectWallet);
         
-        window.onload = function() {
-            // Inisialisasi UI
-            updateNFTSummary();
-            updateTokenSummary();
-            
-            // Event Listeners Input
-            nftQuantityInput.addEventListener('input', updateNFTSummary);
-            tokenAmountInput.addEventListener('input', updateTokenSummary);
+        // Listener untuk tombol 1 USDC
+        mint1USDCBtn.addEventListener('click', () => {
+            const amount = parseInt(mint1USDCBtn.getAttribute('data-usdc-amount'));
+            mintToken(amount);
+        });
 
-            // Event Listeners Tombol
-            connectBtn.addEventListener('click', connectWallet);
-            nftMintBtn.addEventListener('click', mintNFT); 
-            tokenMintBtn.addEventListener('click', mintToken); 
-            
-            // Memastikan nilai awal diatur untuk input
-            if (tokenAmountInput.value === "") tokenAmountInput.value = 10;
-            if (nftQuantityInput.value === "") nftQuantityInput.value = 1;
-        };
+        // Listener untuk tombol 10 USDC
+        mint10USDCBtn.addEventListener('click', () => {
+            const amount = parseInt(mint10USDCBtn.getAttribute('data-usdc-amount'));
+            mintToken(amount);
+        });
     </script>
-
 </body>
 </html>
