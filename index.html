@@ -31,7 +31,7 @@
             animation: scroll-left 20s linear infinite;
         }
 
-        /* Progress Bar Styling */
+        /* Progress Bar Styling (Simulasi Progress Shadcn) */
         .progress-root {
             position: relative;
             height: 1rem; /* h-4 */
@@ -50,28 +50,46 @@
 
     <div id="main-content" class="min-h-screen bg-[#F5F0E8] overflow-hidden relative">
         <div id="bg-elements" class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div id="bg-el-1" class="absolute top-20 left-10 w-64 h-64 rounded-full bg-purple-200 opacity-20 blur-3xl"></div>
-            <div id="bg-el-2" class="absolute top-40 right-20 w-96 h-96 rounded-full bg-orange-200 opacity-20 blur-3xl"></div>
-            <div id="bg-el-3" class="absolute bottom-20 left-1/3 w-80 h-80 rounded-full bg-green-200 opacity-20 blur-3xl"></div>
+            <div 
+                id="bg-el-1"
+                class="absolute top-20 left-10 w-64 h-64 rounded-full bg-purple-200 opacity-20 blur-3xl"
+            ></div>
+            <div 
+                id="bg-el-2"
+                class="absolute top-40 right-20 w-96 h-96 rounded-full bg-orange-200 opacity-20 blur-3xl"
+            ></div>
+            <div 
+                id="bg-el-3"
+                class="absolute bottom-20 left-1/3 w-80 h-80 rounded-full bg-green-200 opacity-20 blur-3xl"
+            ></div>
         </div>
 
         <nav class="relative z-50 px-6 md:px-12 py-6 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden">
-                    <img src="logo.png" alt="SHIBA Logo" class="w-full h-full object-cover">
-                </div>
-                <h1 class="text-3xl font-black">SHIUA X402</h1> 
-            </div>
+    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden">
+        <img 
+            src="logo.png" 
+            alt="SHIBA Logo" 
+            class="w-full h-full object-cover"
+        >
+    </div>
+    <h1 class="text-3xl font-black">SHIUA X402</h1> 
+    </div>
             
             <div class="flex items-center gap-4">
-                <a href="https://x.com/ShiuaX402" target="_blank" rel="noopener noreferrer"
-                    class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300">
+                <a 
+                    href="https://twitter.com" 
+                    target="https://x.com/ShiuaX402" 
+                    rel="noopener noreferrer"
+                    class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300"
+                >
                     <i data-lucide="twitter" class="w-5 h-5"></i>
                 </a>
-                <a href="/mint.html" 
-                    class="bg-black text-white font-bold px-6 py-3 md:px-8 md:py-4 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border-4 border-black">
-                    MINT $SHIUA NOW
-                </a>
+                <button 
+                    class="bg-white text-black font-bold px-6 py-6 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border-4 border-black"
+                >
+                    Connect Wallet
+                </button>
             </div>
         </nav>
 
@@ -82,10 +100,10 @@
                         <h2 class="text-6xl md:text-8xl font-black leading-tight">
                             $SHIUA
                         </h2>
-                        <p class="text-2xl font-bold" id="total-supply-display">Total supply 1B</p>
+                        <p class="text-2xl font-bold">Total supply 1B</p>
                         
-                        <div class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-lg border-2 border-black max-w-md">
-                            <code class="font-mono text-sm flex-1" id="contract-address-display">CA: 0xED14...E3D1</code>
+                        <div id="copy-container" class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-lg border-2 border-black max-w-md">
+                            <code class="font-mono text-sm flex-1" id="contract-address-display">CA: 0xC0B3...4486C7</code>
                             <button
                                 id="copy-button"
                                 class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -99,26 +117,25 @@
                         <p class="font-bold text-lg">1 USDC = 10,000 $SHIUA</p>
                         <div class="space-y-2">
                             <div class="progress-root">
-                                <div id="progress-indicator" class="progress-indicator bg-black" style="width: 0%;"></div>
+                                <div id="progress-indicator" class="progress-indicator bg-black" style="width: 100%;"></div>
                             </div>
                             <div class="flex justify-between text-sm font-semibold">
-                                <span id="progress-percentage">Loading%</span>
-                                <span id="minted-vs-max">0 / 100M Minted</span>
+                                <span>100%</span>
+                                <span>100%</span>
                             </div>
                         </div>
                     </div>
 
-                    <a href="/mint.html" 
-                        class="inline-block bg-gradient-to-r from-yellow-400 to-orange-400 px-10 py-5 rounded-full border-4 border-black shadow-xl transform hover:scale-105 transition-transform text-2xl font-black text-black text-center">
-                        MINT YOUR $SHIUA
-                    </a>
-                    
-                    <div class="inline-flex items-center gap-3 bg-white px-8 py-4 rounded-full border-4 border-black shadow-xl">
-                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border-2 border-black overflow-hidden">
-                            <img src="usdc.png" alt="USDC Logo" class="w-full h-full object-contain">
-                        </div>
-                        <span class="text-2xl font-black">Powered by USDC</span>
-                    </div>
+                    <div class="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-400 to-orange-400 px-8 py-4 rounded-full border-4 border-black shadow-xl transform hover:scale-105 transition-transform">
+    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border-2 border-black overflow-hidden">
+        <img 
+            src="usdc.png" 
+            alt="USDC Logo" 
+            class="w-full h-full object-contain"
+        >
+    </div>
+    <span class="text-2xl font-black">1</span>
+</div>
 
                     <div class="inline-flex items-center gap-2 bg-blue-100 px-6 py-3 rounded-full border-2 border-blue-300">
                         <span class="text-xl">❌</span>
@@ -127,9 +144,51 @@
                 </div>
 
                 <div class="relative flex justify-center items-center">
-                    <div class="relative animate-float">
-                        <img src="logo.png" alt="SHIBA X402 NFT" class="w-full max-w-md drop-shadow-2xl">
-                        
+    <div class="relative animate-float">
+        <img 
+            src="logo.png" 
+            alt="SHIBA X402 NFT"
+            class="w-full max-w-md drop-shadow-2xl"
+                        >
+                            <path
+                                d="M 100 30 
+                                   Q 50 30, 40 80 
+                                   Q 30 130, 40 180 
+                                   L 40 230 
+                                   Q 50 215, 60 230 
+                                   Q 70 215, 80 230 
+                                   Q 90 215, 100 230 
+                                   Q 110 215, 120 230 
+                                   Q 130 215, 140 230 
+                                   Q 150 215, 160 230 
+                                   L 160 180 
+                                   Q 170 130, 160 80 
+                                   Q 150 30, 100 30 Z"
+                                fill="white"
+                                stroke="black"
+                                stroke-width="4"
+                            />
+                            
+                            <circle cx="75" cy="90" r="15" fill="black" />
+                            <circle cx="125" cy="90" r="15" fill="black" />
+                            
+                            <ellipse cx="100" cy="120" rx="20" ry="25" fill="black" />
+                            <ellipse cx="100" cy="115" rx="15" ry="20" fill="#FF4444" />
+                            
+                            <path
+                                d="M 40 100 Q 10 110, 20 130"
+                                stroke="black"
+                                stroke-width="4"
+                                fill="white"
+                            />
+                            <path
+                                d="M 160 100 Q 190 110, 180 130"
+                                stroke="black"
+                                stroke-width="4"
+                                fill="white"
+                            />
+                        </svg>
+
                         <div class="absolute -top-10 -right-10 animate-bounce-slow">
                             <div class="bg-white px-6 py-3 rounded-2xl border-4 border-black shadow-xl transform rotate-12">
                                 <p class="font-black text-3xl">
@@ -145,9 +204,15 @@
         </div>
 
         <div class="absolute bottom-0 left-0 right-0 overflow-hidden">
-            <div class="relative h-32 bg-gradient-to-r from-yellow-400 to-yellow-600"> 
-                <svg class="absolute top-0 w-full h-32" preserveAspectRatio="none" viewBox="0 0 1200 120">
-                    <path d="M0,60 Q150,0 300,60 T600,60 T900,60 T1200,60 L1200,120 L0,120 Z" fill="#F5F0E8"/>
+    <div class="relative h-32 bg-gradient-to-r from-yellow-400 to-yellow-600"> <svg
+            class="absolute top-0 w-full h-32"
+            preserveAspectRatio="none"
+            viewBox="0 0 1200 120"
+                >
+                    <path
+                        d="M0,60 Q150,0 300,60 T600,60 T900,60 T1200,60 L1200,120 L0,120 Z"
+                        fill="#F5F0E8"
+                    />
                 </svg>
                 
                 <div class="absolute inset-0 flex items-center justify-center overflow-hidden">
@@ -169,27 +234,21 @@
     </div>
 
     <script>
-        // --- KONFIGURASI DATA UTAMA ---
-        const CONTRACT_ADDRESS_FULL = "0xED143D7C6195fD65C5b0a66F8d2B329E44ffE3D1"; // Alamat Penuh Contract Sale Manager
-        const DISPLAY_ADDRESS = "0xED14...E3D1";
-        const MINT_SUPPLY_MAX = 100000000; // 100 Juta Token untuk Minting
+        // 1. Data
+        const contractAddress = "0xC0B3...4486C7";
+        const progressValue = 100; // Assuming 100%
 
-        // --- DOM ELEMENTS ---
+        // 2. DOM Elements
         const copyButton = document.getElementById('copy-button');
         const copyIcon = document.getElementById('copy-icon');
-        const progressIndicator = document.getElementById('progress-indicator');
-        const progressPercentage = document.getElementById('progress-percentage');
-        const mintedVsMax = document.getElementById('minted-vs-max');
         const contractAddressDisplay = document.getElementById('contract-address-display');
+        const progressIndicator = document.getElementById('progress-indicator');
 
-        // Setel tampilan awal CA
-        contractAddressDisplay.textContent = `CA: ${DISPLAY_ADDRESS}`;
-
-        // --- 1. FUNGSIONALITAS COPY CA ---
+        // 3. Logic for Copy Button
         if (copyButton) {
             copyButton.addEventListener('click', () => {
                 // Copy text
-                navigator.clipboard.writeText(CONTRACT_ADDRESS_FULL);
+                navigator.clipboard.writeText(contractAddress);
                 
                 // Change icon to Check (Checkmark)
                 copyIcon.setAttribute('data-lucide', 'check');
@@ -207,46 +266,8 @@
                 lucide.createIcons(); // Re-render icon
             });
         }
-        
-        // --- 2. FUNGSIONALITAS PROGRESS (PERLU IMPLEMENTASI BACKEND) ---
 
-        async function fetchSupplyData() {
-    let mintedSupply = 0;
-    
-    // ABI minimal untuk membaca data (Contoh: fungsi yang mengembalikan uint256)
-    const MINT_ABI = ["function tokensMinted() view returns (uint256)"]; 
-    const CONTRACT_SALE_MANAGER_ADDRESS = "0xED143D7C6195fD65C5b0a66F8d2B329E44ffE3D1";
-    
-    try {
-        // Gunakan provider RPC publik Base (Atau gunakan milik Anda sendiri)
-        const provider = new ethers.providers.JsonRpcProvider('https://mainnet.base.org');
-        const saleContract = new ethers.Contract(CONTRACT_SALE_MANAGER_ADDRESS, MINT_ABI, provider);
-        
-        // Panggil fungsi kontrak (ganti 'tokensMinted' sesuai nama fungsi di kontrak Anda)
-        const result = await saleContract.tokensMinted();
-        
-        // Ubah BigNumber menjadi angka JavaScript (discaled)
-        mintedSupply = result.toNumber();
-        
-    } catch (error) {
-        console.error("Gagal mengambil data kontrak:", error);
-    }
-
-            const percentage = Math.min(100, (mintedSupply / MINT_SUPPLY_MAX) * 100);
-
-            // Perbarui tampilan
-            progressIndicator.style.width = `${percentage}%`;
-            progressPercentage.textContent = `${percentage.toFixed(2)}%`;
-            mintedVsMax.textContent = `${(mintedSupply / 1000000).toFixed(0)}M / ${MINT_SUPPLY_MAX / 1000000}M Minted`;
-            
-            // Perbarui data setiap 30 detik
-            setTimeout(fetchSupplyData, 30000); 
-        }
-
-
-        // --- 3. LOGIC LAIN & INISIALISASI ---
-
-        // Logic for Scroll Effect (Parallax)
+        // 4. Logic for Scroll Effect (Parallax)
         const bgEl1 = document.getElementById('bg-el-1');
         const bgEl2 = document.getElementById('bg-el-2');
         const bgEl3 = document.getElementById('bg-el-3');
@@ -258,13 +279,28 @@
             if (bgEl3) bgEl3.style.transform = `translateY(${scrollY * 0.4}px)`;
         });
 
-        // Initialize on Load
+        // 5. Initialize Lucide Icons
+        // This must be called after the DOM content is loaded
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
-            // Mulai fetch data supply
-            fetchSupplyData();
+            // Set initial progress bar width
+            if (progressIndicator) {
+                progressIndicator.style.width = `${progressValue}%`;
+            }
+            // Change the SVG color in the wavy bottom to match the background
+            const wavyPath = document.querySelector('.wavy-bottom svg path');
+            if (wavyPath) {
+                wavyPath.setAttribute('fill', '#F5F0E8');
+            }
+
+            // Fix SHIUA text color in the footer
+            const booTexts = document.querySelectorAll('.animate-scroll-left span');
+            booTexts.forEach(span => {
+                 span.classList.remove('text-white');
+                 span.classList.add('text-black');
+            });
         });
     </script>
 </body>
