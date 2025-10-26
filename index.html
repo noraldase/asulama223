@@ -45,9 +45,14 @@
             transition: transform 0.6s ease;
         }
         
-        /* Gaya kustom untuk memastikan lebar sejajar */
+        /* Gaya kustom untuk membatasi lebar kolom konten */
         .cta-max-width {
-            max-width: 450px; /* Batasan lebar untuk keseragaman CTA */
+            max-width: 450px; 
+        }
+        /* Gaya kustom untuk memastikan ikon USDC terlihat baik di tombol yang lebih kecil */
+        .usdc-icon-size {
+            width: 1.75rem; /* w-7 */
+            height: 1.75rem; /* h-7 */
         }
     </style>
 </head>
@@ -113,18 +118,19 @@
                         </div>
                     </div>
                     
-                    <div class="space-y-4 cta-max-width">
+                    <div class="flex gap-4 cta-max-width">
+                        
                         <a href="/mint.html" 
-                            class="inline-block w-full text-center bg-gradient-to-r from-yellow-400 to-orange-400 px-10 py-5 rounded-full border-4 border-black shadow-xl transform hover:scale-105 transition-transform text-2xl font-black text-black">
+                            class="inline-block flex-1 text-center bg-gradient-to-r from-yellow-400 to-orange-400 px-6 py-4 rounded-full border-4 border-black shadow-xl transform hover:scale-105 transition-transform text-lg font-black text-black">
                             MINT YOUR $SHIUA
                         </a>
                         
-                        <div class="inline-flex items-center justify-center w-full gap-3 bg-white px-10 py-5 rounded-full border-4 border-black shadow-xl">
-                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border-2 border-black overflow-hidden">
+                        <div class="inline-flex items-center justify-center flex-1 gap-2 bg-white px-3 py-4 rounded-full border-4 border-black shadow-xl">
+                            <div class="usdc-icon-size bg-white rounded-full flex items-center justify-center border-2 border-black overflow-hidden">
                                 <img src="usdc.png" alt="USDC Logo" class="w-full h-full object-contain">
                             </div>
                             <a href="https://www.x402scan.com" target="_blank"
-                                class="text-2xl font-black text-center">Powered by x420Scan
+                                class="text-base font-black text-center">Powered by x420Scan
                             </a>
                         </div>
                     </div>
@@ -213,13 +219,12 @@
             });
         }
 
-        // --- INISIALISASI (Termasuk Parallax yang tidak terdeteksi) ---
+        // --- INISIALISASI ---
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
 
-            // Memperbaiki tampilan CA agar sesuai dengan format penuh
             contractAddressDisplay.textContent = `CA: ${DISPLAY_ADDRESS}`; 
 
             // Logic for Scroll Effect (Parallax) - Dibiarkan agar efek tetap ada
