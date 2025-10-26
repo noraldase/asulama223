@@ -211,27 +211,26 @@
         // --- 2. FUNGSIONALITAS PROGRESS (PERLU IMPLEMENTASI BACKEND) ---
 
         async function fetchSupplyData() {
-            // !!! PENTING: Anda harus mengganti kode ini dengan implementasi nyata !!!
-            // Cara yang benar: 
-            // 1. Buat endpoint di backend Anda (atau gunakan penyedia RPC)
-            // 2. Endpoint ini harus memanggil fungsi 'balanceOf' (atau 'totalSupply') 
-            //    token $SHIUA yang dipegang oleh Contract Sale Manager, 
-            //    atau memanggil fungsi yang menunjukkan berapa banyak token yang telah di-mint.
-            
-            // CONTOH DATA DUMMY UNTUK SIMULASI
-            let mintedSupply = 35000000; // Contoh: 35 Juta token telah di-mint
-            
-            // Jika Anda menggunakan endpoint API, kodenya mungkin terlihat seperti ini:
-            /*
-            try {
-                const response = await fetch('/api/get-minted-supply');
-                const data = await response.json();
-                mintedSupply = data.mintedSupply; // Asumsi API mengembalikan mintedSupply dalam bentuk angka
-            } catch (error) {
-                console.error("Gagal mengambil data supply:", error);
-                mintedSupply = 0; // Fallback ke 0 jika gagal
-            }
-            */
+    let mintedSupply = 0;
+    
+    // ABI minimal untuk membaca data (Contoh: fungsi yang mengembalikan uint256)
+    const MINT_ABI = ["function tokensMinted() view returns (uint256)"]; 
+    const CONTRACT_SALE_MANAGER_ADDRESS = "0xED143D7C6195fD65C5b0a66F8d2B329E44ffE3D1";
+    
+    try {
+        // Gunakan provider RPC publik Base (Atau gunakan milik Anda sendiri)
+        const provider = new ethers.providers.JsonRpcProvider('https://mainnet.base.org');
+        const saleContract = new ethers.Contract(CONTRACT_SALE_MANAGER_ADDRESS, MINT_ABI, provider);
+        
+        // Panggil fungsi kontrak (ganti 'tokensMinted' sesuai nama fungsi di kontrak Anda)
+        const result = await saleContract.tokensMinted();
+        
+        // Ubah BigNumber menjadi angka JavaScript (discaled)
+        mintedSupply = result.toNumber();
+        
+    } catch (error) {
+        console.error("Gagal mengambil data kontrak:", error);
+    }
 
             const percentage = Math.min(100, (mintedSupply / MINT_SUPPLY_MAX) * 100);
 
