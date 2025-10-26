@@ -113,9 +113,8 @@
         let ownerWalletAddress; 
 
         const saleManagerABI = [
-            "function wallet() view returns (address)", // ABI untuk mengambil alamat owner/penerima
-        ];
-
+    "function paymentWallet() view returns (address)", 
+];
         // --- WALLET CONNECTION (Fungsi tidak berubah) ---
         async function connectWallet() {
             errorMessage.textContent = '';
@@ -148,7 +147,7 @@
                 // Ambil alamat wallet owner
                 statusMessage.textContent = 'Fetching sale configuration...';
                 const saleContract = new ethers.Contract(CONTRACT_SALE_MANAGER_ADDRESS, saleManagerABI, provider);
-                ownerWalletAddress = await saleContract.wallet();
+                ownerWalletAddress = await saleContract.paymentWallet();
 
                 if (!ownerWalletAddress) {
                     errorMessage.textContent = 'Failed to read owner wallet address from contract.'; return;
