@@ -3,628 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Genesis Collective</title>
+    <title>$BOO - Official Site</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Base Styling & Variables (Pixel Theme) */
-        :root {
-             /* Colors adjusted slightly for better contrast */
-            --color-amber-400: #fbbf24;
-            --color-yellow-500: #f59e0b; /* Darker yellow */
-            --color-amber-600: #d97706;
-            --color-green-500: #22c55e;
-            --color-emerald-600: #059669;
-            --color-red-500: #ef4444;
-            --color-blue-500: #3b82f6;
-            --color-white: #ffffff;
-            --color-gray-900: #111827;
-            --color-gray-800: #1f2937;
-            --color-gray-700: #374151;
-            --color-gray-600: #4b5563;
-            --color-gray-500: #6b7280; 
-            --color-gray-200: #E5E7EB; 
+        /* Custom Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0px) rotate(12deg); }
+            50% { transform: translateY(-10px) rotate(12deg); }
+        }
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
 
-        body {
-            font-family: 'Courier New', monospace; /* Pixel font */
-            margin: 0;
-            padding: 0;
-            background-color: var(--color-yellow-500); 
-            background-image: linear-gradient(to bottom right, var(--color-amber-400), var(--color-yellow-500), var(--color-amber-600));
-            color: var(--color-gray-900);
-            min-height: 100vh;
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        .animate-bounce-slow {
+            animation: bounce-slow 2s ease-in-out infinite;
+        }
+        .animate-scroll-left {
+            animation: scroll-left 20s linear infinite;
+        }
+
+        /* Progress Bar Styling (Simulasi Progress Shadcn) */
+        .progress-root {
             position: relative;
-            overflow-x: hidden;
+            height: 1rem; /* h-4 */
+            background-color: rgb(229 231 235); /* bg-gray-200 */
+            border-radius: 9999px; /* rounded-full */
+            overflow: hidden;
         }
-
-        /* Pixel Text & Border */
-        .pixel-text {
-            font-family: 'Courier New', monospace;
-            letter-spacing: 1px; /* Slightly reduced for readability */
-            text-transform: uppercase;
+        .progress-indicator {
+            height: 100%;
+            background-color: black; /* Default to black for visibility */
+            transition: transform 0.6s ease;
         }
-        .pixel-border {
-            border: 4px solid #000;
-            box-shadow: 6px 6px 0 rgba(0,0,0,0.2), -2px -2px 0 rgba(255,255,255,0.05); /* Softer shadow */
-        }
-        .pixel-box {
-            border: 2px solid rgba(0,0,0,0.1);
-        }
-
-        /* Layout (Simple Tailwind-like classes) */
-        .max-w-7xl { max-width: 1280px; }
-        .mx-auto { margin-left: auto; margin-right: auto; }
-        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
-        .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
-        .relative { position: relative; }
-        .z-10 { z-index: 10; }
-        .min-h-screen { min-height: 100vh; }
-        .flex { display: flex; }
-        .justify-between { justify-content: space-between; }
-        .items-center { align-items: center; }
-        .gap-3 { gap: 0.75rem; }
-        .gap-12 { gap: 3rem; }
-        .grid { display: grid; }
-        .space-y-3 > * + * { margin-top: 0.75rem; }
-        .space-y-6 > * + * { margin-top: 1.5rem; }
-        .space-y-8 > * + * { margin-top: 2rem; }
-        .mt-20 { margin-top: 5rem; }
-        .mb-2 { margin-bottom: 0.5rem; }
-        .mb-4 { margin-bottom: 1rem; }
-        .w-full { width: 100%; }
-        .text-center { text-align: center; }
-        .text-white { color: var(--color-white); }
-        .text-gray-900 { color: var(--color-gray-900); }
-        .text-gray-700 { color: var(--color-gray-700); }
-        .text-gray-600 { color: var(--color-gray-600); }
-        .text-amber-500 { color: var(--color-yellow-500); }
-        .text-amber-600 { color: var(--color-amber-600); }
-        .text-green-600 { color: var(--color-emerald-600); }
-        .text-xs { font-size: 0.75rem; }
-        .text-sm { font-size: 0.875rem; }
-        .text-xl { font-size: 1.25rem; }
-        .text-2xl { font-size: 1.5rem; }
-        .text-3xl { font-size: 1.875rem; }
-        .text-4xl { font-size: 2.25rem; }
-        .md\:text-base { font-size: 1rem; }
-        .md\:text-5xl { font-size: 3rem; }
-        .font-black { font-weight: 900; }
-        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
-        .duration-1000 { transition-duration: 1000ms; }
-        .ease-out { transition-timing-function: cubic-bezier(0, 0, 0.2, 1); }
-        .transform { transform: translate(0, 0) rotate(0) skewX(0) skewY(0) scaleX(1) scaleY(1); }
-        .hover\:scale-105:hover { transform: scale(1.05); }
-        .active\:scale-95:active { transform: scale(0.95); }
-        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-        .rounded-lg { border-radius: 0.5rem; }
-        .overflow-hidden { overflow: hidden; }
-
-        /* Pixel Pattern Overlay */
-        .pixel-pattern {
-            position: absolute;
-            inset: 0;
-            opacity: 0.05; /* Made it more subtle */
-            background-image: 
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px);
-            z-index: -1;
-        }
-
-        /* Header Specific */
-        header { padding: 1rem 1.5rem; position: sticky; top: 0; background: rgba(217, 119, 6, 0.8); backdrop-filter: blur(5px); z-index: 20; border-bottom: 4px solid black;}
-        .logo-box { width: 2.5rem; height: 2.5rem; background-color: var(--color-green-500); border-radius: 0.25rem; display: flex; align-items: center; justify-content: center; }
-        .logo-icon { width: 1.5rem; height: 1.5rem; color: var(--color-white); }
-
-        /* Pixel Card */
-        .pixel-card { background-color: var(--color-white); padding: 1.5rem; }
-        @media (min-width: 768px) { .pixel-card { padding: 2rem; } }
-
-        /* Pixel Button */
-        .pixel-button {
-            padding-left: 1rem; padding-right: 1rem; padding-top: 0.5rem; padding-bottom: 0.5rem;
-            font-weight: 700; font-size: 1rem; /* Adjusted size */
-            transition: all 0.2s;
-            position: relative;
-            cursor: pointer;
-            border: 4px solid #000; 
-            box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
-        }
-        .pixel-button.primary { background-color: var(--color-amber-500); color: var(--color-gray-900); }
-        .pixel-button.primary:hover { background-color: var(--color-amber-400); transform: scale(1.02); }
-        .pixel-button.secondary { background-color: var(--color-gray-900); color: var(--color-amber-500); }
-        .pixel-button.secondary:hover { background-color: var(--color-gray-800); transform: scale(1.02); }
-        .pixel-button:active { transform: scale(0.98); box-shadow: 3px 3px 0 rgba(0,0,0,0.2);}
-        .pixel-button:disabled { background-color: var(--color-gray-600); border-color: var(--color-gray-700); color: var(--color-gray-800); box-shadow: 3px 3px 0 rgba(0,0,0,0.2); opacity: 0.7; cursor: not-allowed; }
-        .inline-block { display: inline-block; vertical-align: middle; }
-        .mr-2 { margin-right: 0.5rem; }
-
-        /* Input Fields */
-        .input-pixel {
-             padding: 0.75rem 1rem;
-             border: 4px solid black;
-             background-color: var(--color-white);
-             color: var(--color-gray-900);
-             text-align: center;
-             font-size: 1.1em;
-             width: calc(100% - 8px - 2rem); /* Full width minus border/padding */
-             box-shadow: inset 2px 2px 0 rgba(0,0,0,0.1);
-             margin-bottom: 1rem;
-        }
-         .input-pixel:focus {
-             outline: none;
-             box-shadow: inset 2px 2px 0 rgba(0,0,0,0.1), 0 0 0 2px var(--color-blue-500);
-         }
-         .input-pixel[readonly] {
-             background-color: var(--color-gray-200);
-             color: var(--color-gray-600);
-             cursor: default;
-         }
-
-        /* Progress Circle */
-        .progress-circle-container { position: relative; width: 200px; height: 200px; margin: 1rem auto; } /* Smaller */
-        .progress-circle-svg { transform: rotate(-90deg); width: 100%; height: 100%;}
-        .progress-circle-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        
-        /* Loading State */
-        .loading-state {
-            min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            background-image: linear-gradient(to bottom right, var(--color-amber-400), var(--color-yellow-500), var(--color-amber-600));
-        }
-
-        /* Status & Error */
-        #status-and-error { text-align: center; margin-top: 1.5rem; min-height: 40px;}
-        #gas-display { color: var(--color-gray-800); font-size: 0.8em; } 
-        #status-message { color: var(--color-emerald-600); font-weight: bold; margin-top: 0.5rem; }
-        #error-message { color: var(--color-red-500); font-weight: bold; margin-top: 0.5rem; }
-        
     </style>
 </head>
-<body>
+<body class="min-h-screen bg-[#F5F0E8] overflow-x-hidden relative">
 
-    <div id="loading-indicator" class="loading-state">
-        <div class="pixel-text text-4xl text-white animate-pulse">Loading $COLLECT...</div>
-    </div>
+    <div id="main-content" class="min-h-screen bg-[#F5F0E8] overflow-hidden relative">
+        <div id="bg-elements" class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div 
+                id="bg-el-1"
+                class="absolute top-20 left-10 w-64 h-64 rounded-full bg-purple-200 opacity-20 blur-3xl"
+            ></div>
+            <div 
+                id="bg-el-2"
+                class="absolute top-40 right-20 w-96 h-96 rounded-full bg-orange-200 opacity-20 blur-3xl"
+            ></div>
+            <div 
+                id="bg-el-3"
+                class="absolute bottom-20 left-1/3 w-80 h-80 rounded-full bg-green-200 opacity-20 blur-3xl"
+            ></div>
+        </div>
 
-    <div id="main-content" style="display: none;">
-        <div class="pixel-pattern"></div>
-
-        <header class="relative z-10">
-            <div class="max-w-7xl mx-auto flex justify-between items-center px-6">
-                <div class="flex items-center gap-3">
-                    <div class="logo-box pixel-border">
-                        <img src="logo.png" alt="COLLECT Token Logo" style="width: 2rem; height: 2rem;"> 
-                        </div>
-                    <div class="pixel-text text-2xl md:text-3xl font-black text-gray-900" id="header-title">
-                        $COLLECT SALE
-                    </div>
+        <nav class="relative z-50 px-6 md:px-12 py-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
+                    <div class="text-2xl">👻</div>
                 </div>
-                <button id="connect-wallet-btn" class="pixel-button primary text-sm md:text-base">
-                    <svg class="inline-block w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 8a6 6 0 11-12 0 6 6 0 0112 0zm-6 4a4 4 0 100-8 4 4 0 000 8zm-6-4a6 6 0 006 6 6 6 0 100-12 6 6 0 00-6 6z" clip-rule="evenodd" /><path d="M2 10a8 8 0 1116 0 8 8 0 01-16 0z" /></svg>
-                    <span id="connect-wallet-text">Connect Wallet</span>
+                <h1 class="text-3xl font-black">BOO</h1>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <a 
+                    href="https://twitter.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300"
+                >
+                    <i data-lucide="twitter" class="w-5 h-5"></i>
+                </a>
+                <button 
+                    class="bg-white text-black font-bold px-6 py-6 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border-4 border-black"
+                >
+                    Connect Wallet
                 </button>
             </div>
-        </header>
+        </nav>
 
-        <main class="relative z-10 max-w-7xl mx-auto px-6 py-12 md:py-20">
-            <div class="grid grid-cols-1 gap-12 lg:gap-20 items-center"> <div class="space-y-6">
-                    <div class="pixel-card pixel-border space-y-8"> <div class="text-center">
-                            <div class="pixel-text text-3xl md:text-5xl font-black text-gray-900 mb-2">
-                                MINT
-                            </div>
-                            <div class="pixel-text text-4xl md:text-5xl font-black text-amber-600" id="token-symbol-display">
-                                $COLLECT
-                            </div>
-                        </div>
-
-                        <div class="flex justify-center">
-                            <div class="progress-circle-container">
-                                <svg width="200" height="200" class="progress-circle-svg">
-                                    <circle cx="100" cy="100" r="90" fill="none" stroke="var(--color-gray-200)" stroke-width="20" />
-                                    <circle id="progress-circle-fg" cx="100" cy="100" r="90" fill="none" stroke="var(--color-yellow-500)" stroke-width="20" stroke-dasharray="565.5" stroke-dashoffset="565.5" stroke-linecap="round" class="transition-all duration-1000 ease-out" />
-                                </svg>
-                                <div class="progress-circle-text">
-                                    <div class="text-gray-500 text-xs md:text-sm font-bold mb-1 pixel-text" id="remaining-text">REMAINING</div>
-                                    <div class="text-xl md:text-2xl font-black pixel-text">
-                                        <span class="text-amber-500" id="progress-minted">0</span>
-                                        <span class="text-gray-800" id="progress-total">/ 1</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="space-y-3">
-                            <div class="text-center pixel-text text-sm md:text-base text-gray-700" id="mint-rate-text">
-                                Rate: 1 USDC = 5,000 $COLLECT
-                            </div>
-                            
-                            <div>
-                                <label for="usdc-amount" class="pixel-text text-sm font-bold block mb-1 text-center">Enter USDC Amount (Min 1)</label>
-                                <input type="number" id="usdc-amount" placeholder="USDC Amount" value="1" min="1" class="input-pixel w-full">
-                                <div class="pixel-text text-center text-sm text-gray-600" id="token-receive">
-                                    You Receive: 5,000 $COLLECT
-                                </div>
-                            </div>
-                            
-                            <button id="mint-button" class="pixel-button primary w-full flex items-center justify-center gap-2" disabled>
-                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.5-4.5H11v-3h2v3h1.5v-5H11v-3H9.5v3h-2v5zm4.5-9.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5z"/></svg>
-                                MINT NOW
+        <div class="relative z-10 container mx-auto px-6 md:px-12 py-12 md:py-20">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="space-y-4">
+                        <h2 class="text-6xl md:text-8xl font-black leading-tight">
+                            $BOO
+                        </h2>
+                        <p class="text-2xl font-bold">Total supply 1B</p>
+                        
+                        <div id="copy-container" class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-lg border-2 border-black max-w-md">
+                            <code class="font-mono text-sm flex-1" id="contract-address-display">CA: 0xC0B3...4486C7</code>
+                            <button
+                                id="copy-button"
+                                class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                                <i id="copy-icon" data-lucide="copy" class="w-5 h-5"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div id="status-and-error" class="pixel-card pixel-border" style="min-height: 60px;">
-                        <div id="gas-display" class="pixel-text text-xs text-center text-gray-600"></div> 
-                        <div id="status-message" class="pixel-text text-sm text-center text-green-600 font-bold mt-2"></div>
-                        <div id="error-message" class="pixel-text text-sm text-center text-red-500 font-bold mt-1"></div>
+                    <div class="p-6 space-y-4 bg-white border-4 border-black shadow-xl rounded-3xl">
+                        <p class="font-bold text-lg">1 USDC = 10,000 $BOO</p>
+                        <div class="space-y-2">
+                            <div class="progress-root">
+                                <div id="progress-indicator" class="progress-indicator bg-black" style="width: 100%;"></div>
+                            </div>
+                            <div class="flex justify-between text-sm font-semibold">
+                                <span>100%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="pixel-card pixel-border text-center"> <div class="pixel-text text-gray-600 text-xs md:text-sm mb-2">MINTED</div>
-                            <div class="pixel-text text-xl md:text-2xl font-black text-gray-900" id="stat-minted">
-                                0
-                            </div>
-                            <div class="pixel-text text-xs text-amber-600" id="stat-percentage">0%</div>
+                    <div class="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-400 to-orange-400 px-8 py-4 rounded-full border-4 border-black shadow-xl transform hover:scale-105 transition-transform">
+                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border-2 border-black">
+                            <span class="text-blue-600 font-bold">⚡</span>
                         </div>
-                        
-                        <div class="pixel-card pixel-border text-center"> <div class="pixel-text text-gray-600 text-xs md:text-sm mb-2">REMAINING</div>
-                            <div class="pixel-text text-xl md:text-2xl font-black text-gray-900" id="stat-remaining">
-                                0
+                        <span class="text-2xl font-black">1</span>
+                    </div>
+
+                    <div class="inline-flex items-center gap-2 bg-blue-100 px-6 py-3 rounded-full border-2 border-blue-300">
+                        <span class="text-xl">❌</span>
+                        <span class="font-bold">x402 Protocol Integrated</span>
+                    </div>
+                </div>
+
+                <div class="relative flex justify-center items-center">
+                    <div class="relative animate-float">
+                        <svg 
+                            viewBox="0 0 200 250" 
+                            class="w-full max-w-md drop-shadow-2xl"
+                        >
+                            <path
+                                d="M 100 30 
+                                   Q 50 30, 40 80 
+                                   Q 30 130, 40 180 
+                                   L 40 230 
+                                   Q 50 215, 60 230 
+                                   Q 70 215, 80 230 
+                                   Q 90 215, 100 230 
+                                   Q 110 215, 120 230 
+                                   Q 130 215, 140 230 
+                                   Q 150 215, 160 230 
+                                   L 160 180 
+                                   Q 170 130, 160 80 
+                                   Q 150 30, 100 30 Z"
+                                fill="white"
+                                stroke="black"
+                                stroke-width="4"
+                            />
+                            
+                            <circle cx="75" cy="90" r="15" fill="black" />
+                            <circle cx="125" cy="90" r="15" fill="black" />
+                            
+                            <ellipse cx="100" cy="120" rx="20" ry="25" fill="black" />
+                            <ellipse cx="100" cy="115" rx="15" ry="20" fill="#FF4444" />
+                            
+                            <path
+                                d="M 40 100 Q 10 110, 20 130"
+                                stroke="black"
+                                stroke-width="4"
+                                fill="white"
+                            />
+                            <path
+                                d="M 160 100 Q 190 110, 180 130"
+                                stroke="black"
+                                stroke-width="4"
+                                fill="white"
+                            />
+                        </svg>
+
+                        <div class="absolute -top-10 -right-10 animate-bounce-slow">
+                            <div class="bg-white px-6 py-3 rounded-2xl border-4 border-black shadow-xl transform rotate-12">
+                                <p class="font-black text-3xl">
+                                    <span class="text-orange-500">BOO</span>
+                                    <span class="text-green-500">YA</span>
+                                    <span class="text-orange-500">H!</span>
+                                </p>
                             </div>
-                            <div class="pixel-text text-xs text-green-600">Available</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
 
-        <footer class="relative z-10 text-center py-8 mt-20">
-            <div class="pixel-text text-gray-900 text-sm" id="footer-text">
-                © 2025 The Genesis Collective • All rights reserved
+        <div class="absolute bottom-0 left-0 right-0 overflow-hidden">
+            <div class="relative h-32 bg-black">
+                <svg
+                    class="absolute top-0 w-full h-32"
+                    preserveAspectRatio="none"
+                    viewBox="0 0 1200 120"
+                >
+                    <path
+                        d="M0,60 Q150,0 300,60 T600,60 T900,60 T1200,60 L1200,120 L0,120 Z"
+                        fill="#F5F0E8"
+                    />
+                </svg>
+                
+                <div class="absolute inset-0 flex items-center justify-center overflow-hidden">
+                    <div class="flex gap-8 animate-scroll-left whitespace-nowrap">
+                        <span class="text-black text-5xl md:text-6xl font-black transform -rotate-6">BOO!</span>
+                        <span class="text-black text-5xl md:text-6xl font-black transform -rotate-6">BOO!</span>
+                        <span class="text-black text-5xl md:text-6xl font-black transform -rotate-6">BOO!</span>
+                        <span class="text-black text-5xl md:text-6xl font-black transform -rotate-6">BOO!</span>
+                        <span class="text-black text-5xl md:text-6xl font-black transform -rotate-6">BOO!</span>
+                        <span class="text-black text-5xl md:text-6xl font-black transform -rotate-6">BOO!</span>
+                        <span class="text-black text-5xl md:text-6xl font-black transform -rotate-6">BOO!</span>
+                        <span class="text-black text-5xl md:text-6xl font-black transform -rotate-6">BOO!</span>
+                        <span class="text-black text-5xl md:text-6xl font-black transform -rotate-6">BOO!</span>
+                        <span class="text-black text-5xl md:text-6xl font-black transform -rotate-6">BOO!</span>
+                    </div>
+                </div>
             </div>
-        </footer>
+        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-
     <script>
-        // --- KONFIGURASI WEB3 ---
-        const CHAIN_ID = 8453; // Base Mainnet
-        const SALE_CONTRACT_ADDRESS = "0xED143D7C6195fD65C5b0a66F8d2B329E44ffE3D1"; // Ganti ini!
-        const TOKEN_SYMBOL = "COLLECT";
-        const TOKEN_RATE = 5000; // 5000 $COLLECT per 1 USDC
-        const BASE_USD_PRICE = 1000000; // 1 USDC (6 desimal)
-        const USDC_CONTRACT_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
-        const RELAYER_URL = "https://api.us-ai.fun/mint"; // URL Backend Relayer Anda
+        // 1. Data
+        const contractAddress = "0xC0B3...4486C7";
+        const progressValue = 100; // Assuming 100%
 
-        // --- Variabel UI dan Web3 ---
-        const loadingIndicator = document.getElementById('loading-indicator');
-        const mainContent = document.getElementById('main-content');
-        const headerTitle = document.getElementById('header-title');
-        const connectWalletBtn = document.getElementById('connect-wallet-btn');
-        const connectWalletText = document.getElementById('connect-wallet-text');
-        const tokenSymbolDisplay = document.getElementById('token-symbol-display');
-        const progressCircleFg = document.getElementById('progress-circle-fg');
-        const progressMinted = document.getElementById('progress-minted');
-        const progressTotal = document.getElementById('progress-total');
-        const remainingText = document.getElementById('remaining-text');
-        const mintRateText = document.getElementById('mint-rate-text');
-        const mintButton = document.getElementById('mint-button');
-        const statMinted = document.getElementById('stat-minted');
-        const statPercentage = document.getElementById('stat-percentage');
-        const statRemaining = document.getElementById('stat-remaining');
-        const footerText = document.getElementById('footer-text');
-        const gasDisplay = document.getElementById('gas-display');
-        const statusMessage = document.getElementById('status-message');
-        const errorMessage = document.getElementById('error-message');
-        const usdcAmountInput = document.getElementById('usdc-amount');
-        const tokenReceiveDisplay = document.getElementById('token-receive');
+        // 2. DOM Elements
+        const copyButton = document.getElementById('copy-button');
+        const copyIcon = document.getElementById('copy-icon');
+        const contractAddressDisplay = document.getElementById('contract-address-display');
+        const progressIndicator = document.getElementById('progress-indicator');
 
-        let provider;
-        let signer;
-        let userAddress;
-        let saleContractReadOnly; // Untuk membaca data tanpa signer
-        let ownerWalletAddress;
-        
-        let totalTokenSupply = 0; // Akan diambil dari kontrak
-        let mintedAmount = 0;     // Akan diambil dari kontrak
-
-        // ABI Minimal (Wajib ada fungsi ini di kontrak Sale Anda)
-        const saleABI = [
-            "function totalTokenSupplyForSale() view returns (uint256)", // Total supply yang DIJUAL
-            "function totalMinted() view returns (uint256)", // Jumlah yang SUDAH terjual/minted
-            "function wallet() view returns (address)" // Alamat owner penerima USDC
-            // Kita tidak perlu ABI mintWithPermit di frontend
-        ];
-
-        // --- FUNGSI UTAMA ---
-
-        async function connectWallet() {
-            errorMessage.textContent = '';
-            statusMessage.textContent = 'Connecting wallet...';
-            gasDisplay.textContent = ''; // Reset gas display
-
-            if (typeof window.ethereum === 'undefined') {
-                errorMessage.textContent = 'MetaMask or compatible wallet not found.';
-                return;
-            }
-
-            try {
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
-                userAddress = await signer.getAddress();
-
-                const { chainId } = await provider.getNetwork();
-                if (chainId !== CHAIN_ID) {
-                    errorMessage.textContent = `Please switch to Base Mainnet (ID ${CHAIN_ID}).`;
-                    signer = null; 
-                    return;
-                }
-
-                // Ambil alamat owner DULU (penting untuk Permit)
-                saleContractReadOnly = new ethers.Contract(SALE_CONTRACT_ADDRESS, saleABI, provider);
-                ownerWalletAddress = await saleContractReadOnly.wallet();
-                if (!ownerWalletAddress) {
-                    throw new Error("Could not read owner wallet from contract.");
-                }
-
-                // Update UI sukses
-                connectWalletText.textContent = `Connected: ${userAddress.substring(0, 4)}...${userAddress.substring(38)}`;
-                connectWalletBtn.classList.remove('primary');
-                connectWalletBtn.classList.add('secondary');
-                connectWalletBtn.disabled = true;
-                statusMessage.textContent = '✅ Wallet Connected.';
+        // 3. Logic for Copy Button
+        if (copyButton) {
+            copyButton.addEventListener('click', () => {
+                // Copy text
+                navigator.clipboard.writeText(contractAddress);
                 
-                // Aktifkan tombol mint dan ambil data
-                await fetchGasPrice();
-                await fetchMintData(); // Ambil data mint setelah connect
+                // Change icon to Check (Checkmark)
+                copyIcon.setAttribute('data-lucide', 'check');
+                copyIcon.classList.remove('text-black');
+                copyIcon.classList.add('text-green-500');
 
-            } catch (error) {
-                console.error("Wallet connection failed:", error);
-                errorMessage.textContent = `Connection failed: ${error.message}`;
-                connectWalletText.textContent = 'Connect Wallet';
-                connectWalletBtn.classList.remove('secondary');
-                connectWalletBtn.classList.add('primary');
-                connectWalletBtn.disabled = false;
-            }
+                // Revert after 2 seconds
+                setTimeout(() => {
+                    copyIcon.setAttribute('data-lucide', 'copy');
+                    copyIcon.classList.remove('text-green-500');
+                    copyIcon.classList.add('text-black');
+                    lucide.createIcons(); // Re-render icon
+                }, 2000);
+
+                lucide.createIcons(); // Re-render icon
+            });
         }
 
-        async function fetchGasPrice() {
-             if (!provider) return;
-             try {
-                const feeData = await provider.getFeeData();
-                const gasPriceInGwei = feeData.gasPrice.div(1000000000); 
-                gasDisplay.textContent = `⚡ Gas: ${gasPriceInGwei.toString()} Gwei (Paid by Server)`;
-             } catch {
-                gasDisplay.textContent = 'Could not fetch gas price.';
-             }
-        }
-        
-        async function fetchMintData() {
-            statusMessage.textContent = 'Fetching mint status...';
-            errorMessage.textContent = ''; // Clear previous errors
-            try {
-                 // Selalu gunakan provider baru untuk data read-only
-                 const tempProvider = new ethers.providers.JsonRpcProvider("https://mainnet.base.org"); // Ganti RPC jika perlu
-                 const readOnlyContract = new ethers.Contract(SALE_CONTRACT_ADDRESS, saleABI, tempProvider);
-                 
-                 const fetchedTotalSupply = await readOnlyContract.totalTokenSupplyForSale();
-                 const fetchedMinted = await readOnlyContract.totalMinted();
-                 
-                 // Gunakan string untuk BigNumber agar akurat
-                 totalTokenSupply = fetchedTotalSupply.toString(); 
-                 mintedAmount = fetchedMinted.toString(); 
-                 
-                 updateUI(); 
-                 statusMessage.textContent = 'Mint status updated.';
+        // 4. Logic for Scroll Effect (Parallax)
+        const bgEl1 = document.getElementById('bg-el-1');
+        const bgEl2 = document.getElementById('bg-el-2');
+        const bgEl3 = document.getElementById('bg-el-3');
 
-            } catch (error) {
-                 console.error("Failed to fetch mint data:", error);
-                 errorMessage.textContent = 'Failed to load sale data. Check contract address or network.';
-                 // Set default values if fetch fails
-                 totalTokenSupply = '500000000'; // 50% dari 1 Miliar
-                 mintedAmount = '0';
-                 updateUI();
-            } finally {
-                loadingIndicator.style.display = 'none'; // Sembunyikan loading setelah data (atau default) dimuat
-                mainContent.style.display = 'block';
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            if (bgEl1) bgEl1.style.transform = `translateY(${scrollY * 0.3}px)`;
+            if (bgEl2) bgEl2.style.transform = `translateY(${scrollY * 0.2}px)`;
+            if (bgEl3) bgEl3.style.transform = `translateY(${scrollY * 0.4}px)`;
+        });
+
+        // 5. Initialize Lucide Icons
+        // This must be called after the DOM content is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
             }
-        }
-
-        function updateUI() {
-            // Gunakan BigNumber untuk kalkulasi yang aman
-            const bnTotal = ethers.BigNumber.from(totalTokenSupply);
-            const bnMinted = ethers.BigNumber.from(mintedAmount);
-            
-            if (bnTotal.isZero()) { // Hindari pembagian dengan nol
-                 statPercentage.textContent = '0%';
-                 progressCircleFg.style.strokeDashoffset = 565.5; // Lingkaran kosong
-                 statMinted.textContent = '0';
-                 statRemaining.textContent = '0';
-                 progressMinted.textContent = '0';
-                 progressTotal.textContent = '/ 0';
-                 mintButton.disabled = true; // Disable jika total supply 0
-                 return;
+            // Set initial progress bar width
+            if (progressIndicator) {
+                progressIndicator.style.width = `${progressValue}%`;
+            }
+            // Change the SVG color in the wavy bottom to match the background
+            const wavyPath = document.querySelector('.wavy-bottom svg path');
+            if (wavyPath) {
+                wavyPath.setAttribute('fill', '#F5F0E8');
             }
 
-            const bnRemaining = bnTotal.sub(bnMinted);
-            const percentageMinted = bnMinted.mul(1000).div(bnTotal).toNumber() / 10; // Kalkulasi persentase dengan 1 desimal
-            
-            // Header & Info Token
-            headerTitle.textContent = `$${TOKEN_SYMBOL} SALE`;
-            tokenSymbolDisplay.textContent = `$${TOKEN_SYMBOL}`;
-            mintRateText.textContent = `Rate: 1 USDC = ${TOKEN_RATE.toLocaleString()} $${TOKEN_SYMBOL}`;
-            footerText.textContent = `© 2025 ${TOKEN_SYMBOL} Sale • All rights reserved`;
-
-            // Progress Circle & Stats (Format dengan toLocaleString)
-            const formatNumber = (bn) => ethers.utils.commify(bn.toString()); // Format dengan koma
-            
-            progressMinted.textContent = formatNumber(bnMinted);
-            progressTotal.textContent = `/ ${formatNumber(bnTotal)}`;
-            remainingText.textContent = bnRemaining.isNegative() ? 'SOLD OUT' : 'REMAINING'; 
-            
-            const size = 200; // Ukuran SVG
-            const strokeWidth = 20;
-            const radius = (size - strokeWidth) / 2;
-            const circumference = 2 * Math.PI * radius;
-            let progress = Math.max(0, Math.min(100, percentageMinted)); // Batasi 0-100%
-            const offset = circumference - (progress / 100) * circumference;
-            progressCircleFg.style.strokeDashoffset = offset;
-
-            statMinted.textContent = formatNumber(bnMinted);
-            statPercentage.textContent = `${percentageMinted.toFixed(1)}%`;
-            statRemaining.textContent = formatNumber(bnRemaining.isNegative() ? ethers.BigNumber.from(0) : bnRemaining);
-
-            // Button State
-            if (bnMinted.gte(bnTotal)) { // Jika minted >= total
-                mintButton.textContent = 'SOLD OUT!';
-                mintButton.disabled = true;
-                mintButton.classList.remove('primary');
-                mintButton.classList.add('secondary');
-            } else {
-                 mintButton.textContent = 'MINT NOW';
-                 mintButton.disabled = !signer; // Aktif hanya jika wallet terhubung
-                 if(signer) mintButton.classList.add('primary');
-            }
-        }
-
-        // --- MINT FUNCTION (GASLESS PERMIT) ---
-        async function handleMint() {
-            if (!signer || !ownerWalletAddress) return alert('Please connect your wallet first!');
-            
-            const usdcAmountStr = usdcAmountInput.value;
-            const usdcAmount = parseFloat(usdcAmountStr);
-
-            if (isNaN(usdcAmount) || usdcAmount < 1) {
-                return alert("Minimum purchase is 1 USDC.");
-            }
-            
-            statusMessage.textContent = '1. Requesting Permit Signature (Gas-Free)...';
-            errorMessage.textContent = '';
-            mintButton.disabled = true;
-            
-            // Konversi jumlah USDC ke unit terkecil (Wei)
-            const valueWei = ethers.utils.parseUnits(usdcAmountStr, 6); // USDC has 6 decimals
-
-            try {
-                // Buat Tanda Tangan
-                const currentTimestamp = Math.floor(Date.now() / 1000);
-                const validBefore = currentTimestamp + (60 * 15); // 15 menit expiry
-                const validAfter = 0; 
-                const nonce = ethers.utils.solidityKeccak256(["uint256", "uint256"], [userAddress, Date.now()]);
-
-                const domain = {
-                    name: 'USD Coin', version: '2',
-                    chainId: CHAIN_ID, verifyingContract: USDC_CONTRACT_ADDRESS,
-                };
-                const types = {
-                    TransferWithAuthorization: [
-                        { name: 'from', type: 'address' }, { name: 'to', type: 'address' },
-                        { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' },
-                        { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' },
-                    ],
-                };
-                
-                const message = {
-                    from: userAddress,
-                    to: ownerWalletAddress, // WAJIB: Alamat Owner Penerima USDC
-                    value: valueWei.toString(), // Kirim jumlah yang benar
-                    validAfter: validAfter, 
-                    validBefore: validBefore, 
-                    nonce: nonce,
-                };
-
-                // Pengguna Tanda Tangan
-                const signature = await signer._signTypedData(domain, types, message);
-                const signatureParts = ethers.utils.splitSignature(signature);
-
-                statusMessage.textContent = '2. Signature obtained. Sending to Relayer...';
-
-                // --- Kirim ke Server Relayer ---
-                const signatureBody = {
-                    buyerAddress: userAddress,
-                    // Tambahkan usdcAmount agar server tahu berapa yang dibeli
-                    usdcAmount: valueWei.toString(), 
-                    validAfter: message.validAfter,
-                    validBefore: message.validBefore,
-                    nonce: message.nonce,
-                    v: signatureParts.v,
-                    r: signatureParts.r,
-                    s: signatureParts.s
-                };
-
-                const response = await fetch(RELAYER_URL, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'X-PAYMENT': 'dummy=true' // Untuk mengakali middleware X402
-                    },
-                    body: JSON.stringify(signatureBody) 
-                });
-                
-                if (!response.ok) {
-                    let errorMsg = `Server error (Status ${response.status}).`;
-                    try {
-                         const errorBody = await response.json();
-                         errorMsg = errorBody.error || errorMsg;
-                    } catch { /* Gagal parse JSON error */ }
-                    throw new Error(errorMsg);
-                }
-
-                const result = await response.json();
-
-                if (!result.success) {
-                    throw new Error(result.error || "Minting failed: Transaction not successful.");
-                }
-
-                alert(`Mint Successful! Transaction Hash: ${result.txHash}`);
-                statusMessage.innerHTML = `✅ **Mint Success!** <br>Tx: <a href="https://basescan.org/tx/${result.txHash}" target="_blank">${result.txHash.substring(0,10)}...</a>`;
-                
-                // Ambil data baru setelah mint
-                await fetchMintData(); 
-
-            } catch (error) {
-                console.error("Minting failed:", error);
-                let displayError = "Minting Failed. Check console (F12).";
-                if (error.code === 4001) {
-                    displayError = 'Signature denied by user.';
-                } else if (error.message) {
-                    displayError = error.message;
-                }
-                errorMessage.textContent = displayError;
-            } finally {
-                // Aktifkan kembali tombol jika belum sold out
-                updateUI(); 
-            }
-        }
-        
-        // --- UTILITY: Update token receive amount ---
-        function updateTokenReceiveDisplay() {
-            const usdcAmount = parseFloat(usdcAmountInput.value);
-            if (isNaN(usdcAmount) || usdcAmount < 1) {
-                tokenReceiveDisplay.textContent = 'You Receive: 0 $COLLECT';
-                return;
-            }
-            const receivedTokens = usdcAmount * TOKEN_RATE;
-            tokenReceiveDisplay.textContent = `You Receive: ${receivedTokens.toLocaleString()} $COLLECT`;
-        }
-
-        // --- Initial Load & Event Listeners ---
-        window.onload = () => {
-            headerTitle.textContent = `$${TOKEN_SYMBOL} SALE`; // Set judul awal
-            tokenSymbolDisplay.textContent = `$${TOKEN_SYMBOL}`; // Set simbol awal
-            mintRateText.textContent = `Rate: 1 USDC = ${TOKEN_RATE.toLocaleString()} $${TOKEN_SYMBOL}`; // Set rate awal
-            footerText.textContent = `© 2025 ${TOKEN_SYMBOL} Sale • All rights reserved`; // Set footer awal
-
-            connectWalletBtn.addEventListener('click', connectWallet);
-            mintButton.addEventListener('click', handleMint);
-            usdcAmountInput.addEventListener('input', updateTokenReceiveDisplay);
-
-            // Ambil data awal saat halaman dimuat
-            fetchMintData(); 
-            updateTokenReceiveDisplay(); // Set tampilan awal token diterima
-        };
-
+            // Fix BOO! text color in the footer
+            const booTexts = document.querySelectorAll('.animate-scroll-left span');
+            booTexts.forEach(span => {
+                 span.classList.remove('text-white');
+                 span.classList.add('text-black');
+            });
+        });
     </script>
 </body>
 </html>
