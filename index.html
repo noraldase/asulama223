@@ -7,45 +7,44 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        @keyframes bounce-slow {
-            0%, 100% { transform: translateY(0px) rotate(12deg); }
-            50% { transform: translateY(-10px) rotate(12deg); }
-        }
-        @keyframes scroll-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
+        /* Custom Animations */
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        @keyframes bounce-slow { 0%, 100% { transform: translateY(0px) rotate(12deg); } 50% { transform: translateY(-8px) rotate(12deg); } }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .animate-bounce-slow { animation: bounce-slow 2.5s ease-in-out infinite; }
+        .animate-scroll-left { animation: scroll-left 25s linear infinite; display: inline-block; /* Fix for animation */ width: 200%; /* Ensure content repeats seamlessly */ }
 
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
-        .animate-bounce-slow {
-            animation: bounce-slow 2s ease-in-out infinite;
-        }
-        .animate-scroll-left {
-            animation: scroll-left 20s linear infinite;
-        }
-        body { font-family: sans-serif; background-color: #F5F0E8; color: #111827; min-height: 100vh; position: relative; overflow-x: hidden; }
+
+        /* Progress Bar Styling */
         .progress-root {
-            position: relative;
-            height: 1rem; /* h-4 */
-            background-color: rgb(229 231 235); /* bg-gray-200 */
+            position: relative; height: 1rem; /* h-4 */
+            background-color: #E5E7EB; /* bg-gray-200 */
             border-radius: 9999px; /* rounded-full */
-            overflow: hidden;
+            overflow: hidden; border: 2px solid black; /* Added border */
         }
         .progress-indicator {
             height: 100%;
-            background-color: black; /* Default to black for visibility */
-            transition: transform 0.6s ease;
+            background-color: black; /* bg-black */
+            transition: width 0.6s ease; /* Animate width change */
         }
+
+        /* Basic Body Styling */
+        body {
+            font-family: sans-serif; /* Fallback font */
+            background-color: #F5F0E8; /* bg-[#F5F0E8] */
+            color: #111827; /* text-gray-900 */
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+         /* Style tambahan untuk pesan status */
          #status-and-error { text-align: center; margin-top: 1.5rem; min-height: 40px;}
          #gas-display { color: #4B5563; font-size: 0.8em; } /* text-gray-600 */
          #status-message { color: #059669; font-weight: bold; margin-top: 0.5rem; } /* text-emerald-600 */
          #error-message { color: #ef4444; font-weight: bold; margin-top: 0.5rem; } /* text-red-500 */
+
          /* Gaya untuk tombol mint */
         .mint-button { /* Tambahkan class ini ke tombol mint Anda jika belum */
              background-color: #fbbf24; /* bg-amber-400 */
@@ -58,13 +57,16 @@
              transition: all 0.2s;
              cursor: pointer;
          }
-         .mint-button:hover {
+         .mint-button:hover:not(:disabled) { /* Only apply hover effect if not disabled */
              transform: scale(1.05);
              box-shadow: 0 6px 10px rgba(0,0,0,0.15);
          }
          .mint-button:disabled {
              opacity: 0.5;
              cursor: not-allowed;
+             background-color: #9CA3AF; /* gray-400 */
+             border-color: #6B7280; /* gray-500 */
+             color: #4B5563; /* gray-600 */
          }
          /* Grid untuk tombol mint */
         .button-grid {
@@ -81,7 +83,11 @@
 </head>
 <body class="min-h-screen bg-[#F5F0E8] overflow-x-hidden relative">
 
-    <div id="main-content" class="min-h-screen bg-[#F5F0E8] overflow-hidden relative">
+    <div id="loading-indicator" class="fixed inset-0 flex items-center justify-center bg-[#F5F0E8] z-50">
+        <div class="text-3xl font-black animate-pulse">Loading $SHIUA...</div>
+    </div>
+
+    <div id="main-content" class="min-h-screen bg-[#F5F0E8] overflow-hidden relative" style="display: none;">
         <div id="bg-elements" class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="absolute top-20 left-10 w-64 h-64 rounded-full bg-purple-200 opacity-20 blur-3xl"></div>
             <div class="absolute top-40 right-20 w-96 h-96 rounded-full bg-orange-200 opacity-20 blur-3xl"></div>
@@ -166,22 +172,20 @@
                     </div>
                 </div>
             </div>
-        </div> <div class="absolute bottom-0 left-0 right-0 overflow-hidden h-24 md:h-32">
-             <div class="relative h-full bg-gradient-to-r from-yellow-400 to-yellow-600">
+        </div> <div class="w-full overflow-hidden mt-20"> <div class="relative h-24 md:h-32 bg-gradient-to-r from-yellow-400 to-yellow-600">
                 <svg class="absolute top-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 120">
                     <path d="M0,60 Q150,0 300,60 T600,60 T900,60 T1200,60 L1200,120 L0,120 Z" fill="#F5F0E8"/>
                 </svg>
-                <div class="absolute inset-0 flex items-center justify-center overflow-hidden">
-                    <div class="flex gap-8 animate-scroll-left whitespace-nowrap">
-                        <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3">SHIUA</span>
-                        <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3">SHIUA</span>
-                         <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3">SHIUA</span>
-                         <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3">SHIUA</span>
-                         <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3">SHIUA</span>
-                         <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3">SHIUA</span>
-                         <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3">SHIUA</span>
-                         <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3">SHIUA</span>
-                    </div>
+                <div class="absolute inset-0 flex items-center overflow-hidden"> <div class="animate-scroll-left whitespace-nowrap">
+                        <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3 inline-block mx-4">SHIUA</span>
+                        <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3 inline-block mx-4">SHIUA</span>
+                        <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3 inline-block mx-4">SHIUA</span>
+                        <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3 inline-block mx-4">SHIUA</span>
+                        <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3 inline-block mx-4">SHIUA</span>
+                        <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3 inline-block mx-4">SHIUA</span>
+                        <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3 inline-block mx-4">SHIUA</span>
+                        <span class="text-black text-4xl md:text-6xl font-black transform -rotate-3 inline-block mx-4">SHIUA</span>
+                        </div>
                 </div>
             </div>
         </div>
@@ -189,7 +193,7 @@
     <script>
         // --- KONFIGURASI WEB3 ---
         const CHAIN_ID = 8453; // Base Mainnet
-        // --- GANTI ALAMAT KONTRAK SALE ANDA DI SINI ---
+        // --- GANTI DENGAN ALAMAT KONTRAK SALE ANDA ---
         const SALE_CONTRACT_ADDRESS = "0xED143D7C6195fD65C5b0a66F8d2B329E44ffE3D1"; 
         const TOKEN_SYMBOL = "SHIUA";
         const TOKEN_RATE = 10000; // 10000 $SHIUA per 1 USDC
@@ -203,7 +207,7 @@
         const mainContent = document.getElementById('main-content');
         const headerTitle = document.getElementById('header-title');
         const connectWalletBtn = document.getElementById('connect-wallet-btn');
-        // const connectWalletText = document.getElementById('connect-wallet-text'); // Tidak ada ID ini di HTML Anda
+        // const connectWalletText = connectWalletBtn.querySelector('span'); // Ambil span di dalam tombol
         const contractAddressDisplay = document.getElementById('contract-address-display');
         const copyButton = document.getElementById('copy-button');
         const copyIcon = document.getElementById('copy-icon');
@@ -266,7 +270,6 @@
                 }
 
                 // Update UI sukses
-                // Menggunakan tombol itu sendiri untuk menampilkan status
                 connectWalletBtn.textContent = `Connected: ${userAddress.substring(0, 4)}...${userAddress.substring(38)}`;
                 connectWalletBtn.disabled = true; // Nonaktifkan setelah terhubung
                 statusMessage.textContent = '✅ Wallet Connected.';
@@ -297,6 +300,7 @@
             statusMessage.textContent = 'Fetching mint status...';
             errorMessage.textContent = ''; 
             try {
+                 // Selalu gunakan provider baru untuk data read-only
                  const tempProvider = new ethers.providers.JsonRpcProvider("https://mainnet.base.org"); 
                  const readOnlyContract = new ethers.Contract(SALE_CONTRACT_ADDRESS, saleABI, tempProvider);
                  
@@ -310,7 +314,8 @@
                  console.error("Failed to fetch mint data:", error);
                  errorMessage.textContent = 'Failed to load sale data. Check contract address or network.';
                  // Set default values (sesuaikan dengan tokenomic SHIUA Anda - 50% dari 1 Miliar = 500 Juta)
-                 totalTokenSupplyForSale = ethers.utils.parseUnits("500000000", 18); // Asumsi 18 desimal
+                 // Asumsi token Anda 18 desimal
+                 totalTokenSupplyForSale = ethers.utils.parseUnits("500000000", 18); 
                  mintedAmount = ethers.BigNumber.from(0);
                  updateUI();
             } finally {
@@ -334,13 +339,14 @@
             const formatTokens = (bn) => ethers.utils.commify(ethers.utils.formatUnits(bn, 18).split('.')[0]); 
 
             const bnRemaining = totalTokenSupplyForSale.sub(mintedAmount);
+            // Kalkulasi persentase dengan BigNumber
             const percentageMinted = mintedAmount.mul(1000).div(totalTokenSupplyForSale).toNumber() / 10; 
 
             // Header & Info Token
             headerTitle.textContent = `$${TOKEN_SYMBOL} SALE`;
             mintRateDisplay.textContent = `1 USDC = ${TOKEN_RATE.toLocaleString()} $${TOKEN_SYMBOL}`; 
             
-            // Update Contract Address Display (dengan asumsi 18 desimal)
+            // Update Contract Address Display
             contractAddressDisplay.textContent = `CA: ${SALE_CONTRACT_ADDRESS.substring(0, 6)}...${SALE_CONTRACT_ADDRESS.substring(38)}`;
 
             // Progress Bar & Stats
@@ -357,20 +363,26 @@
             if (isSoldOut) {
                 mint1UsdButton.textContent = 'SOLD OUT!';
                 mint10UsdButton.textContent = 'SOLD OUT!';
-                 mint1UsdButton.classList.remove('bg-white'); mint1UsdButton.classList.add('bg-gray-400');
-                 mint10UsdButton.classList.remove('bg-white'); mint10UsdButton.classList.add('bg-gray-400');
+                 mint1UsdButton.classList.remove('bg-white', 'text-black'); mint1UsdButton.classList.add('bg-gray-400', 'text-gray-700');
+                 mint10UsdButton.classList.remove('bg-white', 'text-black'); mint10UsdButton.classList.add('bg-gray-400', 'text-gray-700');
             } else if(signer) {
-                // Biarkan teks tombol tetap
+                 mint1UsdButton.classList.remove('bg-gray-400'); mint1UsdButton.classList.add('bg-white'); // Kembalikan style normal jika aktif
+                 mint10UsdButton.classList.remove('bg-gray-400'); mint10UsdButton.classList.add('bg-white');
             }
         }
 
         // --- FUNGSI MINT UTAMA (GASLESS PERMIT) ---
         async function handleMint(usdcAmountStr) { // Terima jumlah USDC sebagai string ('1' atau '10')
-            if (!signer || !ownerWalletAddress) return alert('Please connect wallet first!');
+            if (!signer || !ownerWalletAddress) {
+                statusMessage.textContent = ''; // Clear previous messages
+                errorMessage.textContent = 'Please connect your wallet first!';
+                return;
+            }
             
             const usdcAmount = parseFloat(usdcAmountStr);
             if (isNaN(usdcAmount) || usdcAmount < 1) { 
-                return alert("Invalid amount selected.");
+                errorMessage.textContent = "Invalid amount selected.";
+                return;
             }
             
             statusMessage.textContent = `1. Requesting Permit Signature for ${usdcAmount} USDC...`;
@@ -446,10 +458,10 @@
                 // Hitung token yang diterima
                 const receivedTokens = usdcAmount * TOKEN_RATE;
 
-                alert(`Mint Successful! Transaction Hash: ${result.txHash}`);
-                statusMessage.innerHTML = `✅ **Mint Success!** ${receivedTokens.toLocaleString()} $${TOKEN_SYMBOL} sent! <br>Tx: <a href="https://basescan.org/tx/${result.txHash}" target="_blank">${result.txHash.substring(0,10)}...</a>`;
+                // Tampilkan pesan sukses sementara
+                statusMessage.innerHTML = `✅ **Mint Success!** ${receivedTokens.toLocaleString()} $${TOKEN_SYMBOL} sent! <br>Tx: <a href="https://basescan.org/tx/${result.txHash}" target="_blank" class="text-blue-600 hover:underline">${result.txHash.substring(0,10)}...</a>`;
                 
-                // Ambil data baru setelah mint
+                // Ambil data baru setelah mint untuk update progress bar
                 await fetchMintData(); 
 
             } catch (error) {
@@ -458,17 +470,20 @@
                 if (error.code === 4001) {
                     displayError = 'Signature denied by user.';
                 } else if (error.message) {
-                    displayError = error.message;
+                    // Tampilkan pesan error dari server jika ada
+                    displayError = error.message.includes("Kontrak revert:") ? error.message : "Minting failed. Please try again."; 
                 }
                 errorMessage.textContent = displayError;
             } finally {
-                // Aktifkan kembali tombol jika belum sold out
+                // Aktifkan kembali tombol jika belum sold out dan wallet terhubung
                 updateUI(); 
             }
         }
         
         // --- Copy to Clipboard ---
         function copyToClipboard() {
+            if (!SALE_CONTRACT_ADDRESS || SALE_CONTRACT_ADDRESS.startsWith('0x...')) return; // Jangan copy placeholder
+
             navigator.clipboard.writeText(SALE_CONTRACT_ADDRESS);
             
             copyIcon.setAttribute('data-lucide', 'check');
@@ -477,7 +492,7 @@
             setTimeout(() => {
                 copyIcon.setAttribute('data-lucide', 'copy');
                 copyIcon.classList.remove('text-green-500');
-                if (typeof lucide !== 'undefined') lucide.createIcons(); // Re-render
+                if (typeof lucide !== 'undefined') lucide.createIcons(); 
             }, 2000);
             
              if (typeof lucide !== 'undefined') lucide.createIcons(); 
