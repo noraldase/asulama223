@@ -7,13 +7,41 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* (Salin SEMUA CSS Anda dari kode $SHIUA asli ke sini) */
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
-        /* ... (Semua @keyframes dan class CSS lainnya) ... */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0px) rotate(12deg); }
+            50% { transform: translateY(-10px) rotate(12deg); }
+        }
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        .animate-bounce-slow {
+            animation: bounce-slow 2s ease-in-out infinite;
+        }
+        .animate-scroll-left {
+            animation: scroll-left 20s linear infinite;
+        }
         body { font-family: sans-serif; background-color: #F5F0E8; color: #111827; min-height: 100vh; position: relative; overflow-x: hidden; }
-        .progress-root { /* ... gaya progress bar ... */ }
-        .progress-indicator { /* ... gaya progress indicator ... */ }
-         /* Gaya tambahan untuk pesan status */
+        .progress-root {
+            position: relative;
+            height: 1rem; /* h-4 */
+            background-color: rgb(229 231 235); /* bg-gray-200 */
+            border-radius: 9999px; /* rounded-full */
+            overflow: hidden;
+        }
+        .progress-indicator {
+            height: 100%;
+            background-color: black; /* Default to black for visibility */
+            transition: transform 0.6s ease;
+        }
          #status-and-error { text-align: center; margin-top: 1.5rem; min-height: 40px;}
          #gas-display { color: #4B5563; font-size: 0.8em; } /* text-gray-600 */
          #status-message { color: #059669; font-weight: bold; margin-top: 0.5rem; } /* text-emerald-600 */
