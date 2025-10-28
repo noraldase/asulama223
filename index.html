@@ -312,35 +312,40 @@
             }
 
             // --- 5. PANGGILAN API (MOCKUP) ---
+            // --- 5. PANGGILAN API (SEBENARNYA) ---
             async function callMockGeminiAPI(message) {
-                console.log(`Mengirim pesan ke API: ${message}`);
+                // Ganti dengan IP Address VPS Anda yang sebenarnya
+                const backendUrl = '158.69.206.22:3000/api/chat'; 
                 
-                // !!! PERINGATAN PENTING !!!
-                // ANDA TIDAK BISA MEMANGGIL API GEMINI LANGSUNG DARI SINI (JavaScript frontend)
-                // KARENA AKAN MEMBOCORKAN API KEY ANDA.
-                
-                // ANDA HARUS:
-                // 1. Membuat server backend (misalnya di Node.js, Python, atau Go).
-                // 2. Server backend Anda akan menyimpan API KEY Gemini dengan aman.
-                // 3. Frontend ini mengirim 'fetch' ke server backend Anda.
-                // 4. Server backend Anda meneruskan permintaan ke Gemini API.
-                // 5. Server backend Anda mengembalikan respons Gemini ke frontend.
+                console.log(`Mengirim pesan ke backend: ${message}`);
 
-                // Ini adalah simulasi (mockup) respons API:
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Simulasi delay jaringan
-                
-                // Jika ini backend sungguhan, Anda akan melakukan:
-                /*
-                const response = await fetch('https://URL_BACKEND_ANDA/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: message })
-                });
-                const data = await response.json();
-                return data.text;
-                */
+                try {
+                    const response = await fetch(backendUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ prompt: message }) // Kirim pesan dalam format JSON
+                    });
 
-                return `(Demo) Ini adalah respons untuk: "${message}". Harap siapkan backend Anda untuk terhubung ke Gemini API.`;
+                    if (!response.ok) {
+                        // Jika server mengembalikan error (misal: 500)
+                        throw new Error(`Server error: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                         // Jika server mengembalikan pesan error yang spesifik
+                        throw new Error(data.error);
+                    }
+
+                    return data.text; // Kembalikan teks dari respons JSON
+
+                } catch (error) {
+                    console.error('Gagal mengambil data dari backend:', error);
+                    return `Maaf, terjadi kesalahan saat terhubung ke server: ${error.message}`;
+                }
             }
 
             // --- Event Listeners ---
