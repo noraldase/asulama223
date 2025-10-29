@@ -2,7 +2,7 @@
 
 // --- 1. KONFIGURASI FRONTEND ---
 const CONFIG = {
-    rpc: 'https://bsc-testnet-rpc.publicnode.com',
+    rpc: 'https://data-seed-prebsc-1-s1.binance.org:8545',
     chainId: 97, 
     chainHex: '0x61', 
     chainName: 'BSC Testnet',
