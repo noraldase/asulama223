@@ -272,13 +272,13 @@
         const ERC20_ABI = [ 'function balanceOf(address) view returns (uint256)', 'function decimals() view returns (uint8)', 'function approve(address,uint256) returns (bool)', 'function allowance(address,address) view returns (uint256)' ];
         
         let provider, signer, userAddress;
-        let usdcContract, mytokenContract;
+        let usd1, mytokenContract;
 
         // --- 3. ELEMEN DOM ---
         const walletDisplay = document.getElementById('walletDisplay');
         const walletAddressSpan = document.getElementById('walletAddress');
         const balancesCard = document.getElementById('balancesCard');
-        const usdcBalanceSpan = document.getElementById('usdcBalance');
+        const usd1BalanceSpan = document.getElementById('usd1Balance');
         const mytokenBalanceSpan = document.getElementById('mytokenBalance');
         const spinButton = document.getElementById('spinButton');
         const statusSection = document.getElementById('statusSection');
@@ -318,19 +318,19 @@
         async function loadBalances() {
             try {
                 balancesCard.classList.remove('hidden');
-                usdcBalanceSpan.textContent = 'Loading...';
+                BalanceSpan.textContent = 'Loading...';
                 mytokenBalanceSpan.textContent = 'Loading...';
 
-                const usdcBal = await usdcContract.balanceOf(userAddress);
+                const usd1Bal = await usd1Contract.balanceOf(userAddress);
                 const mytokenBal = await mytokenContract.balanceOf(userAddress);
                 
                 // ⚠️ Sesuaikan desimal jika token Anda berbeda
-                usdcBalanceSpan.textContent = ethers.formatUnits(usdcBal, 6) + ' USD1'; // 6 desimal
+                usd1BalanceSpan.textContent = ethers.formatUnits(usd1Bal, 6) + ' USD1'; // 6 desimal
                 mytokenBalanceSpan.textContent = ethers.formatUnits(mytokenBal, 18) + ' MYTOKEN'; // 18 desimal
 
             } catch (error) {
                 console.error("Gagal memuat saldo:", error);
-                usdcBalanceSpan.textContent = 'Error';
+                usd1BalanceSpan.textContent = 'Error';
                 mytokenBalanceSpan.textContent = 'Error';
             }
         }
@@ -389,7 +389,7 @@
                 });
 
                 // 6. Inisialisasi kontrak (Sama)
-                usdcContract = new ethers.Contract(CONFIG.usdc, ERC20_ABI, signer); 
+                usd1Contract = new ethers.Contract(CONFIG.usd1, ERC20_ABI, signer); 
                 mytokenContract = new ethers.Contract(CONFIG.mytoken, ERC20_ABI, provider);
 
                 // 7. Tampilkan info & muat saldo (Sama)
@@ -425,13 +425,13 @@
 
                 // Langkah B: Approve USDC (Step 2)
                 updateStep(2, 'active');
-                showStatus('Checking USDC approval...', 'info');
+                showStatus('Checking USD1 approval...', 'info');
                 const amount = ethers.parseUnits('1', 6); // 1 USDC (6 desimal)
-                const allowance = await usdcContract.allowance(userAddress, CONFIG.relayer);
+                const allowance = await usd1Contract.allowance(userAddress, CONFIG.relayer);
 
                 if (allowance < amount) {
-                    showStatus('Please approve 1 USDC for the relayer... (Gas required)');
-                    const approveTx = await usdcContract.approve(CONFIG.relayer, amount);
+                    showStatus('Please approve 1 USD1');
+                    const approveTx = await usd1Contract.approve(CONFIG.relayer, amount);
                     await approveTx.wait();
                     showStatus('Approval successful!', 'info');
                 }
@@ -481,16 +481,16 @@
                 slotImgs[1].src = `images/${result.result[1]}.png`;
                 slotImgs[2].src = `images/${result.result[2]}.png`;
 
-                let winMessage = `You got 1000 MYTOKEN!`;
+                let winMessage = `You got 1000 $POOP!`;
                 if (result.winnings > 0) {
-                    winMessage = `🎉 YOU WON ${result.winnings} USDC! 🎉<br>+ ${result.tokenReward} MYTOKEN!`;
+                    winMessage = `🎉 YOU WON ${result.winnings} USD1! 🎉<br>+ ${result.tokenReward} $POOP!`;
                 } else {
-                    winMessage = `You won ${result.tokenReward} MYTOKEN. Better luck next time!`;
+                    winMessage = `You won ${result.tokenReward} $POOP. Better luck next time!`;
                 }
 
                 showStatus(
                     `${winMessage}
-                     <br><a class="link" href="https://testnet.bscscan.com/tx/${result.paymentTx}" target="_blank">View Transaction</a>`,
+                     <br><a class="link" href="https://.bscscan.com/tx/${result.paymentTx}" target="_blank">View Transaction</a>`,
                     'success'
                 );
                 updateStep(6, 'completed');
