@@ -325,7 +325,7 @@
                 const mytokenBal = await mytokenContract.balanceOf(userAddress);
                 
                 // ⚠️ Sesuaikan desimal jika token Anda berbeda
-                usd1BalanceSpan.textContent = ethers.formatUnits(usd1Bal, 6) + ' USD1'; // 6 desimal
+                usd1BalanceSpan.textContent = ethers.formatUnits(usd1Bal, 18) + ' USD1'; // 6 desimal
                 mytokenBalanceSpan.textContent = ethers.formatUnits(mytokenBal, 18) + ' MYTOKEN'; // 18 desimal
 
             } catch (error) {
@@ -426,7 +426,7 @@
                 // Langkah B: Approve USDC (Step 2)
                 updateStep(2, 'active');
                 showStatus('Checking USD1 approval...', 'info');
-                const amount = ethers.parseUnits('1', 6); // 1 USDC (6 desimal)
+                const amount = ethers.parseUnits('1', 18); // 1 USDC (6 desimal)
                 const allowance = await usd1Contract.allowance(userAddress, CONFIG.relayer);
 
                 if (allowance < amount) {
