@@ -62,26 +62,36 @@ async function connectWallet() {
             return;
         }
 
-        // --- AWAL PERBAIKAN ENS ---
-        const metaMaskProvider = new ethers.BrowserProvider(window.ethereum);
-        await metaMaskProvider.send("eth_requestAccounts", []);
-        const metaMaskSigner = await metaMaskProvider.getSigner();
-        userAddress = await metaMaskSigner.getAddress();
+        // --- AWAL PERBAIKAN BARU (Lebih Sederhana) ---
 
+        // 1. Buat network kustom untuk BSC Testnet (non-ENS)
         const bscTestnet = new ethers.Network('bnbt', 97);
         bscTestnet.ensAddress = null; // KUNCI UTAMA: Menonaktifkan ENS
 
-        provider = new ethers.JsonRpcProvider(CONFIG.rpc, bscTestnet);
-        signer = metaMaskSigner.connect(provider);
-        // --- AKHIR PERBAIKAN ENS ---
+        // 2. Buat SATU provider (BrowserProvider) dan langsung
+        //    beritahu untuk menggunakan network kustom kita.
+        //    'provider' adalah variabel global
+        provider = new ethers.BrowserProvider(window.ethereum, bscTestnet);
+        
+        // 3. Minta akun
+        await provider.send("eth_requestAccounts", []);
 
-        // Coba ganti ke BSC Testnet
+        // 4. Dapatkan signer dari provider TUNGGAL kita
+        //    'signer' adalah variabel global
+        signer = await provider.getSigner();
+        userAddress = await signer.getAddress();
+        
+        // --- AKHIR PERBAIKAN BARU ---
+
+
+        // Coba ganti ke BSC Testnet (Logika ini tetap sama)
         try {
             await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',
                 params: [{ chainId: CONFIG.chainHex }], // '0x61'
             });
         } catch (switchError) {
+            // Jika chain belum ditambahkan
             if (switchError.code === 4902) {
                 await window.ethereum.request({
                     method: 'wallet_addEthereumChain',
@@ -93,19 +103,25 @@ async function connectWallet() {
                         blockExplorerUrls: ['https://testnet.bscscan.com']
                     }]
                 });
-            } else { throw switchError; }
+            } else { 
+                throw switchError; // Lempar error jika bukan 'chain not added'
+            }
         }
 
+        // Tampilkan UI Aplikasi
         connectSection.classList.add('hidden');
         appSection.classList.remove('hidden');
         walletAddressSpan.textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
 
-        usdcContract = new ethers.Contract(CONFIG.usdc, ERC20_ABI, signer);
+        // Inisialisasi kontrak (Kode ini tetap sama)
+        usdcContract = new ethers.Contract(CONFIG.usdc, ERC20_ABI, signer); 
         mytokenContract = new ethers.Contract(CONFIG.mytoken, ERC20_ABI, provider);
 
         await loadBalances();
+
     } catch (error) {
-        console.error(error);
+        console.error(error); // Tampilkan error lengkap di console
+        // Tampilkan pesan error yang lebih ramah ke pengguna
         showStatus('Error connecting wallet: ' + error.message, 'error');
     }
 }
