@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Slot Machine - (BSC Testnet)</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+    <!-- Kita menggunakan style.css di folder yang sama -->
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <div class="container">
+        <h1>🎰 Crypto Slot Machine</h1>
+        <div class="subtitle">Pay 1 USDC, Get 1000 MYTOKEN + Win! <span class="badge">0 GAS</span></div>
+
+        <!-- Wallet Connection -->
+        <div id="connectSection">
+            <button class="btn-primary" onclick="connectWallet()">
+                Connect MetaMask
+            </button>
+        </div>
+
+        <!-- Main App -->
+        <div id="appSection" class="hidden">
+            <div class="wallet-display">
+                <strong>Your Wallet:</strong> <span id="walletAddress"></span>
+            </div>
+
+            <!-- Bagian Gambar Slot -->
+            <div class="slots-container">
+                <div class="slot">
+                    <!-- Pastikan Anda punya gambar ini di /public/images/ -->
+                    <img src="images/Jesse.png" alt="slot-reel" id="slot1-img">
+                </div>
+                <div class="slot">
+                    <img src="images/Base.png" alt="slot-reel" id="slot2-img">
+                </div>
+                <div class="slot">
+                    <img src="images/BTC.png" alt="slot-reel" id="slot3-img">
+                </div>
+            </div>
+
+            <!-- Saldo Pengguna -->
+            <div class="card">
+                <h3>Your Balances</h3>
+                <div class="info-row">
+                    <span>USDC Balance</span>
+                    <span id="usdcBalance">Loading...</span>
+                </div>
+                <div class="info-row">
+                    <span>MYTOKEN Balance</span>
+                    <span id="mytokenBalance">Loading...</span>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div id="statusSection"></div>
+
+            <!-- Langkah-langkah (Steps) -->
+            <div id="stepsSection" class="hidden">
+                <div class="step" id="step1">1. Approving USDC...</div>
+                <div class="step" id="step2">2. Signing spin (0 gas)...</div>
+                <div class="step" id="step3">3. Server is spinning...</div>
+                <div class="step" id="step4">4. Server paying rewards...</div>
+                <div class="step" id="step5">5. Complete!</div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <button class="btn-primary" id="spinButton" onclick="spinSlot()">
+                Spin! (Pay 1 USDC)
+            </button>
+
+            <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #999;">
+                BSC Testnet
+            </div>
+        </div>
+    </div>
+    
+    <!-- Memuat client.js dari folder yang sama -->
+    <script src="client.js"></script>
+</body>
+</html>
