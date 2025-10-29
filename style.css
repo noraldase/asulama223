@@ -175,3 +175,9 @@ button {
     margin-bottom: 15px;
     word-break: break-all;
 }
+
+/* Tambahkan ini ke bagian bawah style.css Anda */
+.wallet-display.hidden,
+.card.hidden {
+    display: none;
+}
