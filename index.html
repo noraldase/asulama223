@@ -352,6 +352,7 @@
         }
 
         // --- 5. FUNGSI KONEKSI ---
+        // --- 5. FUNGSI KONEKSI ---
         async function ensureWalletConnected() {
             // Jika signer sudah ada, kita sudah terkoneksi. Lewati.
             if (signer) return true; 
@@ -363,27 +364,35 @@
                     return false;
                 }
 
-                // Perbaikan untuk ENS dan Reconnect
-                const bscTestnet = new ethers.Network('bnbt', 97);
-                bscTestnet.ensAddress = null; 
-                provider = new ethers.BrowserProvider(window.ethereum, bscTestnet);
+                // --- AWAL PERUBAHAN ---
+                // 1. Buat network kustom MENGGUNAKAN CONFIG
+                // Kita bisa menggunakan nama apa saja, tapi 'bsc' masuk akal untuk Mainnet
+                const targetNetwork = new ethers.Network(CONFIG.chainName.toLowerCase(), CONFIG.chainId); 
+                targetNetwork.ensAddress = null; // Tetap nonaktifkan ENS
+
+                // 2. Buat provider dengan network target
+                provider = new ethers.BrowserProvider(window.ethereum, targetNetwork); 
+                // --- AKHIR PERUBAHAN ---
                 
+                // 3. Minta akun (Sama)
                 await provider.send("eth_requestAccounts", []);
                 
+                // 4. Dapatkan signer (Sama)
                 signer = await provider.getSigner();
                 userAddress = await signer.getAddress();
                 
-                // Coba ganti ke BSC Testnet
+                // 5. Coba ganti ke jaringan target (Sama)
+                // Ini akan meminta pengguna beralih jika mereka tidak di jaringan yang benar
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: CONFIG.chainHex }], // '0x61'
+                    params: [{ chainId: CONFIG.chainHex }], // '0x38' dari CONFIG
                 });
 
-                // Inisialisasi kontrak
+                // 6. Inisialisasi kontrak (Sama)
                 usdcContract = new ethers.Contract(CONFIG.usdc, ERC20_ABI, signer); 
                 mytokenContract = new ethers.Contract(CONFIG.mytoken, ERC20_ABI, provider);
 
-                // Tampilkan info wallet & muat saldo
+                // 7. Tampilkan info & muat saldo (Sama)
                 walletAddressSpan.textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
                 walletDisplay.classList.remove('hidden');
                 await loadBalances();
@@ -393,7 +402,8 @@
 
             } catch (error) {
                 console.error(error);
-                showStatus('Gagal konek wallet: ' + error.message, 'error');
+                // Jika pengguna menolak beralih jaringan, error akan muncul di sini
+                showStatus('Gagal konek/beralih jaringan: ' + error.message, 'error');
                 updateStep(1, 'failed'); 
                 return false; // Koneksi gagal
             }
