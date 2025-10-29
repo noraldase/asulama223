@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Slot Machine - (BSC Testnet)</title>
-    <!-- Ethers.js tetap dimuat dari CDN -->
+    
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
     
-    <!-- KODE CSS ANDA DIMASUKKAN DI SINI -->
     <style>
         * {
             margin: 0;
@@ -16,8 +15,7 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Pastikan Anda punya /images/background.jpg */
-            /* JIKA INI 404, ANDA HARUS MEMPERBAIKI FOLDER 'images' */
+            /* ⚠️ PERINGATAN: /images/background.jpg MASIH HARUS ADA DI VERCEL */
             background-image: url('images/background.jpg'); 
             background-size: cover;
             background-position: center;
@@ -187,26 +185,23 @@
             margin-bottom: 15px;
             word-break: break-all;
         }
-        /* Tambahan dari kode sebelumnya */
         .wallet-display.hidden,
         .card.hidden {
             display: none;
         }
     </style>
-</head>
+    </head>
 <body>
+
     <div class="container">
         <h1>🎰 Crypto Slot Machine</h1>
         <div class="subtitle">Pay 1 USDC, Get 1000 MYTOKEN + Win! <span class="badge">0 GAS</span></div>
 
-        <!-- Main App - LANGSUNG TAMPIL -->
         <div id="appSection">
             <div class="wallet-display hidden" id="walletDisplay">
-                <!-- Akan diisi oleh JavaScript setelah konek -->
                 <strong>Your Wallet:</strong> <span id="walletAddress"></span>
             </div>
 
-            <!-- Bagian Gambar Slot -->
             <div class="slots-container">
                 <div class="slot">
                     <img src="images/Jesse.png" alt="slot-reel" id="slot1-img">
@@ -219,7 +214,6 @@
                 </div>
             </div>
 
-            <!-- Saldo Pengguna -->
             <div class="card hidden" id="balancesCard">
                 <h3>Your Balances</h3>
                 <div class="info-row">
@@ -232,10 +226,8 @@
                 </div>
             </div>
 
-            <!-- Status -->
             <div id="statusSection"></div>
 
-            <!-- Langkah-langkah (Steps) -->
             <div id="stepsSection" class="hidden">
                 <div class="step" id="step1">1. Connecting wallet...</div>
                 <div class="step" id="step2">2. Approving USDC...</div>
@@ -245,8 +237,6 @@
                 <div class="step" id="step6">6. Complete!</div>
             </div>
 
-            <!-- Tombol Aksi -->
-            <!-- Memanggil fungsi spinSlot() yang ada di tag <script> di bawah -->
             <button class="btn-primary" id="spinButton" onclick="spinSlot()">
                 Spin! (Pay 1 USDC)
             </button>
@@ -256,35 +246,35 @@
             </div>
         </div>
     </div>
-    
-    <!-- KODE JAVASCRIPT ANDA DIMASUKKAN DI SINI -->
     <script>
         // --- 1. KONFIGURASI FRONTEND ---
+        // ⚠️ PASTIKAN ANDA MENGGANTI SEMUA NILAI '0x...' DI BAWAH INI!
         const CONFIG = {
             rpc: 'https://data-seed-prebsc-1-s1.binance.org:8545',
             chainId: 97, 
             chainHex: '0x61', 
             chainName: 'BSC Testnet',
 
-            // PASTIKAN INI ADALAH DOMAIN API ANDA YANG BERFUNGSI DENGAN HTTPS
+            // ⚠️ GANTI INI dengan URL API VPS Anda
             backendUrl: 'https://api.poopx402.site',
 
-            // PASTIKAN SEMUA ALAMAT INI BENAR (Gunakan alamat Testnet Anda)
+            // ⚠️ GANTI INI dengan alamat kontrak TESTNET Anda
             usdc: '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd',
-            mytoken: '0xf1e42c42987d5e00fad0e1805f9196b5e2df3b2f', 
-            relayer: '0x62150F2c3A29fDA8bCf22c0F22Eb17270FCBb78A', 
+            mytoken: '0xf1E42c42987d5E00fAd0e1805f9196B5E2DF3b2F', 
+            
+            relayer: '0xE1C2830d5DDd6B49E9c46EbE03a98Cb44CD8eA5a', // Ini B402 Relayer, biarkan
+            
+            // ⚠️ GANTI INI dengan alamat dompet SERVER Anda (penerima 1 USDC)
             serverWallet: '0xbdDD85bc42010110B8184d0fDA25659688bf935E'
         };
 
         // --- 2. ABI & VARIABEL GLOBAL ---
         const ERC20_ABI = [ 'function balanceOf(address) view returns (uint256)', 'function decimals() view returns (uint8)', 'function approve(address,uint256) returns (bool)', 'function allowance(address,address) view returns (uint256)' ];
-
-        // Deklarasi global (HANYA SEKALI)
+        
         let provider, signer, userAddress;
         let usdcContract, mytokenContract;
 
         // --- 3. ELEMEN DOM ---
-        // Variabel ini sudah bisa "melihat" HTML di atas karena skrip ada di bawah
         const walletDisplay = document.getElementById('walletDisplay');
         const walletAddressSpan = document.getElementById('walletAddress');
         const balancesCard = document.getElementById('balancesCard');
@@ -294,6 +284,8 @@
         const statusSection = document.getElementById('statusSection');
         const stepsSection = document.getElementById('stepsSection');
         const slotImgs = [ document.getElementById('slot1-img'), document.getElementById('slot2-img'), document.getElementById('slot3-img') ];
+        
+        // ⚠️ PASTIKAN NAMA FILE GAMBAR INI SESUAI DENGAN FOLDER /images/ ANDA
         const allSymbolImages = [ 'images/Jesse.png', 'images/Base.png', 'images/BTC.png', 'images/ETH.png', 'images/Other.png' ];
 
 
@@ -304,7 +296,6 @@
         }
         function resetSteps() {
             stepsSection.classList.add('hidden');
-            // Perbarui loop untuk mencocokkan jumlah langkah (sekarang 6)
             for (let i = 1; i <= 6; i++) {
                 const step = document.getElementById(`step${i}`);
                 if(step) step.classList.remove('active', 'completed');
@@ -313,6 +304,7 @@
         function updateStep(stepNum, state) {
             if (stepNum === 1) { stepsSection.classList.remove('hidden'); }
             const step = document.getElementById(`step${stepNum}`);
+            if(!step) return; // Pengaman jika ID step salah
             if (state === 'active') {
                 step.classList.add('active');
                 step.classList.remove('completed');
@@ -332,8 +324,9 @@
                 const usdcBal = await usdcContract.balanceOf(userAddress);
                 const mytokenBal = await mytokenContract.balanceOf(userAddress);
                 
-                usdcBalanceSpan.textContent = ethers.formatUnits(usdcBal, 6) + ' USDC'; // Asumsi 6 desimal
-                mytokenBalanceSpan.textContent = ethers.formatUnits(mytokenBal, 18) + ' MYTOKEN'; // Asumsi 18 desimal
+                // ⚠️ Sesuaikan desimal jika token Anda berbeda
+                usdcBalanceSpan.textContent = ethers.formatUnits(usdcBal, 6) + ' USDC'; // 6 desimal
+                mytokenBalanceSpan.textContent = ethers.formatUnits(mytokenBal, 18) + ' MYTOKEN'; // 18 desimal
 
             } catch (error) {
                 console.error("Gagal memuat saldo:", error);
@@ -347,8 +340,9 @@
             slotImgs.forEach(img => img.classList.add('spinning'));
             let intervalId = setInterval(() => {
                 for (const img of slotImgs) {
+                    // Ambil gambar acak dari 'allSymbolImages'
                     const randomImg = allSymbolImages[Math.floor(Math.random() * allSymbolImages.length)];
-                    img.src = randomImg;
+                    img.src = randomImg; // Tampilkan gambar acak
                 }
             }, 80);
             await sleep(duration);
@@ -359,15 +353,17 @@
 
         // --- 5. FUNGSI KONEKSI ---
         async function ensureWalletConnected() {
-            if (signer) return true; // Sudah terkoneksi
+            // Jika signer sudah ada, kita sudah terkoneksi. Lewati.
+            if (signer) return true; 
 
             try {
-                updateStep(1, 'active'); 
+                updateStep(1, 'active'); // Step 1: Connecting
                 if (!window.ethereum) {
                     alert('Please install MetaMask!');
                     return false;
                 }
 
+                // Perbaikan untuk ENS dan Reconnect
                 const bscTestnet = new ethers.Network('bnbt', 97);
                 bscTestnet.ensAddress = null; 
                 provider = new ethers.BrowserProvider(window.ethereum, bscTestnet);
@@ -377,31 +373,34 @@
                 signer = await provider.getSigner();
                 userAddress = await signer.getAddress();
                 
+                // Coba ganti ke BSC Testnet
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: CONFIG.chainHex }], 
+                    params: [{ chainId: CONFIG.chainHex }], // '0x61'
                 });
 
+                // Inisialisasi kontrak
                 usdcContract = new ethers.Contract(CONFIG.usdc, ERC20_ABI, signer); 
                 mytokenContract = new ethers.Contract(CONFIG.mytoken, ERC20_ABI, provider);
 
+                // Tampilkan info wallet & muat saldo
                 walletAddressSpan.textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
                 walletDisplay.classList.remove('hidden');
                 await loadBalances();
                 
                 updateStep(1, 'completed');
-                return true; 
+                return true; // Koneksi sukses
 
             } catch (error) {
                 console.error(error);
                 showStatus('Gagal konek wallet: ' + error.message, 'error');
                 updateStep(1, 'failed'); 
-                return false; 
+                return false; // Koneksi gagal
             }
         }
 
         // --- 6. FUNGSI UTAMA: SPIN SLOT ---
-        // Fungsi ini sekarang BISA ditemukan karena berada di file yang sama
+        // Ini adalah fungsi yang dipanggil oleh tombol 'onclick="spinSlot()"'
         async function spinSlot() {
             spinButton.disabled = true;
             resetSteps();
@@ -434,7 +433,7 @@
 
                 const nonce = ethers.hexlify(ethers.randomBytes(32));
                 const validAfter = Math.floor(Date.now() / 1000);
-                const validBefore = validAfter + 600;
+                const validBefore = validAfter + 600; // 10 menit
                 const domain = { name: 'B402', version: '1', chainId: CONFIG.chainId, verifyingContract: CONFIG.relayer };
                 const types = { TransferWithAuthorization: [ { name: 'from', type: 'address' }, { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' }, { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' } ] };
                 const value = { from: userAddress, to: CONFIG.serverWallet, value: amount.toString(), validAfter, validBefore, nonce };
@@ -446,10 +445,16 @@
                 const animationPromise = animateSpin(2000); // Step 4
 
                 updateStep(5, 'active'); // Step 5: Server paying
-                const response = await fetch(`${CONFIG.backendUrl}/spin`, {
+                
+                // ⚠️ MEMANGGIL ENDPOINT YANG BENAR ('/process-payment')
+                const response = await fetch(`${CONFIG.backendUrl}/process-payment`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ authorization: value, signature, userAddress })
+                    body: JSON.stringify({ 
+                        authorization: value, 
+                        signature, 
+                        userAddress 
+                    })
                 });
 
                 const result = await response.json();
@@ -475,7 +480,7 @@
 
                 showStatus(
                     `${winMessage}
-                     <br><a class="link" href="https://testnet.bscscan.com/tx/${result.payoutTxHash}" target="_blank">View Payout Transaction</a>`,
+                     <br><a class="link" href="https://testnet.bscscan.com/tx/${result.paymentTx}" target="_blank">View Transaction</a>`,
                     'success'
                 );
                 updateStep(6, 'completed');
@@ -491,5 +496,5 @@
             }
         }
     </script>
-</body>
+    </body>
 </html>
