@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Slot Machine - (BSC Testnet)</title>
+    <title>Crypto Slot Machine - BNB</title>
     
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
     
@@ -195,7 +195,7 @@
 
     <div class="container">
         <h1>🎰 Crypto Slot Machine</h1>
-        <div class="subtitle">Pay 1 USDC, Get 1000 $POOP + Win! <span class="badge">0 GAS</span></div>
+        <div class="subtitle">Pay 1 USD1, Get 1000 $POOP + Win! <span class="badge">0 GAS</span></div>
 
         <div id="appSection">
             <div class="wallet-display hidden" id="walletDisplay">
@@ -218,7 +218,7 @@
                 <h3>Your Balances</h3>
                 <div class="info-row">
                     <span>USD1 Balance</span>
-                    <span id="usdcBalance">Loading...</span>
+                    <span id="usd1Balance">Loading...</span>
                 </div>
                 <div class="info-row">
                     <span>$POOP Balance</span>
@@ -259,7 +259,7 @@
             backendUrl: 'https://api.poopx402.site',
 
             // ⚠️ GANTI INI dengan alamat kontrak TESTNET Anda
-            usdc: '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd',
+            usd1: '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd',
             mytoken: '0xf1e42c42987d5e00fad0e1805f9196b5e2df3b2f', 
             
             relayer: '0xE1C2830d5DDd6B49E9c46EbE03a98Cb44CD8eA5a', // Ini B402 Relayer, biarkan
@@ -325,7 +325,7 @@
                 const mytokenBal = await mytokenContract.balanceOf(userAddress);
                 
                 // ⚠️ Sesuaikan desimal jika token Anda berbeda
-                usdcBalanceSpan.textContent = ethers.formatUnits(usdcBal, 6) + ' USDC'; // 6 desimal
+                usdcBalanceSpan.textContent = ethers.formatUnits(usdcBal, 6) + ' USD1'; // 6 desimal
                 mytokenBalanceSpan.textContent = ethers.formatUnits(mytokenBal, 18) + ' MYTOKEN'; // 18 desimal
 
             } catch (error) {
