@@ -333,6 +333,56 @@ button {
     h1 {
         font-size: 24px;
     }
+    .progress-container {
+    width: 100%;
+    margin-bottom: 20px; /* Jarak sebelum judul H1 */
+}
+
+.progress-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 8px;
+    padding: 0 2px;
+}
+
+.progress-bar-background {
+    width: 100%;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    border: 1px solid #555;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 50%; /* Mulai dari 50% */
+    background: linear-gradient(90deg, #ffc500 0%, #ff9900 100%);
+    border-radius: 10px 0 0 10px;
+    transition: width 0.5s ease-out;
+    
+    /* Efek garis-garis bergerak (opsional tapi keren) */
+    background-size: 40px 40px;
+    background-image: linear-gradient(
+        45deg, 
+        rgba(255, 255, 255, 0.15) 25%, 
+        transparent 25%, 
+        transparent 50%, 
+        rgba(255, 255, 255, 0.15) 50%, 
+        rgba(255, 255, 255, 0.15) 75%, 
+        transparent 75%, 
+        transparent
+    );
+    animation: progress-bar-stripes 1s linear infinite;
+}
+
+@keyframes progress-bar-stripes {
+    0% { background-position: 40px 0; }
+    100% { background-position: 0 0; }
+}
 }
     </style>
     </head>
@@ -355,9 +405,18 @@ button {
         </div>
 
         <div class="container">
-            <h1>POOP Slot Machine</h1>
-            <div class="subtitle">Spin, Get 1000 $POOP + Win! <span class="badge">0 GAS</span></div>
 
+    <div class="progress-container">
+        <div class="progress-bar-label">
+            <span>GAME MINT PROGRESS</span>
+            <span id="progress-text">Loading...</span>
+        </div>
+        <div class="progress-bar-background">
+            <div class="progress-bar-fill" id="progress-bar-fill"></div>
+        </div>
+    </div>
+    <h1>POOP Slot Machine</h1>
+    <div class="subtitle">Spin, Get 5000 $POOP + Win! <span class="badge">0 GAS</span></div>
             <div id="appSection">
                 <div class="wallet-display hidden" id="walletDisplay">
                     <strong>Your Wallet:</strong> <span id="walletAddress"></span>
@@ -467,6 +526,16 @@ button {
         // ⚠️ PASTIKAN NAMA FILE GAMBAR INI SESUAI DENGAN FOLDER /images/ ANDA
         const allSymbolImages = [ 'images/Jesse1.png', 'images/bnb1.png', 'images/BTC1.png', 'images/ETH1.png', 'images/Other1.png' ];
 
+        // 🔽 TAMBAHKAN VARIABEL BARU INI 🔽
+        // --- 3B. VARIABEL PROGRESS BAR ---
+        // Gunakan BigInt untuk perhitungan besar. 1 Miliar + 18 desimal
+        const MAX_SUPPLY = 1_000_000_000_000_000_000_000_000_000n; // 1 Miliar Token (1e27)
+        const START_SUPPLY = 500_000_000_000_000_000_000_000_000n; // 500 Juta Token (5e26)
+        
+        let currentTotalSupply = START_SUPPLY; // Mulai dari 500M, akan diperbarui
+        
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const progressText = document.getElementById('progress-text');
 
         // --- 4. FUNGSI HELPER (Utilitas) ---
 
@@ -493,6 +562,59 @@ button {
             }
         }
         function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+        // 🔽 TAMBAHKAN FUNGSI BARU INI 🔽
+        /**
+         * Memperbarui progress bar dan teks.
+         * Menerima jumlah token BARU yang di-mint (sebagai angka, bukan BigInt).
+         */
+        function updateProgress(newlyMintedAmount) {
+            try {
+                // Ubah angka biasa (misal 5000) menjadi BigInt
+                // dengan 18 desimal
+                const newlyMintedBigInt = ethers.parseUnits(newlyMintedAmount.toString(), 18);
+                
+                // Tambahkan ke total supply yang kita simpan
+                currentTotalSupply = currentTotalSupply + newlyMintedBigInt;
+
+                // Hitung persentase
+                // (current * 100n) / max. Kita kali 100 dulu agar dapat presisi
+                const percentBigInt = (currentTotalSupply * 10000n) / MAX_SUPPLY; // dikali 10000 untuk 2 angka desimal
+                const percent = Number(percentBigInt) / 100; // Ubah kembali ke angka biasa (misal 50.12)
+                
+                // Update tampilan
+                progressText.textContent = `${percent.toFixed(2)}%`;
+                progressBarFill.style.width = `${percent}%`;
+
+            } catch (e) {
+                console.error("Error updating progress:", e);
+                progressText.textContent = `Error`;
+            }
+        }
+
+        /**
+         * Memuat total supply awal dari server saat halaman dibuka.
+         */
+        async function loadInitialProgress() {
+            try {
+                const response = await fetch(`${CONFIG.backendUrl}/game-status`);
+                const data = await response.json();
+
+                if (data.success) {
+                    // Server mengirim string, ubah jadi BigInt
+                    currentTotalSupply = BigInt(data.currentTotalSupply);
+                    
+                    // Panggil updateProgress dengan 0 untuk mengatur bar awal
+                    updateProgress(0); 
+                } else {
+                    progressText.textContent = 'Failed to load';
+                }
+            } catch (error) {
+                console.error("Failed to load initial progress:", error);
+                progressText.textContent = 'Server Error';
+            }
+        }
+        // 🔼 AKHIR FUNGSI BARU 🔼
 
         async function loadBalances() {
             try {
@@ -659,6 +781,7 @@ button {
                     throw new Error(result.error || 'Backend failed to process spin.');
                 }
                 updateStep(5, 'completed');
+                updateProgress(result.tokenReward);
 
                 // Langkah E: Tampilkan Hasil (Step 6)
                 updateStep(6, 'active');
@@ -666,7 +789,7 @@ button {
                 slotImgs[1].src = `images/${result.result[1]}.png`;
                 slotImgs[2].src = `images/${result.result[2]}.png`;
 
-                let winMessage = `You got 1000 $POOP!`;
+                let winMessage = `You got 5000 $POOP!`;
                 if (result.winnings > 0) {
                     winMessage = `🎉 YOU WON ${result.winnings} USDT! 🎉<br>+ ${result.tokenReward} $POOP!`;
                 } else {
@@ -761,7 +884,7 @@ async function spinSlot10x() {
             throw new Error(result.error || 'Backend failed to process spin.');
         }
         updateStep(5, 'completed');
-
+        updateProgress(result.tokenReward);
         // Langkah E: Tampilkan Hasil (Step 6)
         updateStep(6, 'active');
         slotImgs[0].src = `images/${result.result[0]}.png`;
@@ -795,6 +918,7 @@ async function spinSlot10x() {
         spinButton10x.disabled = false;
     }
 }
+        loadInitialProgress();
     </script>
     </body>
 </html>
