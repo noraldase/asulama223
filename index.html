@@ -187,6 +187,20 @@ button {
     cursor: not-allowed;
     transform: none;
 }
+.btn-secondary {
+    background: linear-gradient(135deg, #ff9900 0%, #ffc500 100%);
+    color: white;
+}
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(255, 153, 0, 0.3);
+}
+.btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+        
 .status {
     padding: 12px;
     border-radius: 8px;
@@ -257,7 +271,60 @@ button {
 .card.hidden {
     display: none;
 }
+/* ======================================= */
+/* === KODE PERBAIKAN UNTUK SMARTPHONE === */
+/* ======================================= */
 
+/* Aturan ini berlaku jika lebar layar 768px atau lebih kecil */
+@media (max-width: 768px) {
+    
+    /* 1. Sembunyikan sidebar kiri dan kanan */
+    .sidebar {
+        display: none;
+    }
+
+    /* 2. Izinkan body untuk scroll ke bawah di HP */
+    body {
+        overflow-y: auto; 
+        overflow-x: hidden; /* Tetap larang scroll ke samping */
+    }
+
+    /* 3. Hentikan layout 3-kolom */
+    .page-container {
+        display: block; /* Buat jadi tumpukan vertikal biasa */
+        height: auto;   /* Biarkan tinggi ditentukan konten */
+        min-height: 100vh;
+    }
+
+    /* 4. Buat konten utama mengambil seluruh layar */
+    .container {
+        width: 100%;
+        max-width: 100%; /* Menimpa aturan max-width desktop */
+        min-width: 100%;
+        margin: 0;
+        padding: 15px;   /* Kurangi padding untuk layar kecil */
+        border-radius: 0; /* Hapus sudut di HP (opsional) */
+        
+        /* Pastikan konten utama mengisi layar */
+        min-height: 100vh;
+        height: auto; 
+        overflow-y: visible; /* Biarkan kontennya memanjang ke bawah */
+    }
+    
+    /* 5. (Opsional) Kecilkan slot agar muat lebih baik */
+    .slot {
+        width: 80px;  /* Lebih kecil dari 100px */
+        height: 80px; /* Lebih kecil dari 100px */
+    }
+    
+    .slots-container {
+        margin: 15px 0; /* Kurangi margin */
+    }
+
+    h1 {
+        font-size: 24px; /* Kecilkan judul sedikit */
+    }
+}
     </style>
     </head>
 <body>
