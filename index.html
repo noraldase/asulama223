@@ -321,10 +321,48 @@ button {
     h1 {
         font-size: 24px; /* Kecilkan judul sedikit */
     }
+    new FinisherHeader({
+  "count": 100,
+  "size": {
+    "min": 2,
+    "max": 18,
+    "pulse": 0
+  },
+  "speed": {
+    "x": {
+      "min": 0,
+      "max": 1.1
+    },
+    "y": {
+      "min": 0,
+      "max": 1.7
+    }
+  },
+  "colors": {
+    "background": "#171717",
+    "particles": [
+      "#ff0000",
+      "#13b8f8",
+      "#ffda00"
+    ]
+  },
+  "blending": "overlay",
+  "opacity": {
+    "center": 1,
+    "edge": 0
+  },
+  "skew": -2,
+  "shapes": [
+    "c",
+    "s",
+    "t"
+  ]
+});
 }
     </style>
     </head>
 <body>
+    <script src="finisher-header.es5.min.js" type="text/javascript"></script>
     <div class="page-container">
 
         <div class="sidebar sidebar-kiri">
@@ -341,7 +379,9 @@ button {
                 <img src="images/Other.png" alt="Gambar Slot">
             </div>
         </div>
-
+        <div class="header finisher-header" style="width: 100%; height: 300px;">
+    Logo, navigation, etc.
+  </div>
         <div class="container">
             <h1>POOP Slot Machine</h1>
             <div class="subtitle">Spin, Get 1000 $POOP + Win! <span class="badge">0 GAS</span></div>
