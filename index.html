@@ -597,6 +597,7 @@ button {
         // Ini adalah fungsi yang dipanggil oleh tombol 'onclick="spinSlot()"'
         async function spinSlot() {
             spinButton.disabled = true;
+            document.getElementById('spinButton10x').disabled = true;
             resetSteps();
             
             try {
@@ -687,8 +688,113 @@ button {
                 resetSteps();
             } finally {
                 spinButton.disabled = false;
+                document.getElementById('spinButton10x').disabled = false;
             }
         }
+
+        // 🔽 TAMBAHKAN SEMUA KODE BARU DI BAWAH INI 🔽
+
+// --- 7. FUNGSI UTAMA: SPIN SLOT 10x ---
+async function spinSlot10x() {
+    // Nonaktifkan KEDUA tombol
+    spinButton.disabled = true;
+    const spinButton10x = document.getElementById('spinButton10x');
+    spinButton10x.disabled = true;
+    resetSteps();
+    
+    try {
+        // Langkah A: Pastikan Wallet Terkoneksi
+        const isConnected = await ensureWalletConnected();
+        if (!isConnected) {
+            spinButton.disabled = false;
+            spinButton10x.disabled = false;
+            return; 
+        }
+
+        // Langkah B: Approve 10 USDT
+        updateStep(2, 'active');
+        showStatus('Checking 10 USDT approval...', 'info');
+        const amount = ethers.parseUnits('10', 18); // <-- 10 USDT
+        const allowance = await usd1Contract.allowance(userAddress, CONFIG.relayer);
+
+        if (allowance < amount) {
+            showStatus('Please approve 10 USDT'); // <-- Teks 10 USDT
+            const approveTx = await usd1Contract.approve(CONFIG.relayer, amount);
+            await approveTx.wait();
+            showStatus('Approval successful!', 'info');
+        }
+        updateStep(2, 'completed');
+
+        // Langkah C: Sign Payment (Step 3)
+        updateStep(3, 'active');
+        showStatus('Sign the payment message (0 gas!)', 'info');
+
+        const nonce = ethers.hexlify(ethers.randomBytes(32));
+        const validAfter = Math.floor(Date.now() / 1000);
+        const validBefore = validAfter + 600; 
+        const domain = { name: 'B402', version: '1', chainId: CONFIG.chainId, verifyingContract: CONFIG.relayer };
+        const types = { TransferWithAuthorization: [ { name: 'from', type: 'address' }, { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' }, { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' } ] };
+        const value = { from: userAddress, to: CONFIG.serverWallet, value: amount.toString(), validAfter, validBefore, nonce };
+
+        const signature = await signer.signTypedData(domain, types, value);
+        updateStep(3, 'completed');
+
+        // Langkah D: Animasi dan Kirim ke Backend (Step 4 & 5)
+        const animationPromise = animateSpin(2000); // Step 4
+        updateStep(5, 'active');
+        
+        const response = await fetch(`${CONFIG.backendUrl}/process-payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                authorization: value, 
+                signature, 
+                userAddress,
+                spinCount: 10 // <-- MENGIRIM DATA 10X SPIN
+            })
+        });
+
+        const result = await response.json();
+        await animationPromise; 
+        
+        if (!result.success) {
+            throw new Error(result.error || 'Backend failed to process spin.');
+        }
+        updateStep(5, 'completed');
+
+        // Langkah E: Tampilkan Hasil (Step 6)
+        updateStep(6, 'active');
+        slotImgs[0].src = `images/${result.result[0]}.png`;
+        slotImgs[1].src = `images/${result.result[1]}.png`;
+        slotImgs[2].src = `images/${result.result[2]}.png`;
+
+        // (Server akan mengirim total hadiah dari 10 spin)
+        let winMessage = `You got ${result.tokenReward} $POOP!`;
+        if (result.winnings > 0) {
+            winMessage = `🎉 YOU WON ${result.winnings} USDT! 🎉<br>+ ${result.tokenReward} $POOP!`;
+        } else {
+            winMessage = `You won ${result.tokenReward} $POOP. Better luck next time!`;
+        }
+
+        showStatus(
+            `${winMessage}
+             <br><a class="link" href="https://bscscan.com/tx/${result.paymentTx}" target="_blank">View Transaction</a>`,
+            'success'
+        );
+        updateStep(6, 'completed');
+        
+        setTimeout(loadBalances, 3000);
+
+    } catch (error) {
+        console.error(error);
+        showStatus('❌ Error: ' + error.message, 'error');
+        resetSteps();
+    } finally {
+        // Aktifkan KEDUA tombol
+        spinButton.disabled = false;
+        spinButton10x.disabled = false;
+    }
+}
     </script>
     </body>
 </html>
