@@ -326,10 +326,10 @@
                 
                 // ⚠️ Sesuaikan desimal jika token Anda berbeda
                 usd1BalanceSpan.textContent = ethers.formatUnits(usd1Bal, 18) + ' USD1'; // 6 desimal
-                mytokenBalanceSpan.textContent = ethers.formatUnits(mytokenBal, 18) + ' MYTOKEN'; // 18 desimal
+                mytokenBalanceSpan.textContent = ethers.formatUnits(mytokenBal, 18) + ' POOP'; // 18 desimal
 
             } catch (error) {
-                console.error("Gagal memuat saldo:", error);
+                console.error("Load balance error:", error);
                 usd1BalanceSpan.textContent = 'Error';
                 mytokenBalanceSpan.textContent = 'Error';
             }
@@ -403,7 +403,7 @@
             } catch (error) {
                 console.error(error);
                 // Jika pengguna menolak beralih jaringan, error akan muncul di sini
-                showStatus('Gagal konek/beralih jaringan: ' + error.message, 'error');
+                showStatus('Failed swith chain: ' + error.message, 'error');
                 updateStep(1, 'failed'); 
                 return false; // Koneksi gagal
             }
