@@ -378,7 +378,7 @@ button {
                 <div class="card hidden" id="balancesCard">
                     <h3>Your Balances</h3>
                     <div class="info-row">
-                        <span>USD1 Balance</span>
+                        <span>BUSD Balance</span>
                         <span id="usd1Balance">Loading...</span>
                     </div>
                     <div class="info-row">
@@ -391,7 +391,7 @@ button {
 
                 <div id="stepsSection" class="hidden">
                     <div class="step" id="step1">1. Connecting wallet...</div>
-                    <div class="step" id="step2">2. Approving USD1...</div>
+                    <div class="step" id="step2">2. Approving BUSD...</div>
                     <div class="step" id="step3">3. Signing spin (0 gas)...</div>
                     <div class="step" id="step4">4. Server is spinning...</div>
                     <div class="step" id="step5">5. Server paying rewards...</div>
@@ -399,10 +399,10 @@ button {
                 </div>
 
                 <button class="btn-primary" id="spinButton" onclick="spinSlot()">
-                    Spin 1x! (Pay 1 USD1)
+                    Spin 1x! (Pay 1 BUSD)
                 </button>
                 <button class="btn-secondary" id="spinButton10x" onclick="spinSlot10x()">
-                    Spin 10x! (Pay 10 USD1)
+                    Spin 10x! (Pay 10 BUSD)
                 </button>
 
                 <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #999;">
@@ -438,7 +438,7 @@ button {
             backendUrl: 'https://api.poopx402.site',
 
             // ⚠️ GANTI INI dengan alamat kontrak TESTNET Anda
-            usd1: '0x8d0D000Ee44948FC98c9B98A4FA4921476f08B0d',
+            usd1: '0x55d398326f99059fF775485246999027B3197955',
             mytoken: '0xb96dfbf10a953b527D2e359f35Bc92732994ca76', 
             
             relayer: '0xE1C2830d5DDd6B49E9c46EbE03a98Cb44CD8eA5a', // Ini B402 Relayer, biarkan
@@ -509,7 +509,7 @@ button {
                 const mytokenBal = await mytokenContract.balanceOf(userAddress);
                 
                 // ⚠️ Sesuaikan desimal jika token Anda berbeda
-                usd1BalanceSpan.textContent = ethers.formatUnits(usd1Bal, 18) + ' USD1'; // 6 desimal
+                usd1BalanceSpan.textContent = ethers.formatUnits(usd1Bal, 18) + ' BUSD'; // 6 desimal
                 mytokenBalanceSpan.textContent = ethers.formatUnits(mytokenBal, 18) + ' POOP'; // 18 desimal
 
             } catch (error) {
@@ -609,12 +609,12 @@ button {
 
                 // Langkah B: Approve USDC (Step 2)
                 updateStep(2, 'active');
-                showStatus('Checking USD1 approval...', 'info');
+                showStatus('Checking BUSD approval...', 'info');
                 const amount = ethers.parseUnits('1', 18); // 1 USDC (6 desimal)
                 const allowance = await usd1Contract.allowance(userAddress, CONFIG.relayer);
 
                 if (allowance < amount) {
-                    showStatus('Please approve 1 USD1');
+                    showStatus('Please approve 1 BUSD');
                     const approveTx = await usd1Contract.approve(CONFIG.relayer, amount);
                     await approveTx.wait();
                     showStatus('Approval successful!', 'info');
@@ -667,7 +667,7 @@ button {
 
                 let winMessage = `You got 1000 $POOP!`;
                 if (result.winnings > 0) {
-                    winMessage = `🎉 YOU WON ${result.winnings} USD1! 🎉<br>+ ${result.tokenReward} $POOP!`;
+                    winMessage = `🎉 YOU WON ${result.winnings} BUSD! 🎉<br>+ ${result.tokenReward} $POOP!`;
                 } else {
                     winMessage = `You won ${result.tokenReward} $POOP. Better luck next time!`;
                 }
