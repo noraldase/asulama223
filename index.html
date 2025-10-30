@@ -500,12 +500,12 @@ button {
 
             // ⚠️ GANTI INI dengan alamat kontrak TESTNET Anda
             usd1: '0x55d398326f99059fF775485246999027B3197955',
-            mytoken: '0xb96dfbf10a953b527D2e359f35Bc92732994ca76', 
+            mytoken: '0xc1D31EA80333b4bA21BD9aB5c09d42b3C97ef75B', 
             
             relayer: '0xE1C2830d5DDd6B49E9c46EbE03a98Cb44CD8eA5a', // Ini B402 Relayer, biarkan
             
             // ⚠️ GANTI INI dengan alamat dompet SERVER Anda (penerima 1 USDC)
-            serverWallet: '0x47b5Aa8E9F16DAc4Dca68Bc24B401F24d34f360F'
+            serverWallet: '0x196C141AA6daFf7284f0036B41C945A0e8584A16'
         };
 
         // --- 2. ABI & VARIABEL GLOBAL ---
@@ -531,14 +531,13 @@ button {
         // 🔽 TAMBAHKAN VARIABEL BARU INI 🔽
         // --- 3B. VARIABEL PROGRESS BAR ---
         // Gunakan BigInt untuk perhitungan besar. 1 Miliar + 18 desimal
-        const MAX_SUPPLY = 1_000_000_000_000_000_000_000_000_000n; // 1 Miliar Token (1e27)
-        const START_SUPPLY = 500_000_000_000_000_000_000_000_000n; // 500 Juta Token (5e26)
-        
-        let currentTotalSupply = START_SUPPLY; // Mulai dari 500M, akan diperbarui
-        
-        const progressBarFill = document.getElementById('progress-bar-fill');
-        const progressText = document.getElementById('progress-text');
+        // ⚠️ GANTI INI: Total Supply Maksimum (1 Miliar Token dengan 18 desimal)
+const MAX_SUPPLY = 1_000_000_000_000_000_000_000_000_000n; // 1e27 
+// Hapus `START_SUPPLY` dan `currentTotalSupply`
+// let currentTotalSupply = START_SUPPLY; // HAPUS
 
+const progressBarFill = document.getElementById('progress-bar-fill');
+const progressText = document.getElementById('progress-text');
         // --- 4. FUNGSI HELPER (Utilitas) ---
 
         function showStatus(message, type = 'info') {
@@ -570,53 +569,62 @@ button {
          * Memperbarui progress bar dan teks.
          * Menerima jumlah token BARU yang di-mint (sebagai angka, bukan BigInt).
          */
-        function updateProgress(newlyMintedAmount) {
-            try {
-                // Ubah angka biasa (misal 5000) menjadi BigInt
-                // dengan 18 desimal
-                const newlyMintedBigInt = ethers.parseUnits(newlyMintedAmount.toString(), 18);
-                
-                // Tambahkan ke total supply yang kita simpan
-                currentTotalSupply = currentTotalSupply + newlyMintedBigInt;
+        function updateProgress(currentSupplyString) {
+    try {
+        const currentSupplyBigInt = BigInt(currentSupplyString);
 
-                // Hitung persentase
-                // (current * 100n) / max. Kita kali 100 dulu agar dapat presisi
-                const percentBigInt = (currentTotalSupply * 10000n) / MAX_SUPPLY; // dikali 10000 untuk 2 angka desimal
-                const percent = Number(percentBigInt) / 100; // Ubah kembali ke angka biasa (misal 50.12)
-                
-                // Update tampilan
-                progressText.textContent = `${percent.toFixed(2)}%`;
-                progressBarFill.style.width = `${percent}%`;
-
-            } catch (e) {
-                console.error("Error updating progress:", e);
-                progressText.textContent = `Error`;
-            }
+        // Hitung persentase: (currentSupply * 100) / MAX_SUPPLY
+        // Gunakan 10000n untuk mendapatkan 2 desimal presisi
+        const percentBigInt = (currentSupplyBigInt * 10000n) / MAX_SUPPLY; 
+        
+        // Ubah kembali ke float (misal 50.12)
+        const percent = Number(percentBigInt) / 100; 
+        
+        // Update tampilan
+        progressText.textContent = `${percent.toFixed(2)}%`;
+        
+        // Batasi maksimal 100%
+        progressBarFill.style.width = `${Math.min(percent, 100)}%`; 
+        
+        // Opsional: Nonaktifkan tombol jika progress sudah 100%
+        if (percent >= 100) {
+            spinButton.disabled = true;
+            document.getElementById('spinButton10x').disabled = true;
+            progressText.textContent = '100% (Minting Complete)';
+            showStatus('Token supply minting is complete! Total 1 Billion $POOP minted.', 'info');
         }
 
-        /**
-         * Memuat total supply awal dari server saat halaman dibuka.
-         */
-        async function loadInitialProgress() {
-            try {
-                const response = await fetch(`${CONFIG.backendUrl}/game-status`);
-                const data = await response.json();
+    } catch (e) {
+        console.error("Error updating progress:", e);
+        progressText.textContent = `Error`;
+    }
+}
 
-                if (data.success) {
-                    // Server mengirim string, ubah jadi BigInt
-                    currentTotalSupply = BigInt(data.currentTotalSupply);
-                    
-                    // Panggil updateProgress dengan 0 untuk mengatur bar awal
-                    updateProgress(0); 
-                } else {
-                    progressText.textContent = 'Failed to load';
-                }
-            } catch (error) {
-                console.error("Failed to load initial progress:", error);
-                progressText.textContent = 'Server Error';
-            }
+/**
+ * Memuat total supply saat ini dari server dan terus memperbarui.
+ */
+async function loadAndMonitorProgress() {
+    try {
+        // Panggil endpoint baru: /game-status (disediakan oleh server.js Anda)
+        const response = await fetch(`${CONFIG.backendUrl}/game-status`); 
+        const data = await response.json();
+
+        if (data.success) {
+            // Panggil updateProgress dengan supply dari BC
+            updateProgress(data.currentTotalSupply); 
+        } else {
+            progressText.textContent = 'Failed to load supply';
         }
-        // 🔼 AKHIR FUNGSI BARU 🔼
+    } catch (error) {
+        console.error("Failed to load initial progress:", error);
+        progressText.textContent = 'Server Error';
+    }
+}
+
+// ⚠️ JANGAN HAPUS: Panggilan inisialisasi dan interval di akhir script
+loadAndMonitorProgress();
+setInterval(loadAndMonitorProgress, 5000);
+
 
         async function loadBalances() {
             try {
@@ -772,7 +780,8 @@ button {
                     body: JSON.stringify({ 
                         authorization: value, 
                         signature, 
-                        userAddress 
+                        userAddress,
+                        spinCount: 1
                     })
                 });
 
