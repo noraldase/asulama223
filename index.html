@@ -321,6 +321,11 @@
                 usd1BalanceSpan.textContent = 'Loading...';
                 mytokenBalanceSpan.textContent = 'Loading...';
 
+                if (!usd1Contract || !mytokenContract) {
+                    console.log("Contract error");
+                    return;
+                }
+
                 const usd1Bal = await usd1Contract.balanceOf(userAddress);
                 const mytokenBal = await mytokenContract.balanceOf(userAddress);
                 
