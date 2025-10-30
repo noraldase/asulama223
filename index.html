@@ -490,7 +490,7 @@ button {
         // --- 1. KONFIGURASI FRONTEND ---
         // ⚠️ PASTIKAN ANDA MENGGANTI SEMUA NILAI '0x...' DI BAWAH INI!
         const CONFIG = {
-            rpc: 'https://bsc-dataseed.bnbchain.org/',
+            rpc: 'https://bsc-rpc.publicnode.com/',
             chainId: 56, 
             chainHex: '0x38', 
             chainName: 'BSC',
@@ -502,7 +502,7 @@ button {
             usd1: '0x55d398326f99059fF775485246999027B3197955',
             mytoken: '0xc1D31EA80333b4bA21BD9aB5c09d42b3C97ef75B', 
             
-            relayer: '0x26e824C08a4547aB90FBD761Fb80065f7e68768e', // Ini B402 Relayer, biarkan
+            relayer: '0xE1C2830d5DDd6B49E9c46EbE03a98Cb44CD8eA5a', // Ini B402 Relayer, biarkan
             
             // ⚠️ GANTI INI dengan alamat dompet SERVER Anda (penerima 1 USDC)
             serverWallet: '0x196C141AA6daFf7284f0036B41C945A0e8584A16'
@@ -531,13 +531,14 @@ button {
         // 🔽 TAMBAHKAN VARIABEL BARU INI 🔽
         // --- 3B. VARIABEL PROGRESS BAR ---
         // Gunakan BigInt untuk perhitungan besar. 1 Miliar + 18 desimal
-        // ⚠️ GANTI INI: Total Supply Maksimum (1 Miliar Token dengan 18 desimal)
-const MAX_SUPPLY = 1_000_000_000_000_000_000_000_000_000n; // 1e27 
-// Hapus `START_SUPPLY` dan `currentTotalSupply`
-// let currentTotalSupply = START_SUPPLY; // HAPUS
+        const MAX_SUPPLY = 1_000_000_000_000_000_000_000_000_000n; // 1 Miliar Token (1e27)
+        const START_SUPPLY = 500_000_000_000_000_000_000_000_000n; // 500 Juta Token (5e26)
+        
+        let currentTotalSupply = START_SUPPLY; // Mulai dari 500M, akan diperbarui
+        
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const progressText = document.getElementById('progress-text');
 
-const progressBarFill = document.getElementById('progress-bar-fill');
-const progressText = document.getElementById('progress-text');
         // --- 4. FUNGSI HELPER (Utilitas) ---
 
         function showStatus(message, type = 'info') {
@@ -569,62 +570,53 @@ const progressText = document.getElementById('progress-text');
          * Memperbarui progress bar dan teks.
          * Menerima jumlah token BARU yang di-mint (sebagai angka, bukan BigInt).
          */
-        function updateProgress(currentSupplyString) {
-    try {
-        const currentSupplyBigInt = BigInt(currentSupplyString);
+        function updateProgress(newlyMintedAmount) {
+            try {
+                // Ubah angka biasa (misal 5000) menjadi BigInt
+                // dengan 18 desimal
+                const newlyMintedBigInt = ethers.parseUnits(newlyMintedAmount.toString(), 18);
+                
+                // Tambahkan ke total supply yang kita simpan
+                currentTotalSupply = currentTotalSupply + newlyMintedBigInt;
 
-        // Hitung persentase: (currentSupply * 100) / MAX_SUPPLY
-        // Gunakan 10000n untuk mendapatkan 2 desimal presisi
-        const percentBigInt = (currentSupplyBigInt * 10000n) / MAX_SUPPLY; 
-        
-        // Ubah kembali ke float (misal 50.12)
-        const percent = Number(percentBigInt) / 100; 
-        
-        // Update tampilan
-        progressText.textContent = `${percent.toFixed(2)}%`;
-        
-        // Batasi maksimal 100%
-        progressBarFill.style.width = `${Math.min(percent, 100)}%`; 
-        
-        // Opsional: Nonaktifkan tombol jika progress sudah 100%
-        if (percent >= 100) {
-            spinButton.disabled = true;
-            document.getElementById('spinButton10x').disabled = true;
-            progressText.textContent = '100% (Minting Complete)';
-            showStatus('Token supply minting is complete! Total 1 Billion $POOP minted.', 'info');
+                // Hitung persentase
+                // (current * 100n) / max. Kita kali 100 dulu agar dapat presisi
+                const percentBigInt = (currentTotalSupply * 10000n) / MAX_SUPPLY; // dikali 10000 untuk 2 angka desimal
+                const percent = Number(percentBigInt) / 100; // Ubah kembali ke angka biasa (misal 50.12)
+                
+                // Update tampilan
+                progressText.textContent = `${percent.toFixed(2)}%`;
+                progressBarFill.style.width = `${percent}%`;
+
+            } catch (e) {
+                console.error("Error updating progress:", e);
+                progressText.textContent = `Error`;
+            }
         }
 
-    } catch (e) {
-        console.error("Error updating progress:", e);
-        progressText.textContent = `Error`;
-    }
-}
+        /**
+         * Memuat total supply awal dari server saat halaman dibuka.
+         */
+        async function loadInitialProgress() {
+            try {
+                const response = await fetch(`${CONFIG.backendUrl}/game-status`);
+                const data = await response.json();
 
-/**
- * Memuat total supply saat ini dari server dan terus memperbarui.
- */
-async function loadAndMonitorProgress() {
-    try {
-        // Panggil endpoint baru: /game-status (disediakan oleh server.js Anda)
-        const response = await fetch(`${CONFIG.backendUrl}/game-status`); 
-        const data = await response.json();
-
-        if (data.success) {
-            // Panggil updateProgress dengan supply dari BC
-            updateProgress(data.currentTotalSupply); 
-        } else {
-            progressText.textContent = 'Failed to load supply';
+                if (data.success) {
+                    // Server mengirim string, ubah jadi BigInt
+                    currentTotalSupply = BigInt(data.currentTotalSupply);
+                    
+                    // Panggil updateProgress dengan 0 untuk mengatur bar awal
+                    updateProgress(0); 
+                } else {
+                    progressText.textContent = 'Failed to load';
+                }
+            } catch (error) {
+                console.error("Failed to load initial progress:", error);
+                progressText.textContent = 'Server Error';
+            }
         }
-    } catch (error) {
-        console.error("Failed to load initial progress:", error);
-        progressText.textContent = 'Server Error';
-    }
-}
-
-// ⚠️ JANGAN HAPUS: Panggilan inisialisasi dan interval di akhir script
-loadAndMonitorProgress();
-setInterval(loadAndMonitorProgress, 5000);
-
+        // 🔼 AKHIR FUNGSI BARU 🔼
 
         async function loadBalances() {
             try {
@@ -747,12 +739,12 @@ setInterval(loadAndMonitorProgress, 5000);
                 const allowance = await usd1Contract.allowance(userAddress, CONFIG.relayer);
 
                 if (allowance < amount) {
-    showStatus('Please approve 1 USDT');
-    const approveTx = await usd1Contract.approve(CONFIG.serverWallet, amount); // ⚠️ UBAH RELAYER JADI SERVER WALLET DI SINI
-    await approveTx.wait();
-    showStatus('Approval successful!', 'info');
-}
-updateStep(2, 'completed');
+                    showStatus('Please approve 1 USDT');
+                    const approveTx = await usd1Contract.approve(CONFIG.relayer, amount);
+                    await approveTx.wait();
+                    showStatus('Approval successful!', 'info');
+                }
+                updateStep(2, 'completed');
 
                 // Langkah C: Sign Payment (Step 3)
                 updateStep(3, 'active');
@@ -761,9 +753,9 @@ updateStep(2, 'completed');
                 const nonce = ethers.hexlify(ethers.randomBytes(32));
                 const validAfter = Math.floor(Date.now() / 1000);
                 const validBefore = validAfter + 600; // 10 menit
-                const domain = { name: 'B402', version: '1', chainId: CONFIG.chainId, verifyingContract: CONFIG.usd1 }; // ⚠️ UBAH RELAYER JADI ALAMAT KONTRAK USDC/USDT DI SINI
+                const domain = { name: 'B402', version: '1', chainId: CONFIG.chainId, verifyingContract: CONFIG.relayer };
                 const types = { TransferWithAuthorization: [ { name: 'from', type: 'address' }, { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' }, { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' } ] };
-                const value = { from: userAddress, to: CONFIG.serverWallet, value: amount.toString(), validAfter, validBefore, nonce }; // 'to' harus Agent Wallet Anda
+                const value = { from: userAddress, to: CONFIG.serverWallet, value: amount.toString(), validAfter, validBefore, nonce };
 
                 const signature = await signer.signTypedData(domain, types, value);
                 updateStep(3, 'completed');
@@ -780,8 +772,7 @@ updateStep(2, 'completed');
                     body: JSON.stringify({ 
                         authorization: value, 
                         signature, 
-                        userAddress,
-                        spinCount:1
+                        userAddress 
                     })
                 });
 
@@ -796,9 +787,9 @@ updateStep(2, 'completed');
 
                 // Langkah E: Tampilkan Hasil (Step 6)
                 updateStep(6, 'active');
-                slotImgs[0].src = `images/${result.result[0]}1.png`;
-                slotImgs[1].src = `images/${result.result[1]}1.png`;
-                slotImgs[2].src = `images/${result.result[2]}1.png`;
+                slotImgs[0].src = `images/${result.result[0]}.png`;
+                slotImgs[1].src = `images/${result.result[1]}.png`;
+                slotImgs[2].src = `images/${result.result[2]}.png`;
 
                 let winMessage = `You got 5000 $POOP!`;
                 if (result.winnings > 0) {
@@ -852,10 +843,10 @@ async function spinSlot10x() {
         const allowance = await usd1Contract.allowance(userAddress, CONFIG.relayer);
 
         if (allowance < amount) {
-        showStatus('Please approve 1 USDT');
-        const approveTx = await usd1Contract.approve(CONFIG.serverWallet, amount); // ⚠️ UBAH RELAYER JADI SERVER WALLET DI SINI
-        await approveTx.wait();
-        showStatus('Approval successful!', 'info');
+            showStatus('Please approve 10 USDT'); // <-- Teks 10 USDT
+            const approveTx = await usd1Contract.approve(CONFIG.relayer, amount);
+            await approveTx.wait();
+            showStatus('Approval successful!', 'info');
         }
         updateStep(2, 'completed');
 
@@ -866,9 +857,10 @@ async function spinSlot10x() {
         const nonce = ethers.hexlify(ethers.randomBytes(32));
         const validAfter = Math.floor(Date.now() / 1000);
         const validBefore = validAfter + 600; 
-        const domain = { name: 'B402', version: '1', chainId: CONFIG.chainId, verifyingContract: CONFIG.usd1 }; // ⚠️ UBAH RELAYER JADI ALAMAT KONTRAK USDC/USDT DI SINI
+        const domain = { name: 'B402', version: '1', chainId: CONFIG.chainId, verifyingContract: CONFIG.relayer };
         const types = { TransferWithAuthorization: [ { name: 'from', type: 'address' }, { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' }, { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' } ] };
-        const value = { from: userAddress, to: CONFIG.serverWallet, value: amount.toString(), validAfter, validBefore, nonce }; 
+        const value = { from: userAddress, to: CONFIG.serverWallet, value: amount.toString(), validAfter, validBefore, nonce };
+
         const signature = await signer.signTypedData(domain, types, value);
         updateStep(3, 'completed');
 
