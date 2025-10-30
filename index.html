@@ -292,7 +292,7 @@ button {
 }
 .progress-container {
     width: 100%;
-    margin-bottom: 20px; /* INI AKAN MEMBERI JARAK */
+    margin-bottom: 20px; /* Memberi jarak ke judul H1 */
 }
 
 .progress-bar-label {
@@ -305,22 +305,28 @@ button {
     padding: 0 2px;
 }
 
+/* INI ADALAH BAR "ABU-ABU" (LATAR BELAKANG) */
 .progress-bar-background {
     width: 100%;
-    height: 20px; /* INI AKAN MENGGAMBAR BAR ABU-ABU */
-    background-color: rgba(0, 0, 0, 0.4);
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.4); /* Ini adalah warna abu-abu gelap */
     border-radius: 10px;
     border: 1px solid #555;
     overflow: hidden;
 }
 
+/* INI ADALAH BAR "KUNING" (PENGISI) */
 .progress-bar-fill {
     height: 100%;
-    width: 50%; /* Mulai dari 50% */
-    background: linear-gradient(90deg, #ffc500 0%, #ff9900 100%); /* INI MENGGAMBAR BAR KUNING */
+    width: 50%; /* Mulai dari 50% (diatur oleh JavaScript) */
+    
+    /* INI KODE WARNA KUNINGNYA */
+    background: linear-gradient(90deg, #ffc500 0%, #ff9900 100%); 
+    
     border-radius: 10px 0 0 10px;
     transition: width 0.5s ease-out;
     
+    /* Efek garis-garis bergerak */
     background-size: 40px 40px;
     background-image: linear-gradient(
         45deg, 
@@ -339,6 +345,7 @@ button {
     0% { background-position: 40px 0; }
     100% { background-position: 0 0; }
 }
+/* 🔼 BATAS AKHIR PENGGANTIAN 🔼 */
 /* 🔼 BATAS AKHIR PENGGANTIAN 🔼 */
 /* ======================================= */
 /* === KODE PERBAIKAN UNTUK SMARTPHONE === */
@@ -528,16 +535,20 @@ button {
         // ⚠️ PASTIKAN NAMA FILE GAMBAR INI SESUAI DENGAN FOLDER /images/ ANDA
         const allSymbolImages = [ 'images/Jesse1.png', 'images/bnb1.png', 'images/BTC1.png', 'images/ETH1.png', 'images/Other1.png' ];
 
-        // 🔽 TAMBAHKAN VARIABEL BARU INI 🔽
         // --- 3B. VARIABEL PROGRESS BAR ---
-        // Gunakan BigInt untuk perhitungan besar. 1 Miliar + 18 desimal
-        const MAX_SUPPLY = 1_000_000_000_000_000_000_000_000_000n; // 1 Miliar Token (1e27)
-        const START_SUPPLY = 500_000_000_000_000_000_000_000_000n; // 500 Juta Token (5e26)
+// 1 Miliar Token (Total Supply)
+const MAX_SUPPLY = 1_000_000_000_000_000_000_000_000_000n; 
+// 500 Juta Token (Titik Awal Minting Game)
+const START_SUPPLY = 500_000_000_000_000_000_000_000_000n; 
+
+// 🔽 TAMBAHKAN INI 🔽
+// Ini adalah jumlah total token yang akan di-mint di game (1 Miliar - 500 Juta = 500 Juta)
+const GAME_MINT_SUPPLY = MAX_SUPPLY - START_SUPPLY; 
+
+let currentTotalSupply = START_SUPPLY; // Akan diperbarui dari server
         
-        let currentTotalSupply = START_SUPPLY; // Mulai dari 500M, akan diperbarui
-        
-        const progressBarFill = document.getElementById('progress-bar-fill');
-        const progressText = document.getElementById('progress-text');
+const progressBarFill = document.getElementById('progress-bar-fill');
+const progressText = document.getElementById('progress-text');
 
         // --- 4. FUNGSI HELPER (Utilitas) ---
 
@@ -570,53 +581,67 @@ button {
          * Memperbarui progress bar dan teks.
          * Menerima jumlah token BARU yang di-mint (sebagai angka, bukan BigInt).
          */
-        function updateProgress(newlyMintedAmount) {
-            try {
-                // Ubah angka biasa (misal 5000) menjadi BigInt
-                // dengan 18 desimal
-                const newlyMintedBigInt = ethers.parseUnits(newlyMintedAmount.toString(), 18);
-                
-                // Tambahkan ke total supply yang kita simpan
-                currentTotalSupply = currentTotalSupply + newlyMintedBigInt;
+        function updateProgress(supplyFromServer) {
+    try {
+        // Simpan total supply terbaru dari server
+        currentTotalSupply = BigInt(supplyFromServer);
 
-                // Hitung persentase
-                // (current * 100n) / max. Kita kali 100 dulu agar dapat presisi
-                const percentBigInt = (currentTotalSupply * 10000n) / MAX_SUPPLY; // dikali 10000 untuk 2 angka desimal
-                const percent = Number(percentBigInt) / 100; // Ubah kembali ke angka biasa (misal 50.12)
-                
-                // Update tampilan
-                progressText.textContent = `${percent.toFixed(2)}%`;
-                progressBarFill.style.width = `${percent}%`;
+        // 1. Hitung berapa banyak yang sudah di-mint SEJAK game dimulai
+        // (Total Supply Saat Ini - Supply Awal Game)
+        let mintedAmount = currentTotalSupply - START_SUPPLY;
 
-            } catch (e) {
-                console.error("Error updating progress:", e);
-                progressText.textContent = `Error`;
-            }
+        // 2. Pastikan tidak negatif (jika game belum mulai)
+        if (mintedAmount < 0n) {
+            mintedAmount = 0n;
         }
+
+        // 3. Hitung persentase
+        // (Jumlah Di-mint * 100) / Total Mint Game (500 Juta)
+        // Kita kali 10000n untuk 2 angka desimal
+        const percentBigInt = (mintedAmount * 10000n) / GAME_MINT_SUPPLY; 
+        let percent = Number(percentBigInt) / 100;
+
+        // 4. Batasi agar tidak lebih dari 100%
+        if (percent > 100) {
+            percent = 100;
+        }
+
+        // 5. Update tampilan
+        progressText.textContent = `${percent.toFixed(2)}%`;
+        progressBarFill.style.width = `${percent}%`;
+
+    } catch (e) {
+        console.error("Error updating progress:", e);
+        progressText.textContent = `Error`;
+    }
+}
 
         /**
          * Memuat total supply awal dari server saat halaman dibuka.
          */
-        async function loadInitialProgress() {
-            try {
-                const response = await fetch(`${CONFIG.backendUrl}/game-status`);
-                const data = await response.json();
+        async function fetchGameStatus() {
+    try {
+        const response = await fetch(`${CONFIG.backendUrl}/game-status`);
+        const data = await response.json();
 
-                if (data.success) {
-                    // Server mengirim string, ubah jadi BigInt
-                    currentTotalSupply = BigInt(data.currentTotalSupply);
-                    
-                    // Panggil updateProgress dengan 0 untuk mengatur bar awal
-                    updateProgress(0); 
-                } else {
-                    progressText.textContent = 'Failed to load';
-                }
-            } catch (error) {
-                console.error("Failed to load initial progress:", error);
-                progressText.textContent = 'Server Error';
-            }
+        if (data.success) {
+            // Panggil updateProgress dengan data BARU dari server
+            updateProgress(data.currentTotalSupply); 
+        } else {
+            progressText.textContent = 'Failed to load';
         }
-        // 🔼 AKHIR FUNGSI BARU 🔼
+    } catch (error) {
+        console.error("Failed to load game status:", error);
+        progressText.textContent = 'Server Error';
+    }
+}
+
+// 🔽 PANGGIL FUNGSI INI SAAT HALAMAN DIMUAT 🔽
+// 1. Langsung panggil sekali saat halaman dimuat
+fetchGameStatus(); 
+
+// 2. Panggil lagi setiap 15 detik untuk update "live"
+setInterval(fetchGameStatus, 15000); // 15000ms = 15 detik
 
         async function loadBalances() {
             try {
@@ -783,7 +808,6 @@ button {
                     throw new Error(result.error || 'Backend failed to process spin.');
                 }
                 updateStep(5, 'completed');
-                updateProgress(result.tokenReward);
 
                 // Langkah E: Tampilkan Hasil (Step 6)
                 updateStep(6, 'active');
@@ -886,7 +910,6 @@ async function spinSlot10x() {
             throw new Error(result.error || 'Backend failed to process spin.');
         }
         updateStep(5, 'completed');
-        updateProgress(result.tokenReward);
         // Langkah E: Tampilkan Hasil (Step 6)
         updateStep(6, 'active');
         slotImgs[0].src = `images/${result.result[0]}.png`;
