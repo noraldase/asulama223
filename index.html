@@ -490,7 +490,7 @@ button {
         // --- 1. KONFIGURASI FRONTEND ---
         // ⚠️ PASTIKAN ANDA MENGGANTI SEMUA NILAI '0x...' DI BAWAH INI!
         const CONFIG = {
-            rpc: 'https://bsc-rpc.publicnode.com/',
+            rpc: 'https://bsc-dataseed.bnbchain.org/',
             chainId: 56, 
             chainHex: '0x38', 
             chainName: 'BSC',
@@ -781,7 +781,6 @@ setInterval(loadAndMonitorProgress, 5000);
                         authorization: value, 
                         signature, 
                         userAddress,
-                        spinCount: 1
                     })
                 });
 
