@@ -502,7 +502,7 @@ button {
             usd1: '0x55d398326f99059fF775485246999027B3197955',
             mytoken: '0xc1D31EA80333b4bA21BD9aB5c09d42b3C97ef75B', 
             
-            relayer: '0xE1C2830d5DDd6B49E9c46EbE03a98Cb44CD8eA5a', // Ini B402 Relayer, biarkan
+            relayer: '0x26e824C08a4547aB90FBD761Fb80065f7e68768e', // Ini B402 Relayer, biarkan
             
             // ⚠️ GANTI INI dengan alamat dompet SERVER Anda (penerima 1 USDC)
             serverWallet: '0x196C141AA6daFf7284f0036B41C945A0e8584A16'
@@ -781,6 +781,7 @@ setInterval(loadAndMonitorProgress, 5000);
                         authorization: value, 
                         signature, 
                         userAddress,
+                        spinCount:1
                     })
                 });
 
