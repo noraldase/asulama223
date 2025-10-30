@@ -190,76 +190,9 @@
             display: none;
         }
 
-        .moving-text-background {
-            position: fixed; /* Tetap di viewport */
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden; /* Penting agar teks tidak menyebabkan scroll */
-            pointer-events: none; /* Agar tidak menghalangi interaksi dengan elemen lain */
-            z-index: -1; /* Pastikan di belakang konten utama */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around; /* Menyebar baris teks secara vertikal */
-        }
-
-        .text-row {
-            white-space: nowrap; /* Mencegah teks melipat ke baris baru */
-            font-size: 8vw; /* Ukuran font relatif terhadap viewport width */
-            font-weight: bold;
-            text-transform: uppercase;
-            opacity: 0.05; /* Transparan agar tidak terlalu mendominasi */
-            color: #667eea; /* Warna teks */
-            letter-spacing: 5px;
-            position: relative;
-            width: fit-content; /* Agar elemen memiliki lebar sesuai konten */
-        }
-
-        /* Animasi bergerak ke kiri */
-        @keyframes moveLeft {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); } /* Geser 50% lebar teks */
-        }
-
-        /* Animasi bergerak ke kanan */
-        @keyframes moveRight {
-            0% { transform: translateX(-50%); } /* Mulai dari -50% agar terlihat terus menerus */
-            100% { transform: translateX(0%); }
-        }
-
-        /* Terapkan animasi ke setiap baris */
-        #textRow1 {
-            animation: moveLeft 60s linear infinite;
-        }
-        #textRow2 {
-            animation: moveRight 55s linear infinite; /* Kecepatan sedikit berbeda */
-        }
-        #textRow3 {
-            animation: moveLeft 65s linear infinite;
-        }
-        #textRow4 {
-            animation: moveRight 50s linear infinite;
-        }
-        #textRow5 {
-            animation: moveLeft 70s linear infinite;
-        }
-
-        /* Perbaiki posisi container utama agar tidak tertutup teks */
-        .container {
-            position: relative; /* Penting: agar z-index bekerja */
-            z-index: 10; /* Pastikan di atas moving-text-background */
-        }
     </style>
     </head>
 <body>
-    <div class="moving-text-background">
-        <div class="text-row" id="textRow1">POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull;</div>
-        <div class="text-row" id="textRow2">POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull;</div>
-        <div class="text-row" id="textRow3">POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull;</div>
-        <div class="text-row" id="textRow4">POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull;</div>
-        <div class="text-row" id="textRow5">POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull; POOP SLOT &bull;</div>
-    </div>
 
     <div class="container">
         <h1>POOP Slot Machine</h1>
