@@ -189,12 +189,6 @@
         .card.hidden {
             display: none;
         }
-
-        #connectSection.hidden,
-        #appSection.hidden {
-            display: none;
-        }
-        
     </style>
     </head>
 <body>
@@ -281,8 +275,6 @@
         let usd1Contract, mytokenContract;
 
         // --- 3. ELEMEN DOM ---
-        const connectSection = document.getElementById('connectSection');
-        const appSection = document.getElementById('appSection');
         const walletDisplay = document.getElementById('walletDisplay');
         const walletAddressSpan = document.getElementById('walletAddress');
         const balancesCard = document.getElementById('balancesCard');
@@ -361,58 +353,59 @@
 
         // --- 5. FUNGSI KONEKSI ---
         // --- 5. FUNGSI KONEKSI ---
-        async function initApp() {
-            if (signer) return true; // Sudah terkoneksi
-
-            // Nonaktifkan tombol connect untuk mencegah klik ganda
-            const connectButton = document.getElementById('connectButton');
-            if (connectButton) connectButton.disabled = true;
+        async function ensureWalletConnected() {
+            // Jika signer sudah ada, kita sudah terkoneksi. Lewati.
+            if (signer) return true; 
 
             try {
-                updateStep(1, 'active'); 
+                updateStep(1, 'active'); // Step 1: Connecting
                 if (!window.ethereum) {
                     alert('Please install MetaMask!');
-                    if (connectButton) connectButton.disabled = false;
                     return false;
                 }
 
+                // --- AWAL PERUBAHAN ---
+                // 1. Buat network kustom MENGGUNAKAN CONFIG
+                // Kita bisa menggunakan nama apa saja, tapi 'bsc' masuk akal untuk Mainnet
                 const targetNetwork = new ethers.Network(CONFIG.chainName.toLowerCase(), CONFIG.chainId); 
-                targetNetwork.ensAddress = null; 
+                targetNetwork.ensAddress = null; // Tetap nonaktifkan ENS
+
+                // 2. Buat provider dengan network target
                 provider = new ethers.BrowserProvider(window.ethereum, targetNetwork); 
+                // --- AKHIR PERUBAHAN ---
                 
+                // 3. Minta akun (Sama)
                 await provider.send("eth_requestAccounts", []);
                 
+                // 4. Dapatkan signer (Sama)
                 signer = await provider.getSigner();
                 userAddress = await signer.getAddress();
                 
+                // 5. Coba ganti ke jaringan target (Sama)
+                // Ini akan meminta pengguna beralih jika mereka tidak di jaringan yang benar
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: CONFIG.chainHex }], // '0x38' dari CONFIG
                 });
 
-                usd1Contract = new ethers.Contract(CONFIG.usd1, ERC20_ABI, provider); 
+                // 6. Inisialisasi kontrak (Sama)
+                usd1Contract = new ethers.Contract(CONFIG.usd1, ERC20_ABI, signer); 
                 mytokenContract = new ethers.Contract(CONFIG.mytoken, ERC20_ABI, provider);
 
-                // Tampilkan info wallet & muat saldo
+                // 7. Tampilkan info & muat saldo (Sama)
                 walletAddressSpan.textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
                 walletDisplay.classList.remove('hidden');
-                await loadBalances(); // <-- Saldo dimuat di sini
+                await loadBalances();
                 
                 updateStep(1, 'completed');
-
-                // --- PERUBAHAN UTAMA ---
-                // Sembunyikan tombol Connect, Tampilkan Aplikasi Utama
-                connectSection.classList.add('hidden');
-                appSection.classList.remove('hidden');
-                
-                return true; 
+                return true; // Koneksi sukses
 
             } catch (error) {
                 console.error(error);
-                showStatus('Failed switch chain: ' + error.message, 'error');
+                // Jika pengguna menolak beralih jaringan, error akan muncul di sini
+                showStatus('Failed swith chain: ' + error.message, 'error');
                 updateStep(1, 'failed'); 
-                if (connectButton) connectButton.disabled = false; // Aktifkan lagi jika gagal
-                return false; 
+                return false; // Koneksi gagal
             }
         }
 
@@ -424,7 +417,7 @@
             
             try {
                 // Langkah A: Pastikan Wallet Terkoneksi
-                const isConnected = await initApp();
+                const isConnected = await ensureWalletConnected();
                 if (!isConnected) {
                     spinButton.disabled = false;
                     return; 
