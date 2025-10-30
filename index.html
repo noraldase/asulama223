@@ -189,6 +189,12 @@
         .card.hidden {
             display: none;
         }
+
+        #connectSection.hidden,
+        #appSection.hidden {
+            display: none;
+        }
+        
     </style>
     </head>
 <body>
@@ -275,6 +281,8 @@
         let usd1Contract, mytokenContract;
 
         // --- 3. ELEMEN DOM ---
+        const connectSection = document.getElementById('connectSection');
+        const appSection = document.getElementById('appSection');
         const walletDisplay = document.getElementById('walletDisplay');
         const walletAddressSpan = document.getElementById('walletAddress');
         const balancesCard = document.getElementById('balancesCard');
