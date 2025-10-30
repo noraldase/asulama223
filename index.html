@@ -19,39 +19,31 @@ html, body {
 }
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* ⚠️ PASTIKAN PATH INI BENAR */
-    background-color: #B99074;
-    
-    /* INI KUNCI UNTUK MEMPERBAIKI SCROLL */
+    /* 1. Latar belakang body diubah jadi gelap agar kontras */
+    background-color: #1a1a1a;
     overflow: hidden; 
 }
 
 .page-container {
     display: flex;
     width: 100%;
-    height: 100vh; /* Kunci agar pas di layar */
-    overflow: hidden; /* Mencegah scroll di dalam kontainer */
+    height: 100vh;
+    overflow: hidden;
 }
 
-/* === BAGIAN 2: ANIMASI SIDEBAR (PERBAIKAN ANDA) === */
+/* === BAGIAN 2: ANIMASI SIDEBAR === */
 .sidebar {
     width: 200px;
     flex-shrink: 0;
     overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.5); /* Sedikit transparan */
+    background-color: rgba(0, 0, 0, 0.5); 
     border-left: 2px solid #333;
     border-right: 2px solid #333;
 }
 
 .scrolling-wrapper {
-    /* Menggunakan flexbox di sini lebih aman
-       daripada 'display: block' pada gambar 
-       untuk menghindari celah/spasi aneh.
-    */
     display: flex;
     flex-direction: column;
-
-    /* MENGGANTI ANIMASI KE 'scroll-down' */
     animation: scroll-down 15s linear infinite;
 }
 
@@ -60,73 +52,75 @@ body {
     height: auto;
     padding: 10px;
     box-sizing: border-box;
-    flex-shrink: 0; /* Mencegah gambar menyusut */
+    flex-shrink: 0;
 }
 
-/* ANIMASI BARU: SCROLL-DOWN 
-   Ini adalah kunci untuk loop mulus ke bawah.
-   Kita mulai dari posisi -50% (tengah) dan berakhir di 0 (awal).
-   Karena loop-nya 'infinite', ini akan terlihat mulus.
-*/
 @keyframes scroll-down {
-    0% {
-        transform: translateY(-50%);
-    }
-    100% {
-        transform: translateY(0);
-    }
+    0% { transform: translateY(-50%); }
+    100% { transform: translateY(0); }
 }
 
+/* ================================================= */
+/* === BAGIAN 3: PERBAIKAN "AROMA SLOT" DIMULAI === */
+/* ================================================= */
 
-/* === BAGIAN 3: KONTEN TENGAH (APLIKASI SLOT ANDA) === */
-
-/* Ini adalah .container Anda, sekarang berfungsi
-   sebagai kolom tengah.
-*/
 .container {
-    flex-grow: 1; /* Mengambil semua sisa ruang */
-    background: rgba(255, 255, 255, 0.95);
+    flex-grow: 1;
+    
+    /* 2. MENGGANTI background putih polos dengan gradien ungu tua */
+    background: linear-gradient(180deg, #3a0d5c 0%, #1a0a2e 100%);
+    border: 1px solid #764ba2; /* Tambahkan border ungu */
+    
+    /* 3. Ubah semua teks default di dalam container jadi terang */
+    color: #f0f0f0; 
+    
     padding: 30px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     backdrop-filter: blur(5px);
-    
-    /* Kunci agar konten di dalamnya bisa di-scroll jika tidak muat */
     overflow-y: auto; 
-    
-    /* Batasi lebar agar tidak terlalu lebar di layar besar */
     max-width: 550px;
-    margin: 0 auto; /* Menengahkan jika ada sisa ruang (dibatasi max-width) */
+    margin: 0 auto;
 }
 
-/* --- Sisa CSS Anda (Tidak perlu diubah) --- */
+/* 4. Beri judul efek "Glow" neon */
 h1 {
-    color: #667eea;
+    color: #ffffff;
     margin-bottom: 10px;
     font-size: 28px;
     text-align: center;
+    /* Efek Neon/Glow */
+    text-shadow: 0 0 5px #fff, 0 0 10px #667eea, 0 0 15px #667eea;
 }
+
+/* 5. Ubah warna teks yang tadinya gelap jadi terang */
 .subtitle {
-    color: #666;
+    color: #aaa; /* Dibuat lebih pudar */
     margin-bottom: 30px;
     font-size: 14px;
     text-align: center;
 }
+
 .slots-container {
     display: flex;
     justify-content: space-around;
     margin: 25px 0;
 }
+
+/* 6. Beri kotak slot efek "Glow" juga */
 .slot {
     width: 100px; 
     height: 100px;
-    background-color: #f0f0f0;
-    border: 3px solid #667eea;
+    background-color: #111; /* Latar belakang reel lebih gelap */
+    
+    /* Hapus border, ganti dengan shadow yang bersinar */
+    border: none;
+    box-shadow: 0 0 15px 5px rgba(102, 126, 234, 0.6); /* Shadow biru/ungu */
+    
     border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 .slot img {
     width: 100%;
@@ -136,30 +130,30 @@ h1 {
 .slot img.spinning {
     filter: blur(5px);
 }
+
+/* 7. Ubah kartu "Your Balances" agar sesuai tema gelap */
 .card {
-    background: #f8f9fa;
+    background: rgba(0, 0, 0, 0.25); /* Background hitam transparan */
+    border: 1px solid #555;
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
 }
 .card h3 {
-    color: #333;
+    color: #ffffff; /* Teks jadi putih */
     margin-bottom: 15px;
     font-size: 18px;
 }
-.info-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 14px;
-}
+
+/* 8. Ubah semua teks info jadi terang */
 .info-row span:first-child {
-    color: #666;
+    color: #ccc;
 }
 .info-row span:last-child {
-    color: #333;
+    color: #ffffff;
     font-weight: 600;
 }
+
 button {
     width: 100%;
     padding: 16px;
@@ -171,9 +165,12 @@ button {
     transition: all 0.3s ease;
     margin-bottom: 12px;
 }
+
+/* 9. Beri tombol efek "Glow" pada teksnya */
 .btn-primary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
 }
 .btn-primary:hover {
     transform: translateY(-2px);
@@ -187,6 +184,7 @@ button {
 .btn-secondary {
     background: linear-gradient(135deg, #ff9900 0%, #ffc500 100%);
     color: white;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
 }
 .btn-secondary:hover {
     transform: translateY(-2px);
@@ -205,6 +203,7 @@ button {
     font-size: 14px;
     text-align: center;
 }
+/* Style status biarkan terang agar mudah dibaca */
 .status-info {
     background: #e3f2fd;
     color: #1976d2;
@@ -217,12 +216,14 @@ button {
     background: #ffebee;
     color: #d32f2f;
 }
+
+/* 10. Ubah teks Step jadi terang */
 .step {
     padding: 10px;
-    border-left: 3px solid #ccc;
+    border-left: 3px solid #777;
     margin-bottom: 10px;
     font-size: 14px;
-    color: #666;
+    color: #ccc;
 }
 .step.active {
     background: #f0f4ff;
@@ -255,12 +256,14 @@ button {
     font-weight: 600;
     margin-left: 8px;
 }
+
+/* 11. Ubah Wallet Display agar sesuai tema gelap */
 .wallet-display {
-    background: #f5f5f5;
+    background: rgba(0, 0, 0, 0.25);
     padding: 8px 12px;
     border-radius: 8px;
     font-size: 12px;
-    color: #666;
+    color: #ccc;
     margin-bottom: 15px;
     word-break: break-all;
 }
@@ -268,58 +271,48 @@ button {
 .card.hidden {
     display: none;
 }
+
 /* ======================================= */
 /* === KODE PERBAIKAN UNTUK SMARTPHONE === */
 /* ======================================= */
 
-/* Aturan ini berlaku jika lebar layar 768px atau lebih kecil */
 @media (max-width: 768px) {
     
-    /* 1. Sembunyikan sidebar kiri dan kanan */
     .sidebar {
         display: none;
     }
-
-    /* 2. Izinkan body untuk scroll ke bawah di HP */
     body {
         overflow-y: auto; 
-        overflow-x: hidden; /* Tetap larang scroll ke samping */
+        overflow-x: hidden;
     }
-
-    /* 3. Hentikan layout 3-kolom */
     .page-container {
-        display: block; /* Buat jadi tumpukan vertikal biasa */
-        height: auto;   /* Biarkan tinggi ditentukan konten */
+        display: block;
+        height: auto;
         min-height: 100vh;
     }
-
-    /* 4. Buat konten utama mengambil seluruh layar */
     .container {
         width: 100%;
-        max-width: 100%; /* Menimpa aturan max-width desktop */
+        max-width: 100%;
         min-width: 100%;
         margin: 0;
-        padding: 15px;   /* Kurangi padding untuk layar kecil */
-        border-radius: 0; /* Hapus sudut di HP (opsional) */
-        
-        /* Pastikan konten utama mengisi layar */
+        padding: 15px;
+        border-radius: 0;
         min-height: 100vh;
         height: auto; 
-        overflow-y: visible; /* Biarkan kontennya memanjang ke bawah */
+        overflow-y: visible;
+        
+        /* Matikan border di HP */
+        border: none;
     }
-    
-    /* 5. (Opsional) Kecilkan slot agar muat lebih baik */
     .slot {
-        width: 80px;  /* Lebih kecil dari 100px */
-        height: 80px; /* Lebih kecil dari 100px */
+        width: 80px;
+        height: 80px;
     }
-    
     .slots-container {
-        margin: 15px 0; /* Kurangi margin */
+        margin: 15px 0;
     }
-
     h1 {
-        font-size: 24px; /* Kecilkan judul sedikit */
+        font-size: 24px;
     }
 }
     </style>
