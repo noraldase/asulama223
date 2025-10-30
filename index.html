@@ -616,33 +616,6 @@ const progressText = document.getElementById('progress-text');
     }
 }
 
-        /**
-         * Memuat total supply awal dari server saat halaman dibuka.
-         */
-        async function fetchGameStatus() {
-    try {
-        const response = await fetch(`${CONFIG.backendUrl}/game-status`);
-        const data = await response.json();
-
-        if (data.success) {
-            // Panggil updateProgress dengan data BARU dari server
-            updateProgress(data.currentTotalSupply); 
-        } else {
-            progressText.textContent = 'Failed to load';
-        }
-    } catch (error) {
-        console.error("Failed to load game status:", error);
-        progressText.textContent = 'Server Error';
-    }
-}
-
-// 🔽 PANGGIL FUNGSI INI SAAT HALAMAN DIMUAT 🔽
-// 1. Langsung panggil sekali saat halaman dimuat
-fetchGameStatus(); 
-
-// 2. Panggil lagi setiap 15 detik untuk update "live"
-setInterval(fetchGameStatus, 15000); // 15000ms = 15 detik
-
         async function loadBalances() {
             try {
                 balancesCard.classList.remove('hidden');
@@ -943,7 +916,28 @@ async function spinSlot10x() {
         spinButton10x.disabled = false;
     }
 }
-        loadInitialProgress();
+        async function fetchGameStatus() {
+    try {
+        const response = await fetch(`${CONFIG.backendUrl}/game-status`);
+        const data = await response.json();
+
+        if (data.success) {
+            // Panggil updateProgress dengan data BARU dari server
+            updateProgress(data.currentTotalSupply); 
+        } else {
+            progressText.textContent = 'Failed to load';
+        }
+    } catch (error) {
+        console.error("Failed to load game status:", error);
+        progressText.textContent = 'Server Error';
+    }
+}
+
+// 1. Langsung panggil sekali saat halaman dimuat
+fetchGameStatus(); 
+
+// 2. Panggil lagi setiap 15 detik untuk update "live"
+setInterval(fetchGameStatus, 15000); // 15000ms = 15 detik
     </script>
     </body>
 </html>
