@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Slot Machine - BNB</title>
+    <title>POOP Slot Machine - BNB</title>
     
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
     
@@ -194,7 +194,7 @@
 <body>
 
     <div class="container">
-        <h1>🎰 Crypto Slot Machine</h1>
+        <h1>POOP Slot Machine</h1>
         <div class="subtitle">Pay 1 USD1, Get 1000 $POOP + Win! <span class="badge">0 GAS</span></div>
 
         <div id="appSection">
@@ -272,7 +272,7 @@
         const ERC20_ABI = [ 'function balanceOf(address) view returns (uint256)', 'function decimals() view returns (uint8)', 'function approve(address,uint256) returns (bool)', 'function allowance(address,address) view returns (uint256)' ];
         
         let provider, signer, userAddress;
-        let usd1, mytokenContract;
+        let usd1Contract, mytokenContract;
 
         // --- 3. ELEMEN DOM ---
         const walletDisplay = document.getElementById('walletDisplay');
@@ -318,7 +318,7 @@
         async function loadBalances() {
             try {
                 balancesCard.classList.remove('hidden');
-                BalanceSpan.textContent = 'Loading...';
+                usdc1BalanceSpan.textContent = 'Loading...';
                 mytokenBalanceSpan.textContent = 'Loading...';
 
                 const usd1Bal = await usd1Contract.balanceOf(userAddress);
