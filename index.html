@@ -9,250 +9,253 @@
     
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* ⚠️ PERINGATAN: /images/background.jpg MASIH HARUS ADA DI VERCEL */
-            background-image: url('images/poop1.png'); 
-            background-size: cover;
-            background-position: center;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            backdrop-filter: blur(5px);
-        }
-        h1 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 28px;
-            text-align: center;
-        }
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
-            text-align: center;
-        }
-        .slots-container {
-            display: flex;
-            justify-content: space-around;
-            margin: 25px 0;
-        }
-        .slot {
-            width: 100px; 
-            height: 100px;
-            background-color: #f0f0f0;
-            border: 3px solid #667eea;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .slot img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .slot img.spinning {
-            filter: blur(5px);
-        }
-        .card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .card h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        .info-row span:first-child {
-            color: #666;
-        }
-        .info-row span:last-child {
-            color: #333;
-            font-weight: 600;
-        }
-        button {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 12px;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .status {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            font-size: 14px;
-            text-align: center;
-        }
-        .status-info {
-            background: #e3f2fd;
-            color: #1976d2;
-        }
-        .status-success {
-            background: #e8f5e9;
-            color: #388e3c;
-        }
-        .status-error {
-            background: #ffebee;
-            color: #d32f2f;
-        }
-        .step {
-            padding: 10px;
-            border-left: 3px solid #ccc;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: #666;
-        }
-        .step.active {
-            background: #f0f4ff;
-            color: #667eea;
-            font-weight: 600;
-            border-left-color: #667eea;
-        }
-        .step.completed {
-            color: #4caf50;
-            border-left-color: #4caf50;
-        }
-        .hidden {
-            display: none;
-        }
-        .link {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 12px;
-        }
-        .link:hover {
-            text-decoration: underline;
-        }
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #e3f2fd;
-            color: #1976d2;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-        .wallet-display {
-            background: #f5f5f5;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 15px;
-            word-break: break-all;
-        }
-        .wallet-display.hidden,
-        .card.hidden {
-            display: none;
-        }
-
-        .page-container {
-    display: flex;
-    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* ⚠️ PASTIKAN PATH INI BENAR */
+    background-image: url('images/poop1.png'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Membuat background diam */
+    
+    /* INI KUNCI UNTUK MEMPERBAIKI SCROLL */
+    overflow: hidden; 
 }
 
-/* Styling untuk sidebar kiri dan kanan */
+.page-container {
+    display: flex;
+    width: 100%;
+    height: 100vh; /* Kunci agar pas di layar */
+    overflow: hidden; /* Mencegah scroll di dalam kontainer */
+}
+
+/* === BAGIAN 2: ANIMASI SIDEBAR (PERBAIKAN ANDA) === */
 .sidebar {
-    width: 200px; /* Lebar kolom samping */
-    flex-shrink: 0; /* Mencegah kolom menyusut */
-    overflow: hidden; /* Menyembunyikan gambar yang keluar dari area */
-    background-color: #0d0d0d; /* Warna background kolom samping */
+    width: 200px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.5); /* Sedikit transparan */
     border-left: 2px solid #333;
     border-right: 2px solid #333;
 }
 
-/* Wadah untuk gambar-gambar yang akan bergerak */
 .scrolling-wrapper {
-    /* Menerapkan animasi: 
-       'scroll-up' adalah nama @keyframes
-       '15s' adalah durasi (ubah untuk lebih cepat/lambat)
-       'linear' membuat kecepatan konstan
-       'infinite' membuat animasi berulang tanpa henti
+    /* Menggunakan flexbox di sini lebih aman
+       daripada 'display: block' pada gambar 
+       untuk menghindari celah/spasi aneh.
     */
-    animation: scroll-up 15s linear infinite;
+    display: flex;
+    flex-direction: column;
+
+    /* MENGGANTI ANIMASI KE 'scroll-down' */
+    animation: scroll-down 15s linear infinite;
 }
 
-/* Styling untuk gambar di dalam sidebar */
 .scrolling-wrapper img {
-    display: block; /* Membuat setiap gambar mengambil satu baris penuh */
     width: 100%;
-    padding: 10px;
-    box-sizing: border-box; /* Agar padding tidak merusak layout */
-}
-
-/* Konten utama di tengah */
-.main-content {
-    flex-grow: 1; /* Mengambil sisa ruang di tengah */
-    padding: 20px;
-    text-align: center; /* Membuat logo dan teks jadi di tengah */
-}
-
-/* Styling untuk logo utama Anda */
-.main-logo {
-    width: 150px; /* Atur ukuran logo Anda */
     height: auto;
-    margin-bottom: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+    flex-shrink: 0; /* Mencegah gambar menyusut */
 }
 
-/* ====== INI ADALAH ANIMASINYA ====== */
-
-@keyframes scroll-up {
+/* ANIMASI BARU: SCROLL-DOWN 
+   Ini adalah kunci untuk loop mulus ke bawah.
+   Kita mulai dari posisi -50% (tengah) dan berakhir di 0 (awal).
+   Karena loop-nya 'infinite', ini akan terlihat mulus.
+*/
+@keyframes scroll-down {
     0% {
-        /* Mulai dari posisi 0 (paling atas) */
-        transform: translateY(0);
-    }
-    100% {
-        /* Bergerak ke atas sejauh 50% dari total tinggi wrapper.
-           Karena kita menduplikasi gambar, 50% adalah titik 
-           di mana daftar gambar pertama persis selesai 
-           dan daftar kedua (duplikat) mulai.
-        */
         transform: translateY(-50%);
     }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+/* === BAGIAN 3: KONTEN TENGAH (APLIKASI SLOT ANDA) === */
+
+/* Ini adalah .container Anda, sekarang berfungsi
+   sebagai kolom tengah.
+*/
+.container {
+    flex-grow: 1; /* Mengambil semua sisa ruang */
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    backdrop-filter: blur(5px);
+    
+    /* Kunci agar konten di dalamnya bisa di-scroll jika tidak muat */
+    overflow-y: auto; 
+    
+    /* Batasi lebar agar tidak terlalu lebar di layar besar */
+    max-width: 550px;
+    margin: 0 auto; /* Menengahkan jika ada sisa ruang (dibatasi max-width) */
+}
+
+/* --- Sisa CSS Anda (Tidak perlu diubah) --- */
+h1 {
+    color: #667eea;
+    margin-bottom: 10px;
+    font-size: 28px;
+    text-align: center;
+}
+.subtitle {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 14px;
+    text-align: center;
+}
+.slots-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 25px 0;
+}
+.slot {
+    width: 100px; 
+    height: 100px;
+    background-color: #f0f0f0;
+    border: 3px solid #667eea;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.slot img.spinning {
+    filter: blur(5px);
+}
+.card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.card h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+.info-row span:first-child {
+    color: #666;
+}
+.info-row span:last-child {
+    color: #333;
+    font-weight: 600;
+}
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 12px;
+}
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+.status {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    text-align: center;
+}
+.status-info {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+.status-success {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+.status-error {
+    background: #ffebee;
+    color: #d32f2f;
+}
+.step {
+    padding: 10px;
+    border-left: 3px solid #ccc;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #666;
+}
+.step.active {
+    background: #f0f4ff;
+    color: #667eea;
+    font-weight: 600;
+    border-left-color: #667eea;
+}
+.step.completed {
+    color: #4caf50;
+    border-left-color: #4caf50;
+}
+.hidden {
+    display: none;
+}
+.link {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 12px;
+}
+.link:hover {
+    text-decoration: underline;
+}
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #e3f2fd;
+    color: #1976d2;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+.wallet-display {
+    background: #f5f5f5;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 15px;
+    word-break: break-all;
+}
+.wallet-display.hidden,
+.card.hidden {
+    display: none;
 }
 
     </style>
@@ -266,90 +269,79 @@
                 <img src="images/ETH.png" alt="Gambar Slot">
                 <img src="images/bnb.png" alt="Gambar Slot">
                 <img src="images/Other.png" alt="Gambar Slot">
-        
-
                 <img src="images/BTC.png" alt="Gambar Slot">
                 <img src="images/ETH.png" alt="Gambar Slot">
                 <img src="images/bnb.png" alt="Gambar Slot">
                 <img src="images/Other.png" alt="Gambar Slot">
-             
             </div>
         </div>
 
-        <div class="main-content">
-            <h1>POOP SLOT</h1>
-            <img src="logo.png" alt="Logo Utama" class="main-logo">
-            <p>Click Spin to connect</p>
-            </div>
+        <div class="container">
+            <h1>POOP Slot Machine</h1>
+            <div class="subtitle">Pay 1 USD1, Get 1000 $POOP + Win! <span class="badge">0 GAS</span></div>
 
+            <div id="appSection">
+                <div class="wallet-display hidden" id="walletDisplay">
+                    <strong>Your Wallet:</strong> <span id="walletAddress"></span>
+                </div>
+
+                <div class="slots-container">
+                    <div class="slot">
+                        <img src="images/bnb.png" alt="slot-reel" id="slot1-img">
+                    </div>
+                    <div class="slot">
+                        <img src="images/ETH.png" alt="slot-reel" id="slot2-img">
+                    </div>
+                    <div class="slot">
+                        <img src="images/BTC.png" alt="slot-reel" id="slot3-img">
+                    </div>
+                </div>
+
+                <div class="card hidden" id="balancesCard">
+                    <h3>Your Balances</h3>
+                    <div class="info-row">
+                        <span>USD1 Balance</span>
+                        <span id="usd1Balance">Loading...</span>
+                    </div>
+                    <div class="info-row">
+                        <span>$POOP Balance</span>
+                        <span id="mytokenBalance">Loading...</span>
+                    </div>
+                </div>
+
+                <div id="statusSection"></div>
+
+                <div id="stepsSection" class="hidden">
+                    <div class="step" id="step1">1. Connecting wallet...</div>
+                    <div class="step" id="step2">2. Approving USD1...</div>
+                    <div class="step" id="step3">3. Signing spin (0 gas)...</div>
+                    <div class="step" id="step4">4. Server is spinning...</div>
+                    <div class="step" id="step5">5. Server paying rewards...</div>
+                    <div class="step" id="step6">6. Complete!</div>
+                </div>
+
+                <button class="btn-primary" id="spinButton" onclick="spinSlot()">
+                    Spin! (Pay 1 USD1)
+                </button>
+
+                <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #999;">
+                    Binance Smart Chain
+                </div>
+            </div>
+        </div>
+        
         <div class="sidebar sidebar-kanan">
             <div class="scrolling-wrapper">
                 <img src="images/BTC.png" alt="Gambar Slot">
                 <img src="images/ETH.png" alt="Gambar Slot">
                 <img src="images/bnb.png" alt="Gambar Slot">
                 <img src="images/Other.png" alt="Gambar Slot">
-              
-
                 <img src="images/BTC.png" alt="Gambar Slot">
                 <img src="images/ETH.png" alt="Gambar Slot">
                 <img src="images/bnb.png" alt="Gambar Slot">
                 <img src="images/Other.png" alt="Gambar Slot">
-           
             </div>
         </div>
-    <div class="container">
-        <h1>POOP Slot Machine</h1>
-        <div class="subtitle">Pay 1 USD1, Get 1000 $POOP + Win! <span class="badge">0 GAS</span></div>
-
-        <div id="appSection">
-            <div class="wallet-display hidden" id="walletDisplay">
-                <strong>Your Wallet:</strong> <span id="walletAddress"></span>
-            </div>
-
-            <div class="slots-container">
-                <div class="slot">
-                    <img src="images/bnb.png" alt="slot-reel" id="slot1-img">
-                </div>
-                <div class="slot">
-                    <img src="images/ETH.png" alt="slot-reel" id="slot2-img">
-                </div>
-                <div class="slot">
-                    <img src="images/BTC.png" alt="slot-reel" id="slot3-img">
-                </div>
-            </div>
-
-            <div class="card hidden" id="balancesCard">
-                <h3>Your Balances</h3>
-                <div class="info-row">
-                    <span>USD1 Balance</span>
-                    <span id="usd1Balance">Loading...</span>
-                </div>
-                <div class="info-row">
-                    <span>$POOP Balance</span>
-                    <span id="mytokenBalance">Loading...</span>
-                </div>
-            </div>
-
-            <div id="statusSection"></div>
-
-            <div id="stepsSection" class="hidden">
-                <div class="step" id="step1">1. Connecting wallet...</div>
-                <div class="step" id="step2">2. Approving USD1...</div>
-                <div class="step" id="step3">3. Signing spin (0 gas)...</div>
-                <div class="step" id="step4">4. Server is spinning...</div>
-                <div class="step" id="step5">5. Server paying rewards...</div>
-                <div class="step" id="step6">6. Complete!</div>
-            </div>
-
-            <button class="btn-primary" id="spinButton" onclick="spinSlot()">
-                Spin! (Pay 1 USD1)
-            </button>
-
-            <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #999;">
-                Binance Smart Chain
-            </div>
-        </div>
-    </div>
     <script>
         // --- 1. KONFIGURASI FRONTEND ---
         // ⚠️ PASTIKAN ANDA MENGGANTI SEMUA NILAI '0x...' DI BAWAH INI!
