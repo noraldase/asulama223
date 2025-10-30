@@ -19,8 +19,27 @@ html, body {
 }
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* 1. Latar belakang body diubah jadi gelap agar kontras */
-    background-color: #1a1a1a;
+
+    /* 🔽 GANTI DENGAN BLOK INI 🔽 */
+    
+    /* Ganti 'images/wallpaper.jpg' dengan path gambar Anda */
+    background-image: url('images/bg1.png');
+    
+    /* Membuat gambar menutupi seluruh layar */
+    background-size: cover;
+    
+    /* Menengahkan gambar */
+    background-position: center;
+    
+    /* Kunci: Membuat gambar "diam" di tempat, 
+       bahkan jika ada konten yang di-scroll */
+    background-attachment: fixed; 
+    
+    /* Ini adalah warna cadangan jika gambar gagal dimuat */
+    background-color: #1a1a1a; 
+    
+    /* 🔼 BATAS AKHIR PERUBAHAN 🔼 */
+
     overflow: hidden; 
 }
 
