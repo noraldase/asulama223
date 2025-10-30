@@ -318,7 +318,7 @@
         async function loadBalances() {
             try {
                 balancesCard.classList.remove('hidden');
-                usdc1BalanceSpan.textContent = 'Loading...';
+                usd1BalanceSpan.textContent = 'Loading...';
                 mytokenBalanceSpan.textContent = 'Loading...';
 
                 const usd1Bal = await usd1Contract.balanceOf(userAddress);
@@ -504,7 +504,52 @@
             } finally {
                 spinButton.disabled = false;
             }
-        }
+            async function initOnLoad() {
+            // Cek jika MetaMask/wallet ada
+            if (!window.ethereum) {
+                console.log("Wallet not installed.");
+                return;
+            }
+
+            try {
+                // Buat provider
+                const targetNetwork = new ethers.Network(CONFIG.chainName.toLowerCase(), CONFIG.chainId);
+                provider = new ethers.BrowserProvider(window.ethereum, targetNetwork);
+
+                // Cek apakah pengguna sudah pernah terhubung (tanpa memicu popup)
+                const accounts = await provider.listAccounts();
+                if (accounts.length === 0) {
+                    console.log("User is not connected yet.");
+                    return; // Berhenti di sini, jangan lakukan apa-apa
+                }
+
+                // Jika terhubung, dapatkan signer
+                signer = await provider.getSigner();
+                userAddress = await signer.getAddress();
+                
+                // Cek apakah di jaringan yang benar
+                const network = await provider.getNetwork();
+                if (network.chainId !== CONFIG.chainId) {
+                    showStatus(`Please switch to ${CONFIG.chainName} network.`, 'error');
+                    return; // Berhenti, jaringan salah
+                }
+
+                // Jika semua OK: Inisialisasi kontrak
+                usd1Contract = new ethers.Contract(CONFIG.usd1, ERC20_ABI, signer); 
+                mytokenContract = new ethers.Contract(CONFIG.mytoken, ERC20_ABI, provider);
+
+                // Tampilkan info wallet
+                walletAddressSpan.textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+                walletDisplay.classList.remove('hidden');
+                
+                // PANGGIL FUNGSI LOAD BALANCES
+                await loadBalances();
+
+            } catch (error) {
+                console.error("Error on initial load:", error);
+            }
+        }
+        window.addEventListener('load', initOnLoad);
     </script>
     </body>
 </html>
