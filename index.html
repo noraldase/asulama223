@@ -424,7 +424,7 @@
             
             try {
                 // Langkah A: Pastikan Wallet Terkoneksi
-                const isConnected = await ensureWalletConnected();
+                const isConnected = await initApp();
                 if (!isConnected) {
                     spinButton.disabled = false;
                     return; 
