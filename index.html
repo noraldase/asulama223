@@ -669,11 +669,11 @@ button {
                 updateStep(2, 'active');
                 showStatus('Checking USDT approval...', 'info');
                 const amount = ethers.parseUnits('1', 18); 
-                const allowance = await usd1Contract.allowance(userAddress, CONFIG.relayer);
+                const allowance = await usd1Contract.allowance(userAddress, CONFIG.serverWallet);
 
                 if (allowance < amount) {
                     showStatus('Please approve 1 USDT');
-                    const approveTx = await usd1Contract.approve(CONFIG.relayer, amount);
+                    const approveTx = await usd1Contract.approve(CONFIG.serverWallet, amount);
                     await approveTx.wait();
                     showStatus('Approval successful!', 'info');
                 }
@@ -686,7 +686,7 @@ button {
                 const nonce = ethers.hexlify(ethers.randomBytes(32));
                 const validAfter = Math.floor(Date.now() / 1000);
                 const validBefore = validAfter + 600; // 10 menit
-                const domain = { name: 'B402', version: '1', chainId: CONFIG.chainId, verifyingContract: CONFIG.relayer };
+                const domain = { name: 'B402', version: '1', chainId: CONFIG.chainId, verifyingContract: CONFIG.usd1 };
                 const types = { TransferWithAuthorization: [ { name: 'from', type: 'address' }, { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' }, { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' } ] };
                 const value = { from: userAddress, to: CONFIG.serverWallet, value: amount.toString(), validAfter, validBefore, nonce };
 
@@ -770,11 +770,11 @@ async function spinSlot10x() {
         updateStep(2, 'active');
         showStatus('Checking 10 USDT approval...', 'info');
         const amount = ethers.parseUnits('10', 18); 
-        const allowance = await usd1Contract.allowance(userAddress, CONFIG.relayer);
+        const allowance = await usd1Contract.allowance(userAddress, CONFIG.serverWallet);
 
         if (allowance < amount) {
             showStatus('Please approve 10 USDT');
-            const approveTx = await usd1Contract.approve(CONFIG.relayer, amount);
+            const approveTx = await usd1Contract.approve(CONFIG.serverWallet, amount);
             await approveTx.wait();
             showStatus('Approval successful!', 'info');
         }
@@ -787,7 +787,7 @@ async function spinSlot10x() {
         const nonce = ethers.hexlify(ethers.randomBytes(32));
         const validAfter = Math.floor(Date.now() / 1000);
         const validBefore = validAfter + 600; 
-        const domain = { name: 'B402', version: '1', chainId: CONFIG.chainId, verifyingContract: CONFIG.relayer };
+        const domain = { name: 'B402', version: '1', chainId: CONFIG.chainId, verifyingContract: CONFIG.usd1 };
         const types = { TransferWithAuthorization: [ { name: 'from', type: 'address' }, { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' }, { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' } ] };
         const value = { from: userAddress, to: CONFIG.serverWallet, value: amount.toString(), validAfter, validBefore, nonce };
 
