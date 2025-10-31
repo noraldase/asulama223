@@ -19,27 +19,11 @@ html, body {
 }
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-    /* 🔽 GANTI DENGAN BLOK INI 🔽 */
-    
-    /* Ganti 'images/wallpaper.jpg' dengan path gambar Anda */
     background-image: url('images/bg1.png');
-    
-    /* Membuat gambar menutupi seluruh layar */
     background-size: cover;
-    
-    /* Menengahkan gambar */
     background-position: center;
-    
-    /* Kunci: Membuat gambar "diam" di tempat, 
-       bahkan jika ada konten yang di-scroll */
     background-attachment: fixed; 
-    
-    /* Ini adalah warna cadangan jika gambar gagal dimuat */
     background-color: #1a1a1a; 
-    
-    /* 🔼 BATAS AKHIR PERUBAHAN 🔼 */
-
     overflow: hidden; 
 }
 
@@ -50,7 +34,6 @@ body {
     overflow: hidden;
 }
 
-/* === BAGIAN 2: ANIMASI SIDEBAR === */
 .sidebar {
     width: 200px;
     flex-shrink: 0;
@@ -79,20 +62,12 @@ body {
     100% { transform: translateY(0); }
 }
 
-/* ================================================= */
-/* === BAGIAN 3: PERBAIKAN "AROMA SLOT" DIMULAI === */
-/* ================================================= */
 
 .container {
     flex-grow: 1;
-    
-    /* 2. MENGGANTI background putih polos dengan gradien ungu tua */
     background: linear-gradient(180deg, #3a0d5c 0%, #1a0a2e 100%);
-    border: 1px solid #764ba2; /* Tambahkan border ungu */
-    
-    /* 3. Ubah semua teks default di dalam container jadi terang */
-    color: #f0f0f0; 
-    
+    border: 1px solid #764ba2; 
+    color: #f0f0f0;
     padding: 30px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     backdrop-filter: blur(5px);
@@ -101,19 +76,16 @@ body {
     margin: 0 auto;
 }
 
-/* 4. Beri judul efek "Glow" neon */
 h1 {
     color: #ffffff;
     margin-bottom: 10px;
     font-size: 28px;
     text-align: center;
-    /* Efek Neon/Glow */
     text-shadow: 0 0 5px #fff, 0 0 10px #667eea, 0 0 15px #667eea;
 }
 
-/* 5. Ubah warna teks yang tadinya gelap jadi terang */
 .subtitle {
-    color: #aaa; /* Dibuat lebih pudar */
+    color: #aaa; 
     margin-bottom: 30px;
     font-size: 14px;
     text-align: center;
@@ -125,16 +97,13 @@ h1 {
     margin: 25px 0;
 }
 
-/* 6. Beri kotak slot efek "Glow" juga */
+
 .slot {
     width: 100px; 
     height: 100px;
-    background-color: #111; /* Latar belakang reel lebih gelap */
-    
-    /* Hapus border, ganti dengan shadow yang bersinar */
+    background-color: #111;
     border: none;
-    box-shadow: 0 0 15px 5px rgba(102, 126, 234, 0.6); /* Shadow biru/ungu */
-    
+    box-shadow: 0 0 15px 5px rgba(102, 126, 234, 0.6);
     border-radius: 12px;
     display: flex;
     justify-content: center;
@@ -150,21 +119,20 @@ h1 {
     filter: blur(5px);
 }
 
-/* 7. Ubah kartu "Your Balances" agar sesuai tema gelap */
+
 .card {
-    background: rgba(0, 0, 0, 0.25); /* Background hitam transparan */
+    background: rgba(0, 0, 0, 0.25);
     border: 1px solid #555;
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
 }
 .card h3 {
-    color: #ffffff; /* Teks jadi putih */
+    color: #ffffff;
     margin-bottom: 15px;
     font-size: 18px;
 }
 
-/* 8. Ubah semua teks info jadi terang */
 .info-row span:first-child {
     color: #ccc;
 }
@@ -185,7 +153,7 @@ button {
     margin-bottom: 12px;
 }
 
-/* 9. Beri tombol efek "Glow" pada teksnya */
+
 .btn-primary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -222,7 +190,7 @@ button {
     font-size: 14px;
     text-align: center;
 }
-/* Style status biarkan terang agar mudah dibaca */
+
 .status-info {
     background: #e3f2fd;
     color: #1976d2;
@@ -236,7 +204,6 @@ button {
     color: #d32f2f;
 }
 
-/* 10. Ubah teks Step jadi terang */
 .step {
     padding: 10px;
     border-left: 3px solid #777;
@@ -276,7 +243,6 @@ button {
     margin-left: 8px;
 }
 
-/* 11. Ubah Wallet Display agar sesuai tema gelap */
 .wallet-display {
     background: rgba(0, 0, 0, 0.25);
     padding: 8px 12px;
@@ -292,7 +258,7 @@ button {
 }
 .progress-container {
     width: 100%;
-    margin-bottom: 20px; /* INI AKAN MEMBERI JARAK */
+    margin-bottom: 20px;
 }
 
 .progress-bar-label {
@@ -307,7 +273,7 @@ button {
 
 .progress-bar-background {
     width: 100%;
-    height: 20px; /* INI AKAN MENGGAMBAR BAR ABU-ABU */
+    height: 20px;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 10px;
     border: 1px solid #555;
@@ -316,8 +282,8 @@ button {
 
 .progress-bar-fill {
     height: 100%;
-    width: 50%; /* Mulai dari 50% */
-    background: linear-gradient(90deg, #ffc500 0%, #ff9900 100%); /* INI MENGGAMBAR BAR KUNING */
+    width: 50%;
+    background: linear-gradient(90deg, #ffc500 0%, #ff9900 100%); 
     border-radius: 10px 0 0 10px;
     transition: width 0.5s ease-out;
     
@@ -339,10 +305,6 @@ button {
     0% { background-position: 40px 0; }
     100% { background-position: 0 0; }
 }
-/* 🔼 BATAS AKHIR PENGGANTIAN 🔼 */
-/* ======================================= */
-/* === KODE PERBAIKAN UNTUK SMARTPHONE === */
-/* ======================================= */
 
 @media (max-width: 768px) {
     
@@ -368,8 +330,6 @@ button {
         min-height: 100vh;
         height: auto; 
         overflow-y: visible;
-        
-        /* Matikan border di HP */
         border: none;
     }
     .slot {
@@ -384,7 +344,7 @@ button {
     }
     .progress-container {
     width: 100%;
-    margin-bottom: 20px; /* Jarak sebelum judul H1 */
+    margin-bottom: 20px;
 }
     </style>
     </head>
@@ -393,7 +353,7 @@ button {
 
         <div class="sidebar sidebar-kiri">
             <div class="scrolling-wrapper">
-                <img src="images/" alt="Gambar Slot">
+                <img src="images/BTC1.png" alt="Gambar Slot">
                 <img src="images/ETH1.png" alt="Gambar Slot">
                 <img src="images/bnb1.png" alt="Gambar Slot">
                 <img src="images/Jesse1.png" alt="Gambar Slot">
@@ -487,34 +447,30 @@ button {
             </div>
         </div>
     <script>
-        // --- 1. KONFIGURASI FRONTEND ---
-        // ⚠️ PASTIKAN ANDA MENGGANTI SEMUA NILAI '0x...' DI BAWAH INI!
+
         const CONFIG = {
             rpc: 'https://bsc-rpc.publicnode.com/',
             chainId: 56, 
             chainHex: '0x38', 
             chainName: 'BSC',
 
-            // ⚠️ GANTI INI dengan URL API VPS Anda
             backendUrl: 'https://api.poopx402.site',
 
-            // ⚠️ GANTI INI dengan alamat kontrak TESTNET Anda
+    
             usd1: '0x55d398326f99059fF775485246999027B3197955',
             mytoken: '0xb96dfbf10a953b527D2e359f35Bc92732994ca76', 
             
-            relayer: '0xE1C2830d5DDd6B49E9c46EbE03a98Cb44CD8eA5a', // Ini B402 Relayer, biarkan
+            relayer: '0xE1C2830d5DDd6B49E9c46EbE03a98Cb44CD8eA5a', 
             
-            // ⚠️ GANTI INI dengan alamat dompet SERVER Anda (penerima 1 USDC)
             serverWallet: '0x47b5Aa8E9F16DAc4Dca68Bc24B401F24d34f360F'
         };
 
-        // --- 2. ABI & VARIABEL GLOBAL ---
+
         const ERC20_ABI = [ 'function balanceOf(address) view returns (uint256)', 'function decimals() view returns (uint8)', 'function approve(address,uint256) returns (bool)', 'function allowance(address,address) view returns (uint256)' ];
         
         let provider, signer, userAddress;
         let usd1Contract, mytokenContract;
 
-        // --- 3. ELEMEN DOM ---
         const walletDisplay = document.getElementById('walletDisplay');
         const walletAddressSpan = document.getElementById('walletAddress');
         const balancesCard = document.getElementById('balancesCard');
@@ -525,21 +481,19 @@ button {
         const stepsSection = document.getElementById('stepsSection');
         const slotImgs = [ document.getElementById('slot1-img'), document.getElementById('slot2-img'), document.getElementById('slot3-img') ];
         
-        // ⚠️ PASTIKAN NAMA FILE GAMBAR INI SESUAI DENGAN FOLDER /images/ ANDA
+ 
         const allSymbolImages = [ 'images/Jesse1.png', 'images/bnb1.png', 'images/BTC1.png', 'images/ETH1.png', 'images/Other1.png' ];
 
-        // 🔽 TAMBAHKAN VARIABEL BARU INI 🔽
-        // --- 3B. VARIABEL PROGRESS BAR ---
-        // Gunakan BigInt untuk perhitungan besar. 1 Miliar + 18 desimal
-        const MAX_SUPPLY = 1_000_000_000_000_000_000_000_000_000n; // 1 Miliar Token (1e27)
-        const START_SUPPLY = 500_000_000_000_000_000_000_000_000n; // 500 Juta Token (5e26)
+
+        const MAX_SUPPLY = 1_000_000_000_000_000_000_000_000_000n; 
+        const START_SUPPLY = 500_000_000_000_000_000_000_000_000n; 
         
-        let currentTotalSupply = START_SUPPLY; // Mulai dari 500M, akan diperbarui
+        let currentTotalSupply = START_SUPPLY; 
         
         const progressBarFill = document.getElementById('progress-bar-fill');
         const progressText = document.getElementById('progress-text');
 
-        // --- 4. FUNGSI HELPER (Utilitas) ---
+     
 
         function showStatus(message, type = 'info') {
             statusSection.innerHTML = `<div class="status status-${type}">${message}</div>`;
@@ -554,7 +508,7 @@ button {
         function updateStep(stepNum, state) {
             if (stepNum === 1) { stepsSection.classList.remove('hidden'); }
             const step = document.getElementById(`step${stepNum}`);
-            if(!step) return; // Pengaman jika ID step salah
+            if(!step) return; 
             if (state === 'active') {
                 step.classList.add('active');
                 step.classList.remove('completed');
@@ -565,26 +519,18 @@ button {
         }
         function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
-        // 🔽 TAMBAHKAN FUNGSI BARU INI 🔽
-        /**
-         * Memperbarui progress bar dan teks.
-         * Menerima jumlah token BARU yang di-mint (sebagai angka, bukan BigInt).
-         */
+ 
         function updateProgress(newlyMintedAmount) {
             try {
-                // Ubah angka biasa (misal 5000) menjadi BigInt
-                // dengan 18 desimal
+    
                 const newlyMintedBigInt = ethers.parseUnits(newlyMintedAmount.toString(), 18);
                 
-                // Tambahkan ke total supply yang kita simpan
+        
                 currentTotalSupply = currentTotalSupply + newlyMintedBigInt;
 
-                // Hitung persentase
-                // (current * 100n) / max. Kita kali 100 dulu agar dapat presisi
-                const percentBigInt = (currentTotalSupply * 10000n) / MAX_SUPPLY; // dikali 10000 untuk 2 angka desimal
-                const percent = Number(percentBigInt) / 100; // Ubah kembali ke angka biasa (misal 50.12)
+                const percentBigInt = (currentTotalSupply * 10000n) / MAX_SUPPLY; 
+                const percent = Number(percentBigInt) / 100; 
                 
-                // Update tampilan
                 progressText.textContent = `${percent.toFixed(2)}%`;
                 progressBarFill.style.width = `${percent}%`;
 
@@ -594,19 +540,16 @@ button {
             }
         }
 
-        /**
-         * Memuat total supply awal dari server saat halaman dibuka.
-         */
+
         async function loadInitialProgress() {
             try {
                 const response = await fetch(`${CONFIG.backendUrl}/game-status`);
                 const data = await response.json();
 
                 if (data.success) {
-                    // Server mengirim string, ubah jadi BigInt
+   
                     currentTotalSupply = BigInt(data.currentTotalSupply);
                     
-                    // Panggil updateProgress dengan 0 untuk mengatur bar awal
                     updateProgress(0); 
                 } else {
                     progressText.textContent = 'Failed to load';
@@ -616,7 +559,7 @@ button {
                 progressText.textContent = 'Server Error';
             }
         }
-        // 🔼 AKHIR FUNGSI BARU 🔼
+
 
         async function loadBalances() {
             try {
@@ -632,7 +575,7 @@ button {
                 const usd1Bal = await usd1Contract.balanceOf(userAddress);
                 const mytokenBal = await mytokenContract.balanceOf(userAddress);
                 
-                // ⚠️ Sesuaikan desimal jika token Anda berbeda
+
                 usd1BalanceSpan.textContent = ethers.formatUnits(usd1Bal, 18) + ' USDT'; // 6 desimal
                 mytokenBalanceSpan.textContent = ethers.formatUnits(mytokenBal, 18) + ' POOP'; // 18 desimal
 
@@ -644,13 +587,12 @@ button {
         }
 
         async function animateSpin(duration = 2000) {
-            updateStep(4, 'active'); // Step 4: Server is spinning
+            updateStep(4, 'active'); 
             slotImgs.forEach(img => img.classList.add('spinning'));
             let intervalId = setInterval(() => {
                 for (const img of slotImgs) {
-                    // Ambil gambar acak dari 'allSymbolImages'
                     const randomImg = allSymbolImages[Math.floor(Math.random() * allSymbolImages.length)];
-                    img.src = randomImg; // Tampilkan gambar acak
+                    img.src = randomImg; 
                 }
             }, 80);
             await sleep(duration);
@@ -659,83 +601,74 @@ button {
             updateStep(4, 'completed');
         }
 
-        // --- 5. FUNGSI KONEKSI ---
-        // --- 5. FUNGSI KONEKSI ---
+
         async function ensureWalletConnected() {
-            // Jika signer sudah ada, kita sudah terkoneksi. Lewati.
+
             if (signer) return true; 
 
             try {
-                updateStep(1, 'active'); // Step 1: Connecting
+                updateStep(1, 'active');
                 if (!window.ethereum) {
                     alert('Please install MetaMask!');
                     return false;
                 }
 
-                // --- AWAL PERUBAHAN ---
-                // 1. Buat network kustom MENGGUNAKAN CONFIG
-                // Kita bisa menggunakan nama apa saja, tapi 'bsc' masuk akal untuk Mainnet
-                const targetNetwork = new ethers.Network(CONFIG.chainName.toLowerCase(), CONFIG.chainId); 
-                targetNetwork.ensAddress = null; // Tetap nonaktifkan ENS
 
-                // 2. Buat provider dengan network target
+                const targetNetwork = new ethers.Network(CONFIG.chainName.toLowerCase(), CONFIG.chainId); 
+                targetNetwork.ensAddress = null; 
+
                 provider = new ethers.BrowserProvider(window.ethereum, targetNetwork); 
-                // --- AKHIR PERUBAHAN ---
-                
-                // 3. Minta akun (Sama)
+
                 await provider.send("eth_requestAccounts", []);
                 
-                // 4. Dapatkan signer (Sama)
+             
                 signer = await provider.getSigner();
                 userAddress = await signer.getAddress();
                 
-                // 5. Coba ganti ke jaringan target (Sama)
-                // Ini akan meminta pengguna beralih jika mereka tidak di jaringan yang benar
+            
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: CONFIG.chainHex }], // '0x38' dari CONFIG
+                    params: [{ chainId: CONFIG.chainHex }], 
                 });
 
-                // 6. Inisialisasi kontrak (Sama)
+              
                 usd1Contract = new ethers.Contract(CONFIG.usd1, ERC20_ABI, signer); 
                 mytokenContract = new ethers.Contract(CONFIG.mytoken, ERC20_ABI, provider);
 
-                // 7. Tampilkan info & muat saldo (Sama)
                 walletAddressSpan.textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
                 walletDisplay.classList.remove('hidden');
                 await loadBalances();
                 
                 updateStep(1, 'completed');
-                return true; // Koneksi sukses
+                return true; 
 
             } catch (error) {
                 console.error(error);
-                // Jika pengguna menolak beralih jaringan, error akan muncul di sini
+       
                 showStatus('Failed swith chain: ' + error.message, 'error');
                 updateStep(1, 'failed'); 
-                return false; // Koneksi gagal
+                return false; 
             }
         }
 
-        // --- 6. FUNGSI UTAMA: SPIN SLOT ---
-        // Ini adalah fungsi yang dipanggil oleh tombol 'onclick="spinSlot()"'
+        
         async function spinSlot() {
             spinButton.disabled = true;
             document.getElementById('spinButton10x').disabled = true;
             resetSteps();
             
             try {
-                // Langkah A: Pastikan Wallet Terkoneksi
+                
                 const isConnected = await ensureWalletConnected();
                 if (!isConnected) {
                     spinButton.disabled = false;
                     return; 
                 }
 
-                // Langkah B: Approve USDC (Step 2)
+               
                 updateStep(2, 'active');
                 showStatus('Checking USDT approval...', 'info');
-                const amount = ethers.parseUnits('1', 18); // 1 USDC (6 desimal)
+                const amount = ethers.parseUnits('1', 18); 
                 const allowance = await usd1Contract.allowance(userAddress, CONFIG.relayer);
 
                 if (allowance < amount) {
@@ -746,7 +679,7 @@ button {
                 }
                 updateStep(2, 'completed');
 
-                // Langkah C: Sign Payment (Step 3)
+           
                 updateStep(3, 'active');
                 showStatus('Sign the payment message (0 gas!)', 'info');
 
@@ -760,12 +693,12 @@ button {
                 const signature = await signer.signTypedData(domain, types, value);
                 updateStep(3, 'completed');
 
-                // Langkah D: Animasi dan Kirim ke Backend (Step 4 & 5)
-                const animationPromise = animateSpin(2000); // Step 4
-
-                updateStep(5, 'active'); // Step 5: Server paying
                 
-                // ⚠️ MEMANGGIL ENDPOINT YANG BENAR ('/process-payment')
+                const animationPromise = animateSpin(2000); 
+
+                updateStep(5, 'active'); 
+                
+                
                 const response = await fetch(`${CONFIG.backendUrl}/process-payment`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -785,7 +718,7 @@ button {
                 updateStep(5, 'completed');
                 updateProgress(result.tokenReward);
 
-                // Langkah E: Tampilkan Hasil (Step 6)
+               
                 updateStep(6, 'active');
                 slotImgs[0].src = `images/${result.result[0]}1.png`;
                 slotImgs[1].src = `images/${result.result[1]}1.png`;
@@ -817,18 +750,15 @@ button {
             }
         }
 
-        // 🔽 TAMBAHKAN SEMUA KODE BARU DI BAWAH INI 🔽
-
-// --- 7. FUNGSI UTAMA: SPIN SLOT 10x ---
 async function spinSlot10x() {
-    // Nonaktifkan KEDUA tombol
+  
     spinButton.disabled = true;
     const spinButton10x = document.getElementById('spinButton10x');
     spinButton10x.disabled = true;
     resetSteps();
     
     try {
-        // Langkah A: Pastikan Wallet Terkoneksi
+      
         const isConnected = await ensureWalletConnected();
         if (!isConnected) {
             spinButton.disabled = false;
@@ -836,21 +766,21 @@ async function spinSlot10x() {
             return; 
         }
 
-        // Langkah B: Approve 10 USDT
+       
         updateStep(2, 'active');
         showStatus('Checking 10 USDT approval...', 'info');
-        const amount = ethers.parseUnits('10', 18); // <-- 10 USDT
+        const amount = ethers.parseUnits('10', 18); 
         const allowance = await usd1Contract.allowance(userAddress, CONFIG.relayer);
 
         if (allowance < amount) {
-            showStatus('Please approve 10 USDT'); // <-- Teks 10 USDT
+            showStatus('Please approve 10 USDT');
             const approveTx = await usd1Contract.approve(CONFIG.relayer, amount);
             await approveTx.wait();
             showStatus('Approval successful!', 'info');
         }
         updateStep(2, 'completed');
 
-        // Langkah C: Sign Payment (Step 3)
+       
         updateStep(3, 'active');
         showStatus('Sign the payment message (0 gas!)', 'info');
 
@@ -864,8 +794,8 @@ async function spinSlot10x() {
         const signature = await signer.signTypedData(domain, types, value);
         updateStep(3, 'completed');
 
-        // Langkah D: Animasi dan Kirim ke Backend (Step 4 & 5)
-        const animationPromise = animateSpin(2000); // Step 4
+        
+        const animationPromise = animateSpin(2000);
         updateStep(5, 'active');
         
         const response = await fetch(`${CONFIG.backendUrl}/process-payment`, {
@@ -875,7 +805,7 @@ async function spinSlot10x() {
                 authorization: value, 
                 signature, 
                 userAddress,
-                spinCount: 10 // <-- MENGIRIM DATA 10X SPIN
+                spinCount: 10 
             })
         });
 
@@ -887,13 +817,13 @@ async function spinSlot10x() {
         }
         updateStep(5, 'completed');
         updateProgress(result.tokenReward);
-        // Langkah E: Tampilkan Hasil (Step 6)
+    
         updateStep(6, 'active');
         slotImgs[0].src = `images/${result.result[0]}1.png`;
         slotImgs[1].src = `images/${result.result[1]}1.png`;
         slotImgs[2].src = `images/${result.result[2]}1.png`;
 
-        // (Server akan mengirim total hadiah dari 10 spin)
+        
         let winMessage = `You got ${result.tokenReward} $POOP!`;
         if (result.winnings > 0) {
             winMessage = `🎉 YOU WON ${result.winnings} USDT! 🎉<br>+ ${result.tokenReward} $POOP!`;
@@ -915,7 +845,7 @@ async function spinSlot10x() {
         showStatus('❌ Error: ' + error.message, 'error');
         resetSteps();
     } finally {
-        // Aktifkan KEDUA tombol
+      
         spinButton.disabled = false;
         spinButton10x.disabled = false;
     }
