@@ -19,24 +19,11 @@ html, body {
 }
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-    
-    background-image: url('images/bg1.png');
-    
-    
+    background-image: url('images/bg1.png')
     background-size: cover;
-    
-    
     background-position: center;
-    
-    
     background-attachment: fixed; 
-    
-    
     background-color: #1a1a1a; 
-    
-    
-
     overflow: hidden; 
 }
 
@@ -77,14 +64,9 @@ body {
 
 .container {
     flex-grow: 1;
-    
-    
     background: linear-gradient(180deg, #3a0d5c 0%, #1a0a2e 100%);
     border: 1px solid #764ba2; 
-    
-    
     color: #f0f0f0; 
-    
     padding: 30px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     backdrop-filter: blur(5px);
@@ -98,7 +80,6 @@ h1 {
     margin-bottom: 10px;
     font-size: 28px;
     text-align: center;
-    
     text-shadow: 0 0 5px #fff, 0 0 10px #667eea, 0 0 15px #667eea;
 }
 
@@ -119,11 +100,8 @@ h1 {
     width: 100px; 
     height: 100px;
     background-color: #111; 
-    
-    
     border: none;
     box-shadow: 0 0 15px 5px rgba(102, 126, 234, 0.6); 
-    
     border-radius: 12px;
     display: flex;
     justify-content: center;
@@ -517,8 +495,6 @@ button {
         const progressText = document.getElementById('progress-text');
 
         
-        
-
         function showStatus(message, type = 'info') {
             statusSection.innerHTML = `<div class="status status-${type}">${message}</div>`;
         }
@@ -541,27 +517,14 @@ button {
                 step.classList.add('completed');
             }
         }
-        function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
-        
-        
-        
+        function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); 
         
         function updateProgress(currentSupplyString) {
     try {
         const currentSupplyBigInt = BigInt(currentSupplyString);
-
-        
-        
-        const percentBigInt = (currentSupplyBigInt * 10000n) / MAX_SUPPLY; 
-        
-        
+        const percentBigInt = (currentSupplyBigInt * 10000n) / MAX_SUPPLY;       
         const percent = Number(percentBigInt) / 100; 
-        
-        
-        progressText.textContent = `${percent.toFixed(2)}%`;
-        
-        
+        progressText.textContent = `${percent.toFixed(2)}%`;        
         progressBarFill.style.width = `${Math.min(percent, 100)}%`; 
         
         
