@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CASH402 - Spin to Win</title>
+  <title>POOPX402 - B402 Slot Machine</title>
   
   <!-- Memuat Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Impor font 'Inter' yang digunakan di aplikasi web modern -->
+  <!-- MEMUAT Ethers.js (dari script POOP) -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+
+  <!-- Impor font 'Inter' -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -20,8 +23,6 @@
     }
     
     /* Animasi kustom untuk menggantikan Framer Motion */
-    
-    /* Animasi untuk ikon dollar saat loading */
     @keyframes rotate-scale {
       from { transform: rotate(0deg) scale(1); }
       50% { transform: rotate(180deg) scale(1.2); }
@@ -31,7 +32,6 @@
       animation: rotate-scale 2s ease-in-out infinite;
     }
     
-    /* Animasi untuk memunculkan (enter) tampilan 'WIN' */
     @keyframes fade-in-scale {
       from { opacity: 0; transform: scale(0.5); }
       to { opacity: 1; transform: scale(1); }
@@ -43,6 +43,112 @@
     /* Helper class untuk menyembunyikan elemen */
     .hidden {
       display: none;
+    }
+
+    /* GAYA CSS DARI SCRIPT POOP (Disesuaikan untuk Dark Mode) 
+    */
+    .status {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .status-info {
+      background: #1e3a8a; /* bg-blue-900 */
+      color: #93c5fd; /* text-blue-300 */
+    }
+    .status-success {
+      background: #064e3b; /* bg-green-900 */
+      color: #86efac; /* text-green-300 */
+    }
+    .status-error {
+      background: #7f1d1d; /* bg-red-900 */
+      color: #fca5a5; /* text-red-300 */
+    }
+
+    .step {
+      padding: 10px;
+      border-left: 3px solid #6b7280; /* border-gray-500 */
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #d1d5db; /* text-gray-300 */
+    }
+    .step.active {
+      background: #1e3a8a; /* bg-blue-900 */
+      color: #93c5fd; /* text-blue-300 */
+      font-weight: 600;
+      border-left-color: #3b82f6; /* border-blue-500 */
+    }
+    .step.completed {
+      color: #4ade80; /* text-green-400 */
+      border-left-color: #4ade80; /* border-green-400 */
+    }
+    
+    .link {
+      color: #fcd34d; /* text-yellow-400 */
+      text-decoration: none;
+      font-size: 12px;
+    }
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    .wallet-display {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #e5e7eb; /* text-gray-200 */
+      margin-bottom: 15px;
+      word-break: break-all;
+    }
+
+    /* Progress Bar (dari POOP) */
+    .progress-container {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .progress-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 600;
+      color: #e5e7eb; /* text-gray-200 */
+      margin-bottom: 8px;
+      padding: 0 2px;
+    }
+    .progress-bar-background {
+      width: 100%;
+      height: 20px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      border: 1px solid #4b5563; /* border-gray-600 */
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%; /* Dimulai dari 0 */
+      background: linear-gradient(90deg, #fcd34d 0%, #fb923c 100%); /* yellow-400 to orange-400 */
+      border-radius: 10px 0 0 10px;
+      transition: width 0.5s ease-out;
+      background-size: 40px 40px;
+      background-image: linear-gradient(
+        45deg, 
+        rgba(255, 255, 255, 0.15) 25%, 
+        transparent 25%, 
+        transparent 50%, 
+        rgba(255, 255, 255, 0.15) 50%, 
+        rgba(255, 255, 255, 0.15) 75%, 
+        transparent 75%, 
+        transparent
+      );
+      animation: progress-bar-stripes 1s linear infinite;
+    }
+
+    @keyframes progress-bar-stripes {
+      0% { background-position: 40px 0; }
+      100% { background-position: 0 0; }
     }
   </style>
 </head>
@@ -61,10 +167,8 @@
     </div>
 
     <div class="text-center relative z-10">
-      <!-- Ikon dollar yang berputar (menggantikan Framer Motion) -->
       <div class="mb-8 animate-load-spin">
         <div class="w-32 h-32 mx-auto bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-2xl">
-          <!-- SVG Ikon DollarSign dari Lucide -->
           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-white">
             <path d="M12 2v20"></path>
             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
@@ -73,13 +177,12 @@
       </div>
       
       <h1 class="text-6xl font-bold mb-4 bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent animate-pulse">
-        CASH 402
+        POOPX402
       </h1>
       <p class="text-white text-xl">
-        Loading to <span class="text-yellow-300 font-bold">CASH 402</span> ...
+        Loading Game Data...
       </p>
       
-      <!-- Indikator titik-titik loading -->
       <div class="mt-8 flex justify-center gap-2">
         <div class="w-3 h-3 bg-yellow-400 rounded-full animate-bounce"></div>
         <div class="w-3 h-3 bg-orange-400 rounded-full animate-bounce" style="animation-delay: 100ms;"></div>
@@ -102,328 +205,522 @@
 
     <div class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
       <!-- Header -->
-      <div class="text-center mb-8">
+      <div class="text-center mb-4">
         <h1 class="text-7xl md:text-8xl font-bold mb-2 relative">
           <span class="bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-2xl">
-            CASH402
+            POOPX402
           </span>
-          <!-- Efek glow pada teks -->
           <div class="absolute inset-0 bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent blur-xl opacity-50">
-            CASH402
+            POOPX402
           </div>
         </h1>
+        <p class="text-yellow-300 font-bold">Spin, Get 5000 $POOP + Win! <span class="bg-green-500/20 text-green-300 border border-green-500 px-2 py-0.5 rounded-full text-xs ml-1">0 GAS</span></p>
       </div>
 
-      <!-- Kartu Permainan Utama (direplikasi dari komponen Card) -->
+      <!-- Tampilan Wallet (dari POOP) -->
+      <div class="wallet-display hidden w-full max-w-2xl" id="walletDisplay">
+        <strong>Your Wallet:</strong> <span id="walletAddress"></span>
+      </div>
+
+      <!-- Kartu Permainan Utama -->
       <div class="w-full max-w-2xl bg-gray-800/90 backdrop-blur-xl border-2 border-yellow-500/50 shadow-2xl shadow-yellow-500/20 p-8 rounded-lg">
+        
+        <!-- Progress Bar (dari POOP) -->
+        <div class="progress-container">
+          <div class="progress-bar-label">
+              <span>TOKEN MINT PROGRESS</span>
+              <span id="progress-text">Loading...</span>
+          </div>
+          <div class="progress-bar-background">
+              <div class="progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+        </div>
         
         <!-- Tampilan Kemenangan (Awalnya tersembunyi) -->
         <div id="win-display" class="hidden text-center mb-6">
-          <div class="text-6xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2">
+          <div id="win-title" class="text-6xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2">
             WIN
           </div>
           <div id="win-amount" class="text-4xl font-bold text-yellow-300">
             $0
+          </div>
+          <div id="win-subtitle" class="text-xl text-gray-300 mt-2">
+            + 5000 $POOP
           </div>
         </div>
 
         <!-- Roda Putar (Spin Wheel) -->
         <div class="relative mb-8">
           <div class="w-64 h-64 mx-auto relative">
-            <!-- Bingkai Roda -->
             <div class="absolute inset-0 border-8 border-yellow-500 rounded-full shadow-2xl shadow-yellow-500/50"></div>
             
-            <!-- Konten yang Berputar (dikontrol oleh JS) -->
             <div id="spin-wheel" class="absolute inset-4 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center overflow-hidden transition-transform duration-3000 ease-out">
               <div class="text-center">
                 <div id="spin-wheel-status" class="text-sm text-gray-400 mb-2">
                   Spin
                 </div>
-                <div id="spin-wheel-multiplier" class="text-4xl font-bold text-yellow-300">
-                  CASH 1x
+                <div id="spin-wheel-result" class="text-4xl font-bold text-yellow-300">
+                  CASH
                 </div>
               </div>
             </div>
 
-            <!-- Titik tengah -->
             <div class="absolute inset-0 flex items-center justify-center">
               <div class="w-4 h-4 bg-red-500 rounded-full shadow-lg shadow-red-500/50"></div>
             </div>
-
-            <!-- Efek glow saat berputar (dikelola JS) -->
+            
             <div id="spin-glow" class="hidden absolute inset-0 rounded-full bg-yellow-500/30 blur-2xl opacity-30 animate-pulse"></div>
           </div>
         </div>
 
-        <!-- Bagian Approval USD1 -->
-        <div class="bg-gray-900/80 rounded-lg p-4 mb-6 border border-gray-700">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-gray-400">USD1 Approval:</span>
-            <!-- Badge (direplikasi dari komponen Badge) -->
-            <span id="approval-badge" class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-yellow-500/20 text-yellow-400 border-yellow-500">
-              <span id="approval-badge-icon" class="hidden mr-1">
-                <!-- SVG Ikon CheckCircle2 dari Lucide -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
-                  <path d="m9 12 2 2 4-4"></path>
-                </svg>
-              </span>
-              <span id="approval-badge-text">Checking...</span>
-            </span>
-          </div>
-          <div class="flex gap-3">
-            <!-- Tombol (direplikasi dari komponen Button) -->
-            <button id="refresh-button" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2 flex-1 border border-gray-600 hover:border-yellow-500 hover:bg-yellow-500/10">
-              <!-- SVG Ikon RefreshCw dari Lucide -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
-                <path d="M3 2v6h6"></path>
-                <path d="M21 12A9 9 0 0 0 6 5.3L3 8"></path>
-                <path d="M21 22v-6h-6"></path>
-                <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"></path>
-              </svg>
-              Refresh
-            </button>
-            <button id="approve-button" disabled class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2 flex-1 bg-green-600 hover:bg-green-700 text-white disabled:opacity-50 disabled:cursor-not-allowed">
-              Approve
-            </button>
-          </div>
-        </div>
-
-        <!-- Tombol Beli Spin -->
-        <button id="buy-spin-button" class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-bold text-lg h-16 px-4 py-6 w-full mb-6 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white shadow-lg shadow-yellow-500/50">
-          <!-- SVG Ikon DollarSign dari Lucide -->
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
-            <path d="M12 2v20"></path>
-            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
-          Buy Spin — 1 USD1
-        </button>
-
-        <!-- Statistik -->
+        <!-- Statistik (diganti untuk Balances) -->
         <div class="grid grid-cols-2 gap-4 mb-6">
           <div class="bg-gray-900/80 rounded-lg p-4 border border-gray-700 text-center">
-            <div class="text-gray-400 text-sm mb-1">Purchased Spins</div>
-            <div id="purchased-spins-text" class="text-3xl font-bold text-yellow-300">0</div>
+            <div class="text-gray-400 text-sm mb-1">USDT Balance</div>
+            <div id="usd1Balance" class="text-3xl font-bold text-yellow-300">Loading...</div>
           </div>
           <div class="bg-gray-900/80 rounded-lg p-4 border border-gray-700 text-center">
-            <div class="text-gray-400 text-sm mb-1">Total Spins</div>
-            <div id="total-spins-text" class="text-3xl font-bold text-orange-300">0</div>
+            <div class="text-gray-400 text-sm mb-1">$POOP Balance</div>
+            <div id="mytokenBalance" class="text-3xl font-bold text-orange-300">Loading...</div>
           </div>
         </div>
 
-        <!-- Tombol Spin Sekarang -->
-        <button id="spin-now-button" disabled class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-bold text-xl h-20 px-4 py-8 w-full bg-gradient-to-r from-pink-500 via-red-500 to-orange-500 hover:from-pink-600 hover:via-red-600 hover:to-orange-600 text-white shadow-2xl shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
-          <!-- Teks akan berubah menjadi ikon saat berputar -->
-          <span id="spin-button-text">SPIN NOW</span>
-          <div id="spin-button-loading" class="hidden animate-spin">
-            <!-- SVG Ikon RefreshCw dari Lucide -->
+        <!-- Tombol Beli Spin (Spin 1x) -->
+        <button id="spinButton" class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-bold text-lg h-16 px-4 py-6 w-full mb-6 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white shadow-lg shadow-yellow-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
+          <span id="spin-1x-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2 inline-block">
+              <path d="M12 2v20"></path>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            Spin 1x! (Pay 1 USDT)
+          </span>
+          <div id="spin-1x-loading" class="hidden animate-spin">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
-              <path d="M3 2v6h6"></path>
-              <path d="M21 12A9 9 0 0 0 6 5.3L3 8"></path>
-              <path d="M21 22v-6h-6"></path>
-              <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"></path>
+              <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
             </svg>
           </div>
         </button>
 
-        <!-- Pilihan Multiplier (Statis) -->
-        <div class="flex justify-center gap-4 mt-6">
-          <span class="inline-flex items-center rounded-md border px-4 py-2 text-lg font-semibold bg-blue-500/20 text-blue-300 border-blue-500">1x</span>
-          <span class="inline-flex items-center rounded-md border px-4 py-2 text-lg font-semibold bg-purple-500/20 text-purple-300 border-purple-500">10x</span>
-          <span class="inline-flex items-center rounded-md border px-4 py-2 text-lg font-semibold bg-red-500/20 text-red-300 border-red-500">50x</span>
+        <!-- Tombol Spin Sekarang (Spin 10x) -->
+        <button id="spinButton10x" class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-bold text-xl h-20 px-4 py-8 w-full bg-gradient-to-r from-pink-500 via-red-500 to-orange-500 hover:from-pink-600 hover:via-red-600 hover:to-orange-600 text-white shadow-2xl shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
+          <span id="spin-10x-text">Spin 10x! (Pay 10 USDT)</span>
+          <div id="spin-10x-loading" class="hidden animate-spin">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+              <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+            </svg>
+          </div>
+        </button>
+
+        <!-- Status & Steps (dari POOP) -->
+        <div id="statusSection" class="mt-6"></div>
+        <div id="stepsSection" class="hidden mt-4">
+            <div class="step" id="step1">1. Connecting wallet...</div>
+            <div class="step" id="step2">2. Approving USDT...</div>
+            <div class="step" id="step3">3. Signing spin (0 gas)...</div>
+            <div class="step" id="step4">4. Server is spinning...</div>
+            <div class="step" id="step5">5. Server paying rewards...</div>
+            <div class="step" id="step6">6. Complete!</div>
         </div>
+
       </div>
 
       <!-- Footer -->
       <p class="text-gray-500 text-sm mt-8 text-center">
-        Win up to 50x your bet! Good luck! 🎰
+        Binance Smart Chain 🎰
       </p>
     </div>
   </div>
 
   <!-- 
     =================================================
-    LOGIKA JAVASCRIPT
+    LOGIKA JAVASCRIPT GABUNGAN
     =================================================
   -->
   <script>
-    // Menunggu seluruh konten HTML dimuat
-    document.addEventListener('DOMContentLoaded', () => {
-      
-      // --- Mendapatkan Elemen DOM ---
-      const loadingScreen = document.getElementById('loading-screen');
-      const gameScreen = document.getElementById('game-screen');
-      
-      const winDisplay = document.getElementById('win-display');
-      const winAmountText = document.getElementById('win-amount');
-      
-      const spinWheel = document.getElementById('spin-wheel');
-      const spinWheelStatus = document.getElementById('spin-wheel-status');
-      const spinWheelMultiplier = document.getElementById('spin-wheel-multiplier');
-      const spinGlow = document.getElementById('spin-glow');
+    // --- KONFIGURASI (dari POOP) ---
+    const CONFIG = {
+        rpc: 'https://bsc-rpc.publicnode.com/',
+        chainId: 56, 
+        chainHex: '0x38', 
+        chainName: 'BSC',
+        backendUrl: 'https://api.poopx402.site',
+        usd1: '0x55d398326f99059fF775485246999027B3197955',
+        mytoken: '0xb96dfbf10a953b527d2e359f35bc92732994ca76', 
+        relayer: '0xE1C2830d5DDd6B49E9c46EbE03a98Cb44CD8eA5a', 
+        serverWallet: '0x47b5Aa8E9F16DAc4Dca68Bc24B401F24d34f360F'
+    };
 
-      const approvalBadge = document.getElementById('approval-badge');
-      const approvalBadgeIcon = document.getElementById('approval-badge-icon');
-      const approvalBadgeText = document.getElementById('approval-badge-text');
-      
-      const refreshButton = document.getElementById('refresh-button');
-      const approveButton = document.getElementById('approve-button');
-      
-      const buySpinButton = document.getElementById('buy-spin-button');
-      const purchasedSpinsText = document.getElementById('purchased-spins-text');
-      const totalSpinsText = document.getElementById('total-spins-text');
-      
-      const spinNowButton = document.getElementById('spin-now-button');
-      const spinButtonText = document.getElementById('spin-button-text');
-      const spinButtonLoading = document.getElementById('spin-button-loading');
+    const ERC20_ABI = [ 'function balanceOf(address) view returns (uint256)', 'function decimals() view returns (uint8)', 'function approve(address,uint256) returns (bool)', 'function allowance(address,address) view returns (uint256)' ];
+    
+    // --- Variabel Global (dari POOP) ---
+    let provider, signer, userAddress;
+    let usd1Contract, mytokenContract;
 
-      // --- Variabel Status (menggantikan React state) ---
-      let isLoading = true;
-      let isSpinning = false;
-      let usd1Approval = "Checking...";
-      let purchasedSpins = 0;
-      let totalSpins = 0;
-      let winAmount = null;
-      let currentMultiplier = "1x";
-      let rotation = 0;
+    // --- Variabel Status (Gabungan) ---
+    let rotation = 0; // Untuk animasi roda
+    let isSpinning = false; // Mencegah klik ganda
 
-      // --- Fungsi untuk Memperbarui UI berdasarkan Status ---
-      function updateUI() {
-        // Update Teks Statistik
-        purchasedSpinsText.textContent = purchasedSpins;
-        totalSpinsText.textContent = totalSpins;
+    // --- Elemen DOM (Gabungan UI) ---
+    const loadingScreen = document.getElementById('loading-screen');
+    const gameScreen = document.getElementById('game-screen');
+    
+    const walletDisplay = document.getElementById('walletDisplay');
+    const walletAddressSpan = document.getElementById('walletAddress');
+    
+    const usd1BalanceSpan = document.getElementById('usd1Balance');
+    const mytokenBalanceSpan = document.getElementById('mytokenBalance');
+    
+    const spinButton = document.getElementById('spinButton'); // Tombol Spin 1x
+    const spinButton10x = document.getElementById('spinButton10x'); // Tombol Spin 10x
+    
+    const statusSection = document.getElementById('statusSection');
+    const stepsSection = document.getElementById('stepsSection');
 
-        // Update Badge Approval
-        approvalBadgeText.textContent = usd1Approval;
-        if (usd1Approval === "Ready") {
-          approvalBadge.className = "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-green-500/20 text-green-400 border-green-500";
-          approvalBadgeIcon.classList.remove('hidden');
-          approveButton.disabled = false;
-        } else {
-          approvalBadge.className = "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-yellow-500/20 text-yellow-400 border-yellow-500";
-          approvalBadgeIcon.classList.add('hidden');
-          approveButton.disabled = true;
+    // Elemen UI Roda Putar (dari CASH402)
+    const winDisplay = document.getElementById('win-display');
+    const winTitle = document.getElementById('win-title');
+    const winAmountText = document.getElementById('win-amount');
+    const winSubtitle = document.getElementById('win-subtitle');
+    
+    const spinWheel = document.getElementById('spin-wheel');
+    const spinWheelStatus = document.getElementById('spin-wheel-status');
+    const spinWheelResult = document.getElementById('spin-wheel-result');
+    const spinGlow = document.getElementById('spin-glow');
+
+    // Teks & Ikon Loading Tombol
+    const spin1xText = document.getElementById('spin-1x-text');
+    const spin1xLoading = document.getElementById('spin-1x-loading');
+    const spin10xText = document.getElementById('spin-10x-text');
+    const spin10xLoading = document.getElementById('spin-10x-loading');
+
+    // Gambar slot palsu (hanya untuk referensi backend, tidak ditampilkan)
+    const allSymbolImages = [ 'Jesse', 'bnb', 'BTC', 'ETH', 'Other' ];
+
+    // Logika Progress Bar (dari POOP)
+    const MAX_SUPPLY = 1_000_000_000_000_000_000_000_000_000n; 
+    const START_SUPPLY = 500_000_000_000_000_000_000_000_000n; 
+    let currentTotalSupply = START_SUPPLY; 
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const progressText = document.getElementById('progress-text');
+
+    // --- Fungsi Helper (dari POOP) ---
+    function showStatus(message, type = 'info') {
+        statusSection.innerHTML = `<div class="status status-${type}">${message}</div>`;
+    }
+    function resetSteps() {
+        stepsSection.classList.add('hidden');
+        winDisplay.classList.add('hidden'); // Sembunyikan kemenangan sebelumnya
+        for (let i = 1; i <= 6; i++) {
+            const step = document.getElementById(`step${i}`);
+            if(step) step.classList.remove('active', 'completed');
         }
-
-        // Update Tampilan Kemenangan
-        if (winAmount !== null) {
-          winAmountText.textContent = `$${winAmount}`;
-          winDisplay.classList.remove('hidden');
-          winDisplay.classList.add('animate-fade-in-scale');
-        } else {
-          winDisplay.classList.add('hidden');
-          winDisplay.classList.remove('animate-fade-in-scale');
+    }
+    function updateStep(stepNum, state) {
+        if (stepNum === 1) { stepsSection.classList.remove('hidden'); }
+        const step = document.getElementById(`step${stepNum}`);
+        if(!step) return; 
+        if (state === 'active') {
+            step.classList.add('active');
+            step.classList.remove('completed');
+        } else if (state === 'completed') {
+            step.classList.remove('active');
+            step.classList.add('completed');
         }
+    }
+    function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
-        // Update Tombol Spin
-        if (totalSpins <= 0 || isSpinning) {
-          spinNowButton.disabled = true;
-        } else {
-          spinNowButton.disabled = false;
+    // --- Fungsi Progress Bar (dari POOP) ---
+    function updateProgress(newlyMintedAmount) {
+        try {
+            // Konversi ke BigInt dengan 18 desimal
+            const newlyMintedBigInt = ethers.parseUnits(newlyMintedAmount.toString(), 18);
+            
+            // Tambahkan ke total supply
+            currentTotalSupply = currentTotalSupply + newlyMintedBigInt;
+
+            const percentBigInt = (currentTotalSupply * 10000n) / MAX_SUPPLY; 
+            const percent = Number(percentBigInt) / 100; 
+            
+            progressText.textContent = `${percent.toFixed(2)}%`;
+            progressBarFill.style.width = `${percent}%`;
+
+        } catch (e) {
+            console.error("Error updating progress:", e);
+            progressText.textContent = `Error`;
         }
+    }
 
-        // Update Tampilan Roda Putar
-        if (isSpinning) {
-          spinWheelStatus.textContent = "SPINNING...";
-          spinGlow.classList.remove('hidden');
-          spinButtonText.classList.add('hidden');
-          spinButtonLoading.classList.remove('hidden');
-        } else {
-          spinWheelStatus.textContent = "Spin";
-          spinGlow.classList.add('hidden');
-          spinButtonText.classList.remove('hidden');
-          spinButtonLoading.classList.add('hidden');
+    async function loadInitialProgress() {
+        try {
+            const response = await fetch(`${CONFIG.backendUrl}/game-status`);
+            if (!response.ok) throw new Error("Network response was not ok");
+            const data = await response.json();
+
+            if (data.success) {
+                currentTotalSupply = BigInt(data.currentTotalSupply);
+                updateProgress(0); // Update UI dengan supply awal
+            } else {
+                progressText.textContent = 'Failed to load';
+            }
+        } catch (error) {
+            console.error("Failed to load initial progress:", error);
+            progressText.textContent = 'Server Error';
         }
-        
-        spinWheelMultiplier.textContent = `CASH ${currentMultiplier}`;
-      }
+    }
 
-      // --- Logika Event Handler (menggantikan fungsi React) ---
-      
-      // Menggantikan useEffect (simulasi loading)
-      setTimeout(() => {
-        isLoading = false;
-        usd1Approval = "Ready";
-        
-        loadingScreen.classList.add('hidden');
-        gameScreen.classList.remove('hidden');
-        
-        updateUI(); // Panggil updateUI setelah status berubah
-      }, 2500);
+    // --- Fungsi Web3 (dari POOP) ---
+    async function loadBalances() {
+        try {
+            usd1BalanceSpan.textContent = 'Loading...';
+            mytokenBalanceSpan.textContent = 'Loading...';
 
-      // Handler untuk Beli Spin
-      function handleBuySpin() {
-        purchasedSpins++;
-        totalSpins++;
-        updateUI();
-      }
+            if (!usd1Contract || !mytokenContract || !userAddress) {
+                console.log("Kontrak atau alamat pengguna belum siap");
+                return;
+            }
 
-      // Handler untuk Refresh Approval
-      function handleRefresh() {
-        usd1Approval = "Checking...";
-        updateUI();
+            const usd1Bal = await usd1Contract.balanceOf(userAddress);
+            const mytokenBal = await mytokenContract.balanceOf(userAddress);
+            
+            usd1BalanceSpan.textContent = ethers.formatUnits(usd1Bal, 18) + ' USDT';
+            mytokenBalanceSpan.textContent = ethers.formatUnits(mytokenBal, 18) + ' POOP';
 
-        setTimeout(() => {
-          usd1Approval = "Ready";
-          updateUI();
-        }, 1000);
-      }
-      
-      // (Fungsi Approve tidak ada di React, kita tambahkan simulasi)
-      function handleApprove() {
-        usd1Approval = "Approving...";
-        updateUI();
-        
-        setTimeout(() => {
-          usd1Approval = "Approved"; // Status baru
-          approvalBadge.className = "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-blue-500/20 text-blue-300 border-blue-500";
-          approvalBadgeText.textContent = "Approved";
-          approveButton.disabled = true; // Nonaktifkan setelah disetujui
-        }, 1500);
-      }
+        } catch (error) {
+            console.error("Load balance error:", error);
+            usd1BalanceSpan.textContent = 'Error';
+            mytokenBalanceSpan.textContent = 'Error';
+        }
+    }
 
-      // Handler untuk Memutar Roda
-      function handleSpin() {
-        if (totalSpins <= 0 || isSpinning) return;
-        
+    // --- Fungsi Animasi (Gabungan) ---
+    async function animateSpin(duration = 3000, is10x = false) {
         isSpinning = true;
-        winAmount = null; // Sembunyikan kemenangan sebelumnya
-        totalSpins--;
-        updateUI(); // Update UI untuk menampilkan status berputar
+        updateStep(4, 'active'); 
+        
+        // Tampilkan UI berputar (dari CASH402)
+        spinWheelStatus.textContent = 'SPINNING...';
+        spinGlow.classList.remove('hidden');
+        winDisplay.classList.add('hidden'); // Sembunyikan kemenangan sebelumnya
 
-        // Tentukan hasil putaran
-        const multipliers = ["1x", "10x", "50x"];
-        const randomMultiplier = multipliers[Math.floor(Math.random() * multipliers.length)];
+        // Tampilkan loading di tombol yang benar
+        if (is10x) {
+          spin10xText.classList.add('hidden');
+          spin10xLoading.classList.remove('hidden');
+        } else {
+          spin1xText.classList.add('hidden');
+          spin1xLoading.classList.remove('hidden');
+        }
         
-        // Animasi putaran
-        const extraRotations = 5 + Math.random() * 3; // 5-8 putaran penuh
+        // Animasi rotasi (dari CASH402)
+        const extraRotations = 5 + Math.random() * 3;
         const finalRotation = rotation + (360 * extraRotations);
-        rotation = finalRotation; // Simpan posisi rotasi
-        
-        // Terapkan rotasi ke elemen
+        rotation = finalRotation;
         spinWheel.style.transform = `rotate(${finalRotation}deg)`;
 
-        // Tunggu 3 detik hingga animasi selesai
-        setTimeout(() => {
-          isSpinning = false;
-          currentMultiplier = randomMultiplier;
-          
-          const baseAmount = 1;
-          const multiplierValue = parseInt(randomMultiplier.replace('x', ''));
-          winAmount = baseAmount * multiplierValue;
-          
-          updateUI(); // Tampilkan hasil kemenangan dan update tombol
-        }, 3000); // Durasi ini harus sama dengan 'duration-3000' pada spinWheel
-      }
+        // Tunggu durasi animasi
+        await sleep(duration);
+        
+        // Jangan reset UI dulu, tunggu hasil backend
+        updateStep(4, 'completed');
+    }
 
-      // --- Melampirkan Event Listeners ---
-      buySpinButton.addEventListener('click', handleBuySpin);
-      refreshButton.addEventListener('click', handleRefresh);
-      approveButton.addEventListener('click', handleApprove);
-      spinNowButton.addEventListener('click', handleSpin);
+    function stopSpinAnimation() {
+        isSpinning = false;
+        // Sembunyikan UI berputar
+        spinWheelStatus.textContent = 'Spin';
+        spinGlow.classList.add('hidden');
 
+        // Reset kedua tombol
+        spin1xText.classList.remove('hidden');
+        spin1xLoading.classList.add('hidden');
+        spin10xText.classList.remove('hidden');
+        spin10xLoading.classList.add('hidden');
+    }
+
+    // --- Fungsi Koneksi (dari POOP, dimodifikasi) ---
+    async function ensureWalletConnected() {
+        if (signer) return true; 
+
+        try {
+            updateStep(1, 'active');
+            if (!window.ethereum) {
+                alert('Please install MetaMask!');
+                return false;
+            }
+
+            // Ganti ke Jaringan BSC
+            try {
+                 await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: CONFIG.chainHex }], 
+                });
+            } catch (switchError) {
+                // Tangani jika jaringan belum ditambahkan
+                if (switchError.code === 4902) {
+                    alert('Please add BSC Network to MetaMask!');
+                }
+                throw switchError;
+            }
+
+            // Minta provider dan signer
+            provider = new ethers.BrowserProvider(window.ethereum);
+            await provider.send("eth_requestAccounts", []);
+            signer = await provider.getSigner();
+            userAddress = await signer.getAddress();
+            
+            // Inisialisasi kontrak
+            usd1Contract = new ethers.Contract(CONFIG.usd1, ERC20_ABI, signer); 
+            mytokenContract = new ethers.Contract(CONFIG.mytoken, ERC20_ABI, provider);
+
+            // Tampilkan UI Wallet
+            walletAddressSpan.textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+            walletDisplay.classList.remove('hidden');
+            await loadBalances();
+            
+            updateStep(1, 'completed');
+            return true; 
+
+        } catch (error) {
+            console.error(error);
+            showStatus('Failed to connect wallet: ' + error.message, 'error');
+            updateStep(1, 'failed'); 
+            return false; 
+        }
+    }
+
+    // --- FUNGSI UTAMA SPIN (Gabungan) ---
+    
+    async function spinSlot(spinCount = 1) {
+        // Tentukan tombol mana yang ditekan
+        const is10x = spinCount === 10;
+        const buttonToDisable = is10x ? spinButton10x : spinButton;
+        const otherButton = is10x ? spinButton : spinButton10x;
+        const amountToPay = is10x ? '10' : '1';
+
+        buttonToDisable.disabled = true;
+        otherButton.disabled = true;
+        resetSteps();
+        
+        try {
+            const isConnected = await ensureWalletConnected();
+            if (!isConnected) throw new Error("Wallet not connected.");
+
+            // 2. Cek Approval
+            updateStep(2, 'active');
+            showStatus(`Checking ${amountToPay} USDT approval...`, 'info');
+            const amount = ethers.parseUnits(amountToPay, 18); 
+            const allowance = await usd1Contract.allowance(userAddress, CONFIG.relayer);
+
+            if (allowance < amount) {
+                showStatus(`Please approve ${amountToPay} USDT`);
+                const approveTx = await usd1Contract.approve(CONFIG.relayer, amount);
+                await approveTx.wait();
+                showStatus('Approval successful!', 'info');
+            }
+            updateStep(2, 'completed');
+
+            // 3. Tanda Tangan (B402)
+            updateStep(3, 'active');
+            showStatus('Sign the payment message (0 gas!)', 'info');
+
+            const nonce = ethers.hexlify(ethers.randomBytes(32));
+            const validAfter = Math.floor(Date.now() / 1000);
+            const validBefore = validAfter + 600; // 10 menit
+            const domain = { name: 'B402', version: '1', chainId: CONFIG.chainId, verifyingContract: CONFIG.relayer };
+            const types = { TransferWithAuthorization: [ { name: 'from', type: 'address' }, { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' }, { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' } ] };
+            const value = { from: userAddress, to: CONFIG.serverWallet, value: amount.toString(), validAfter, validBefore, nonce };
+
+            const signature = await signer.signTypedData(domain, types, value);
+            updateStep(3, 'completed');
+
+            // 4. Animasi & Panggilan Backend
+            const animationPromise = animateSpin(3000, is10x); 
+            updateStep(5, 'active'); 
+            
+            const response = await fetch(`${CONFIG.backendUrl}/process-payment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    authorization: value, 
+                    signature, 
+                    userAddress,
+                    spinCount: spinCount // Kirim 1 atau 10
+                })
+            });
+
+            const result = await response.json();
+            await animationPromise; // Pastikan animasi selesai
+            
+            if (!result.success) {
+                throw new Error(result.error || 'Backend failed to process spin.');
+            }
+            updateStep(5, 'completed');
+            updateProgress(result.tokenReward); // Update progress bar
+
+            // 6. Tampilkan Hasil
+            updateStep(6, 'active');
+            stopSpinAnimation(); // Hentikan animasi dan reset tombol
+
+            // Tampilkan hasil di Roda Putar (UI CASH402)
+            if (result.winnings > 0) {
+              spinWheelResult.textContent = `WIN ${result.winnings} USDT!`;
+              winTitle.textContent = "WINNER!";
+              winAmountText.textContent = `$${result.winnings}`;
+              winSubtitle.textContent = `+ ${result.tokenReward} $POOP`;
+            } else {
+              spinWheelResult.textContent = "Try Again";
+              winTitle.textContent = "NICE TRY";
+              winAmountText.textContent = `$0`;
+              winSubtitle.textContent = `+ ${result.tokenReward} $POOP`;
+            }
+            
+            // Tampilkan hasil di Tampilan Kemenangan (UI CASH402)
+            winDisplay.classList.remove('hidden');
+            winDisplay.classList.add('animate-fade-in-scale');
+            
+            // Tampilkan hasil di Status (UI POOP)
+            showStatus(
+                `🎉 You won ${result.winnings} USDT + ${result.tokenReward} $POOP!
+                 <br><a class="link" href="https://bscscan.com/tx/${result.paymentTx}" target="_blank">View Transaction</a>`,
+                'success'
+            );
+            updateStep(6, 'completed');
+            
+            setTimeout(loadBalances, 2000); // Update balance setelah beberapa saat
+
+        } catch (error) {
+            console.error(error);
+            showStatus('❌ Error: ' + error.message, 'error');
+            resetSteps();
+            stopSpinAnimation();
+        } finally {
+            buttonToDisable.disabled = false;
+            otherButton.disabled = false;
+            isSpinning = false;
+        }
+    }
+
+    // --- Event Listeners ---
+    document.addEventListener('DOMContentLoaded', async () => {
+        // 1. Muat progress bar
+        await loadInitialProgress();
+        
+        // 2. Sembunyikan loading, tampilkan game
+        loadingScreen.classList.add('hidden');
+        gameScreen.classList.remove('hidden');
+
+        // 3. Coba hubungkan wallet secara otomatis (opsional, tapi bagus untuk UX)
+        if (window.ethereum && window.ethereum.selectedAddress) {
+            await ensureWalletConnected();
+        }
     });
+
+    // Hubungkan tombol ke fungsi spin yang benar
+    spinButton.addEventListener('click', () => spinSlot(1));
+    spinButton10x.addEventListener('click', () => spinSlot(10));
+
   </script>
 
 </body>
 </html>
+
