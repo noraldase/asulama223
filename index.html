@@ -3,15 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>POOPX402 - B402 Slot Machine</title>
+  <title>CASH402 - B402 Slot Machine</title>
   
-  <!-- Memuat Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- MEMUAT Ethers.js (dari script POOP) -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
 
-  <!-- Impor font 'Inter' -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -154,13 +151,7 @@
 </head>
 <body class="text-white">
 
-  <!-- 
-    =================================================
-    LAYAR LOADING (Awalnya terlihat)
-    =================================================
-  -->
   <div id="loading-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 via-blue-900 to-gray-900 relative overflow-hidden">
-    <!-- Efek latar belakang blur animasi -->
     <div class="absolute inset-0 opacity-30">
       <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-500 rounded-full filter blur-3xl animate-pulse"></div>
       <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500 rounded-full filter blur-3xl animate-pulse delay-75"></div>
@@ -177,7 +168,7 @@
       </div>
       
       <h1 class="text-6xl font-bold mb-4 bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent animate-pulse">
-        POOPX402
+        CASH 402
       </h1>
       <p class="text-white text-xl">
         Loading Game Data...
@@ -191,41 +182,31 @@
     </div>
   </div>
 
-  <!-- 
-    =================================================
-    LAYAR PERMAINAN UTAMA (Awalnya tersembunyi)
-    =================================================
-  -->
   <div id="game-screen" class="hidden min-h-screen bg-gradient-to-b from-gray-900 via-indigo-900 to-gray-900 relative overflow-hidden">
-    <!-- Efek latar belakang blur animasi -->
     <div class="absolute inset-0 opacity-20">
       <div class="absolute top-0 left-1/4 w-96 h-96 bg-yellow-500 rounded-full filter blur-3xl animate-pulse"></div>
       <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-500 rounded-full filter blur-3xl animate-pulse"></div>
     </div>
 
     <div class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
-      <!-- Header -->
       <div class="text-center mb-4">
         <h1 class="text-7xl md:text-8xl font-bold mb-2 relative">
           <span class="bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-2xl">
-            POOPX402
+            CASH402
           </span>
           <div class="absolute inset-0 bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent blur-xl opacity-50">
-            POOPX402
+            CASH402
           </div>
         </h1>
         <p class="text-yellow-300 font-bold">Spin, Get 5000 $POOP + Win! <span class="bg-green-500/20 text-green-300 border border-green-500 px-2 py-0.5 rounded-full text-xs ml-1">0 GAS</span></p>
       </div>
 
-      <!-- Tampilan Wallet (dari POOP) -->
       <div class="wallet-display hidden w-full max-w-2xl" id="walletDisplay">
         <strong>Your Wallet:</strong> <span id="walletAddress"></span>
       </div>
 
-      <!-- Kartu Permainan Utama -->
       <div class="w-full max-w-2xl bg-gray-800/90 backdrop-blur-xl border-2 border-yellow-500/50 shadow-2xl shadow-yellow-500/20 p-8 rounded-lg">
         
-        <!-- Progress Bar (dari POOP) -->
         <div class="progress-container">
           <div class="progress-bar-label">
               <span>TOKEN MINT PROGRESS</span>
@@ -236,7 +217,6 @@
           </div>
         </div>
         
-        <!-- Tampilan Kemenangan (Awalnya tersembunyi) -->
         <div id="win-display" class="hidden text-center mb-6">
           <div id="win-title" class="text-6xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2">
             WIN
@@ -249,26 +229,28 @@
           </div>
         </div>
 
-        <!-- Roda Putar (Spin Wheel) -->
         <div class="relative mb-8">
           <div class="w-64 h-64 mx-auto relative">
             <div class="absolute inset-0 border-8 border-yellow-500 rounded-full shadow-2xl shadow-yellow-500/50"></div>
             
-            <div id="spin-wheel" class="absolute inset-4 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center overflow-hidden transition-transform duration-3000 ease-out">
-              <div class="text-center">
-                <div id="spin-wheel-status" class="text-sm text-gray-400 mb-2">
+            <div id="spin-wheel" class="absolute inset-4 bg-gray-900 rounded-full flex items-center justify-center overflow-hidden transition-transform duration-3000 ease-out">
+              
+              <img src="images/logo-anda.png" 
+                   alt="Logo" 
+                   class="absolute inset-0 w-full h-full object-cover rounded-full opacity-50">
+
+              <div class="text-center relative z-10" style="text-shadow: 0px 0px 10px rgba(0,0,0,0.7);">
+                <div id="spin-wheel-status" class="text-sm text-gray-300 mb-2">
                   Spin
                 </div>
-                <div id="spin-wheel" class="absolute inset-4 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center overflow-hidden transition-transform duration-3000 ease-out">
-  
-  <img id="logo-spinner" 
-       src="images/logo.png" 
-       alt="Logo" 
-       class="w-full h-full object-cover rounded-full">
-  
-</div>
+                <div id="spin-wheel-result" class="text-4xl font-bold text-yellow-300">
+                  CASH
+                </div>
+              </div>
 
-            <div class="absolute inset-0 flex items-center justify-center">
+            </div>
+
+            <div class="absolute inset-0 flex items-center justify-center z-20">
               <div class="w-4 h-4 bg-red-500 rounded-full shadow-lg shadow-red-500/50"></div>
             </div>
             
@@ -276,7 +258,6 @@
           </div>
         </div>
 
-        <!-- Statistik (diganti untuk Balances) -->
         <div class="grid grid-cols-2 gap-4 mb-6">
           <div class="bg-gray-900/80 rounded-lg p-4 border border-gray-700 text-center">
             <div class="text-gray-400 text-sm mb-1">USDT Balance</div>
@@ -288,7 +269,6 @@
           </div>
         </div>
 
-        <!-- Tombol Beli Spin (Spin 1x) -->
         <button id="spinButton" class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-bold text-lg h-16 px-4 py-6 w-full mb-6 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white shadow-lg shadow-yellow-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
           <span id="spin-1x-text">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2 inline-block">
@@ -304,7 +284,6 @@
           </div>
         </button>
 
-        <!-- Tombol Spin Sekarang (Spin 10x) -->
         <button id="spinButton10x" class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-bold text-xl h-20 px-4 py-8 w-full bg-gradient-to-r from-pink-500 via-red-500 to-orange-500 hover:from-pink-600 hover:via-red-600 hover:to-orange-600 text-white shadow-2xl shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
           <span id="spin-10x-text">Spin 10x! (Pay 10 USDT)</span>
           <div id="spin-10x-loading" class="hidden animate-spin">
@@ -314,7 +293,6 @@
           </div>
         </button>
 
-        <!-- Status & Steps (dari POOP) -->
         <div id="statusSection" class="mt-6"></div>
         <div id="stepsSection" class="hidden mt-4">
             <div class="step" id="step1">1. Connecting wallet...</div>
@@ -327,18 +305,12 @@
 
       </div>
 
-      <!-- Footer -->
       <p class="text-gray-500 text-sm mt-8 text-center">
         Binance Smart Chain 🎰
       </p>
     </div>
   </div>
 
-  <!-- 
-    =================================================
-    LOGIKA JAVASCRIPT GABUNGAN
-    =================================================
-  -->
   <script>
     // --- KONFIGURASI (dari POOP) ---
     const CONFIG = {
@@ -501,7 +473,7 @@
         updateStep(4, 'active'); 
         
         // Tampilkan UI berputar (dari CASH402)
-        spinWheelStatus.textContent = 'SPINNING...';
+        spinWheelStatus.textContent = 'SPINNING...'; // Teks di atas logo
         spinGlow.classList.remove('hidden');
         winDisplay.classList.add('hidden'); // Sembunyikan kemenangan sebelumnya
 
@@ -530,7 +502,7 @@
     function stopSpinAnimation() {
         isSpinning = false;
         // Sembunyikan UI berputar
-        spinWheelStatus.textContent = 'Spin';
+        spinWheelStatus.textContent = 'Spin'; // Reset teks status di atas logo
         spinGlow.classList.add('hidden');
 
         // Reset kedua tombol
@@ -600,11 +572,13 @@
         const otherButton = is10x ? spinButton : spinButton10x;
         const amountToPay = is10x ? '10' : '1';
 
+        // Nonaktifkan tombol
         buttonToDisable.disabled = true;
         otherButton.disabled = true;
         resetSteps();
         
         try {
+            // 1. Koneksi Wallet
             const isConnected = await ensureWalletConnected();
             if (!isConnected) throw new Error("Wallet not connected.");
 
@@ -697,6 +671,7 @@
             resetSteps();
             stopSpinAnimation();
         } finally {
+            // Aktifkan kembali tombol
             buttonToDisable.disabled = false;
             otherButton.disabled = false;
             isSpinning = false;
@@ -726,4 +701,3 @@
 
 </body>
 </html>
-
