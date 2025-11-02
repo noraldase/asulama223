@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CASH402 - Spin to Win</title>
+  
+  <!-- Memuat Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Impor font 'Inter' yang digunakan di aplikasi web modern -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Mengatur font default */
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    /* Animasi kustom untuk menggantikan Framer Motion */
+    
+    /* Animasi untuk ikon dollar saat loading */
+    @keyframes rotate-scale {
+      from { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.2); }
+      to { transform: rotate(360deg) scale(1); }
+    }
+    .animate-load-spin {
+      animation: rotate-scale 2s ease-in-out infinite;
+    }
+    
+    /* Animasi untuk memunculkan (enter) tampilan 'WIN' */
+    @keyframes fade-in-scale {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .animate-fade-in-scale {
+      animation: fade-in-scale 0.3s ease-out forwards;
+    }
+
+    /* Helper class untuk menyembunyikan elemen */
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body class="text-white">
+
+  <!-- 
+    =================================================
+    LAYAR LOADING (Awalnya terlihat)
+    =================================================
+  -->
+  <div id="loading-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 via-blue-900 to-gray-900 relative overflow-hidden">
+    <!-- Efek latar belakang blur animasi -->
+    <div class="absolute inset-0 opacity-30">
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-500 rounded-full filter blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500 rounded-full filter blur-3xl animate-pulse delay-75"></div>
+    </div>
+
+    <div class="text-center relative z-10">
+      <!-- Ikon dollar yang berputar (menggantikan Framer Motion) -->
+      <div class="mb-8 animate-load-spin">
+        <div class="w-32 h-32 mx-auto bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-2xl">
+          <!-- SVG Ikon DollarSign dari Lucide -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-white">
+            <path d="M12 2v20"></path>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+      </div>
+      
+      <h1 class="text-6xl font-bold mb-4 bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent animate-pulse">
+        CASH 402
+      </h1>
+      <p class="text-white text-xl">
+        Loading to <span class="text-yellow-300 font-bold">CASH 402</span> ...
+      </p>
+      
+      <!-- Indikator titik-titik loading -->
+      <div class="mt-8 flex justify-center gap-2">
+        <div class="w-3 h-3 bg-yellow-400 rounded-full animate-bounce"></div>
+        <div class="w-3 h-3 bg-orange-400 rounded-full animate-bounce" style="animation-delay: 100ms;"></div>
+        <div class="w-3 h-3 bg-yellow-400 rounded-full animate-bounce" style="animation-delay: 200ms;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 
+    =================================================
+    LAYAR PERMAINAN UTAMA (Awalnya tersembunyi)
+    =================================================
+  -->
+  <div id="game-screen" class="hidden min-h-screen bg-gradient-to-b from-gray-900 via-indigo-900 to-gray-900 relative overflow-hidden">
+    <!-- Efek latar belakang blur animasi -->
+    <div class="absolute inset-0 opacity-20">
+      <div class="absolute top-0 left-1/4 w-96 h-96 bg-yellow-500 rounded-full filter blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-500 rounded-full filter blur-3xl animate-pulse"></div>
+    </div>
+
+    <div class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-7xl md:text-8xl font-bold mb-2 relative">
+          <span class="bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-2xl">
+            CASH402
+          </span>
+          <!-- Efek glow pada teks -->
+          <div class="absolute inset-0 bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent blur-xl opacity-50">
+            CASH402
+          </div>
+        </h1>
+      </div>
+
+      <!-- Kartu Permainan Utama (direplikasi dari komponen Card) -->
+      <div class="w-full max-w-2xl bg-gray-800/90 backdrop-blur-xl border-2 border-yellow-500/50 shadow-2xl shadow-yellow-500/20 p-8 rounded-lg">
+        
+        <!-- Tampilan Kemenangan (Awalnya tersembunyi) -->
+        <div id="win-display" class="hidden text-center mb-6">
+          <div class="text-6xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2">
+            WIN
+          </div>
+          <div id="win-amount" class="text-4xl font-bold text-yellow-300">
+            $0
+          </div>
+        </div>
+
+        <!-- Roda Putar (Spin Wheel) -->
+        <div class="relative mb-8">
+          <div class="w-64 h-64 mx-auto relative">
+            <!-- Bingkai Roda -->
+            <div class="absolute inset-0 border-8 border-yellow-500 rounded-full shadow-2xl shadow-yellow-500/50"></div>
+            
+            <!-- Konten yang Berputar (dikontrol oleh JS) -->
+            <div id="spin-wheel" class="absolute inset-4 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center overflow-hidden transition-transform duration-3000 ease-out">
+              <div class="text-center">
+                <div id="spin-wheel-status" class="text-sm text-gray-400 mb-2">
+                  Spin
+                </div>
+                <div id="spin-wheel-multiplier" class="text-4xl font-bold text-yellow-300">
+                  CASH 1x
+                </div>
+              </div>
+            </div>
+
+            <!-- Titik tengah -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-4 h-4 bg-red-500 rounded-full shadow-lg shadow-red-500/50"></div>
+            </div>
+
+            <!-- Efek glow saat berputar (dikelola JS) -->
+            <div id="spin-glow" class="hidden absolute inset-0 rounded-full bg-yellow-500/30 blur-2xl opacity-30 animate-pulse"></div>
+          </div>
+        </div>
+
+        <!-- Bagian Approval USD1 -->
+        <div class="bg-gray-900/80 rounded-lg p-4 mb-6 border border-gray-700">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-gray-400">USD1 Approval:</span>
+            <!-- Badge (direplikasi dari komponen Badge) -->
+            <span id="approval-badge" class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-yellow-500/20 text-yellow-400 border-yellow-500">
+              <span id="approval-badge-icon" class="hidden mr-1">
+                <!-- SVG Ikon CheckCircle2 dari Lucide -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                  <path d="m9 12 2 2 4-4"></path>
+                </svg>
+              </span>
+              <span id="approval-badge-text">Checking...</span>
+            </span>
+          </div>
+          <div class="flex gap-3">
+            <!-- Tombol (direplikasi dari komponen Button) -->
+            <button id="refresh-button" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2 flex-1 border border-gray-600 hover:border-yellow-500 hover:bg-yellow-500/10">
+              <!-- SVG Ikon RefreshCw dari Lucide -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
+                <path d="M3 2v6h6"></path>
+                <path d="M21 12A9 9 0 0 0 6 5.3L3 8"></path>
+                <path d="M21 22v-6h-6"></path>
+                <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"></path>
+              </svg>
+              Refresh
+            </button>
+            <button id="approve-button" disabled class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2 flex-1 bg-green-600 hover:bg-green-700 text-white disabled:opacity-50 disabled:cursor-not-allowed">
+              Approve
+            </button>
+          </div>
+        </div>
+
+        <!-- Tombol Beli Spin -->
+        <button id="buy-spin-button" class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-bold text-lg h-16 px-4 py-6 w-full mb-6 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white shadow-lg shadow-yellow-500/50">
+          <!-- SVG Ikon DollarSign dari Lucide -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
+            <path d="M12 2v20"></path>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          Buy Spin — 1 USD1
+        </button>
+
+        <!-- Statistik -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="bg-gray-900/80 rounded-lg p-4 border border-gray-700 text-center">
+            <div class="text-gray-400 text-sm mb-1">Purchased Spins</div>
+            <div id="purchased-spins-text" class="text-3xl font-bold text-yellow-300">0</div>
+          </div>
+          <div class="bg-gray-900/80 rounded-lg p-4 border border-gray-700 text-center">
+            <div class="text-gray-400 text-sm mb-1">Total Spins</div>
+            <div id="total-spins-text" class="text-3xl font-bold text-orange-300">0</div>
+          </div>
+        </div>
+
+        <!-- Tombol Spin Sekarang -->
+        <button id="spin-now-button" disabled class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-bold text-xl h-20 px-4 py-8 w-full bg-gradient-to-r from-pink-500 via-red-500 to-orange-500 hover:from-pink-600 hover:via-red-600 hover:to-orange-600 text-white shadow-2xl shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
+          <!-- Teks akan berubah menjadi ikon saat berputar -->
+          <span id="spin-button-text">SPIN NOW</span>
+          <div id="spin-button-loading" class="hidden animate-spin">
+            <!-- SVG Ikon RefreshCw dari Lucide -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+              <path d="M3 2v6h6"></path>
+              <path d="M21 12A9 9 0 0 0 6 5.3L3 8"></path>
+              <path d="M21 22v-6h-6"></path>
+              <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"></path>
+            </svg>
+          </div>
+        </button>
+
+        <!-- Pilihan Multiplier (Statis) -->
+        <div class="flex justify-center gap-4 mt-6">
+          <span class="inline-flex items-center rounded-md border px-4 py-2 text-lg font-semibold bg-blue-500/20 text-blue-300 border-blue-500">1x</span>
+          <span class="inline-flex items-center rounded-md border px-4 py-2 text-lg font-semibold bg-purple-500/20 text-purple-300 border-purple-500">10x</span>
+          <span class="inline-flex items-center rounded-md border px-4 py-2 text-lg font-semibold bg-red-500/20 text-red-300 border-red-500">50x</span>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <p class="text-gray-500 text-sm mt-8 text-center">
+        Win up to 50x your bet! Good luck! 🎰
+      </p>
+    </div>
+  </div>
+
+  <!-- 
+    =================================================
+    LOGIKA JAVASCRIPT
+    =================================================
+  -->
+  <script>
+    // Menunggu seluruh konten HTML dimuat
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // --- Mendapatkan Elemen DOM ---
+      const loadingScreen = document.getElementById('loading-screen');
+      const gameScreen = document.getElementById('game-screen');
+      
+      const winDisplay = document.getElementById('win-display');
+      const winAmountText = document.getElementById('win-amount');
+      
+      const spinWheel = document.getElementById('spin-wheel');
+      const spinWheelStatus = document.getElementById('spin-wheel-status');
+      const spinWheelMultiplier = document.getElementById('spin-wheel-multiplier');
+      const spinGlow = document.getElementById('spin-glow');
+
+      const approvalBadge = document.getElementById('approval-badge');
+      const approvalBadgeIcon = document.getElementById('approval-badge-icon');
+      const approvalBadgeText = document.getElementById('approval-badge-text');
+      
+      const refreshButton = document.getElementById('refresh-button');
+      const approveButton = document.getElementById('approve-button');
+      
+      const buySpinButton = document.getElementById('buy-spin-button');
+      const purchasedSpinsText = document.getElementById('purchased-spins-text');
+      const totalSpinsText = document.getElementById('total-spins-text');
+      
+      const spinNowButton = document.getElementById('spin-now-button');
+      const spinButtonText = document.getElementById('spin-button-text');
+      const spinButtonLoading = document.getElementById('spin-button-loading');
+
+      // --- Variabel Status (menggantikan React state) ---
+      let isLoading = true;
+      let isSpinning = false;
+      let usd1Approval = "Checking...";
+      let purchasedSpins = 0;
+      let totalSpins = 0;
+      let winAmount = null;
+      let currentMultiplier = "1x";
+      let rotation = 0;
+
+      // --- Fungsi untuk Memperbarui UI berdasarkan Status ---
+      function updateUI() {
+        // Update Teks Statistik
+        purchasedSpinsText.textContent = purchasedSpins;
+        totalSpinsText.textContent = totalSpins;
+
+        // Update Badge Approval
+        approvalBadgeText.textContent = usd1Approval;
+        if (usd1Approval === "Ready") {
+          approvalBadge.className = "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-green-500/20 text-green-400 border-green-500";
+          approvalBadgeIcon.classList.remove('hidden');
+          approveButton.disabled = false;
+        } else {
+          approvalBadge.className = "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-yellow-500/20 text-yellow-400 border-yellow-500";
+          approvalBadgeIcon.classList.add('hidden');
+          approveButton.disabled = true;
+        }
+
+        // Update Tampilan Kemenangan
+        if (winAmount !== null) {
+          winAmountText.textContent = `$${winAmount}`;
+          winDisplay.classList.remove('hidden');
+          winDisplay.classList.add('animate-fade-in-scale');
+        } else {
+          winDisplay.classList.add('hidden');
+          winDisplay.classList.remove('animate-fade-in-scale');
+        }
+
+        // Update Tombol Spin
+        if (totalSpins <= 0 || isSpinning) {
+          spinNowButton.disabled = true;
+        } else {
+          spinNowButton.disabled = false;
+        }
+
+        // Update Tampilan Roda Putar
+        if (isSpinning) {
+          spinWheelStatus.textContent = "SPINNING...";
+          spinGlow.classList.remove('hidden');
+          spinButtonText.classList.add('hidden');
+          spinButtonLoading.classList.remove('hidden');
+        } else {
+          spinWheelStatus.textContent = "Spin";
+          spinGlow.classList.add('hidden');
+          spinButtonText.classList.remove('hidden');
+          spinButtonLoading.classList.add('hidden');
+        }
+        
+        spinWheelMultiplier.textContent = `CASH ${currentMultiplier}`;
+      }
+
+      // --- Logika Event Handler (menggantikan fungsi React) ---
+      
+      // Menggantikan useEffect (simulasi loading)
+      setTimeout(() => {
+        isLoading = false;
+        usd1Approval = "Ready";
+        
+        loadingScreen.classList.add('hidden');
+        gameScreen.classList.remove('hidden');
+        
+        updateUI(); // Panggil updateUI setelah status berubah
+      }, 2500);
+
+      // Handler untuk Beli Spin
+      function handleBuySpin() {
+        purchasedSpins++;
+        totalSpins++;
+        updateUI();
+      }
+
+      // Handler untuk Refresh Approval
+      function handleRefresh() {
+        usd1Approval = "Checking...";
+        updateUI();
+
+        setTimeout(() => {
+          usd1Approval = "Ready";
+          updateUI();
+        }, 1000);
+      }
+      
+      // (Fungsi Approve tidak ada di React, kita tambahkan simulasi)
+      function handleApprove() {
+        usd1Approval = "Approving...";
+        updateUI();
+        
+        setTimeout(() => {
+          usd1Approval = "Approved"; // Status baru
+          approvalBadge.className = "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold bg-blue-500/20 text-blue-300 border-blue-500";
+          approvalBadgeText.textContent = "Approved";
+          approveButton.disabled = true; // Nonaktifkan setelah disetujui
+        }, 1500);
+      }
+
+      // Handler untuk Memutar Roda
+      function handleSpin() {
+        if (totalSpins <= 0 || isSpinning) return;
+        
+        isSpinning = true;
+        winAmount = null; // Sembunyikan kemenangan sebelumnya
+        totalSpins--;
+        updateUI(); // Update UI untuk menampilkan status berputar
+
+        // Tentukan hasil putaran
+        const multipliers = ["1x", "10x", "50x"];
+        const randomMultiplier = multipliers[Math.floor(Math.random() * multipliers.length)];
+        
+        // Animasi putaran
+        const extraRotations = 5 + Math.random() * 3; // 5-8 putaran penuh
+        const finalRotation = rotation + (360 * extraRotations);
+        rotation = finalRotation; // Simpan posisi rotasi
+        
+        // Terapkan rotasi ke elemen
+        spinWheel.style.transform = `rotate(${finalRotation}deg)`;
+
+        // Tunggu 3 detik hingga animasi selesai
+        setTimeout(() => {
+          isSpinning = false;
+          currentMultiplier = randomMultiplier;
+          
+          const baseAmount = 1;
+          const multiplierValue = parseInt(randomMultiplier.replace('x', ''));
+          winAmount = baseAmount * multiplierValue;
+          
+          updateUI(); // Tampilkan hasil kemenangan dan update tombol
+        }, 3000); // Durasi ini harus sama dengan 'duration-3000' pada spinWheel
+      }
+
+      // --- Melampirkan Event Listeners ---
+      buySpinButton.addEventListener('click', handleBuySpin);
+      refreshButton.addEventListener('click', handleRefresh);
+      approveButton.addEventListener('click', handleApprove);
+      spinNowButton.addEventListener('click', handleSpin);
+
+    });
+  </script>
+
+</body>
+</html>
